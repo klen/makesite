@@ -1,1 +1,1 @@
-sitegen is in the public domain; it can be used for whatever purpose with absolutely no restrictions.
+Sitegen is in the public domain; it can be used for whatever purpose with absolutely no restrictions.
