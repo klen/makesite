@@ -34,9 +34,10 @@ def deploy(project_name, options):
             sys.exit()
 
     templates = parse_templates(templates, project_options)
+    create_dir( deploy_dir )
+    open(os.path.join( deploy_dir, '.sitegen' ), 'w').write( template_string )
     deploy_templates(templates, project_options)
 
-    open(os.path.join( deploy_dir, '.sitegen' ), 'w').write( template_string )
     os.system('chown -R %(user)s:%(group)s %(deploy_dir)s' % project_options[ 'Main' ])
 
 

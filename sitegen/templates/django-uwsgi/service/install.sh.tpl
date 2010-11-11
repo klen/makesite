@@ -1,5 +1,5 @@
-NGINX_CONF=/etc/nginx/sites-enabled/%(branch)s.%(project_name)s.conf
-SUPERVISOR_CONF=/etc/supervisor/conf.d/%(branch)s.%(project_name)s.conf
+NGINX_CONF=%(nginx_conf_path)s/%(branch)s.%(project_name)s.conf
+SUPERVISOR_CONF=%(supervisor_conf_path)s/%(branch)s.%(project_name)s.conf
 
 echo '  * Create link to nginx conf:'$NGINX_CONF
 ln -sf %(deploy_dir)s/deploy/nginx.conf $NGINX_CONF  
