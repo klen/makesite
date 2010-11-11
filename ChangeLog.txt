@@ -1,5 +1,12 @@
 # sitegen changelog
 
+## 2010-11-11 0.02
+
+* Remove project dir if it empty
+
+* Add virtualenv support to uwsgi template
+
+
 ## 2010-11-10 0.01
 
 * First public version.
