@@ -1,6 +1,6 @@
 upstream %(branch)s.%(project_name)s.proxy {
     ip_hash;
-    server %(deploy_dir)s/uwsgi.sock;
+    server unix://%(deploy_dir)s/uwsgi.sock;
 }
 
 server {
