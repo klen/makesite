@@ -32,6 +32,8 @@ def deploy(project_name, template=None, config=None, branch=None):
 
     templates = parse_templates(template, options)
     deploy_templates(templates, options)
+
+    open(os.path.join( deploy_dir, '.sitegen' ), 'w').write( template )
     os.system('chown -R %(user)s:%(group)s %(deploy_dir)s' % options[ 'Main' ])
 
 
@@ -52,12 +54,23 @@ def remove( project_name, template=None, config=None, branch=None ):
         deploy_dir = deploy_dir,
         basedir = BASEDIR,
     ))
+    try:
+        sitegen_template = open(os.path.join( deploy_dir, '.sitegen2', 'r' )).read()
+    except IOError:
+        sitegen_template = options[ 'Main' ][ 'template' ]
 
-    template = template if template else options[ 'Main' ][ 'template' ]
+    template = template if template else sitegen_template
     templates = parse_templates(template, options)
     remove_templates(templates, options)
     __log__( "Remove directory '%s'" % deploy_dir )
     shutil.rmtree(deploy_dir)
+
+    # If project dir empty remove it
+    project_dir = os.path.dirname( deploy_dir )
+    if not os.listdir(project_dir):
+        __log__( "Remove directory '%s'" % project_dir )
+        shutil.rmtree( project_dir )
+
 
 
 def parse_templates( template, options ):
