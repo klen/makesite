@@ -1,5 +1,12 @@
 # sitegen changelog
 
+## 2010-11-11 0.03
+
+* Add listing project
+
+* Add git template
+
+
 ## 2010-11-11 0.02
 
 * Remove project dir if it empty

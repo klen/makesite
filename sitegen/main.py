@@ -244,7 +244,9 @@ def main():
 
     # Delete project
     elif options.delete:
-        remove( args[ 0 ], options )
+        question = raw_input("  Delete branch '%s' on project '%s' [Y/n]?" % (options.branch, args[0]))
+        if not question or question.lower().startswith('y'):
+            remove( args[ 0 ], options )
 
     # Deploy project
     else:
