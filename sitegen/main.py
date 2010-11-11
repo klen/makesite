@@ -7,61 +7,67 @@ BASECONFIG = os.path.join( BASEDIR, 'sitegen.ini' )
 HOMECONFIG = os.path.join( os.getenv( 'HOME' ), '.sitegen.ini' )
 
 
-def deploy(project_name, template=None, config=None, branch=None):
+def deploy(project_name, options):
     """ Deploy project.
     """
-    __log__( "Deploy branch '%s' in project '%s'\n" % (branch, project_name) )
-    options = load_config( config )
-    deploy_dir = os.path.join( options[ 'Main' ][ 'sites_home' ], project_name, branch )
+    __log__( "Deploy branch '%s' in project '%s'\n" % (options.branch, project_name) )
+    project_options = load_config( options.config )
+    deploy_dir = os.path.join( project_options[ 'Main' ][ 'sites_home' ], project_name, options.branch )
 
     if os.path.exists( deploy_dir ):
         __log__("Directory '%s' is exists." % deploy_dir, error=True)
         sys.exit()
 
-    options[ 'Main' ].update(dict(
+    project_options[ 'Main' ].update(dict(
         project_name = project_name,
-        branch = branch,
+        branch = options.branch,
         deploy_dir = deploy_dir,
+        repo = options.repo,
         basedir = BASEDIR,
     ))
 
-    template = template if template else options[ 'Main' ][ 'template' ]
-    if not options[ 'Templates' ].has_key( template ):
-        __log__( "Template '%s' not found in options." % template, error=True )
-        sys.exit()
+    template_string = options.template if options.template else project_options[ 'Main' ][ 'template' ]
+    templates = template_string.split(',')
+    for template in templates:
+        if not project_options[ 'Templates' ].has_key( template ):
+            __log__( "Template '%s' not found in project_options." % template, error=True )
+            sys.exit()
 
-    templates = parse_templates(template, options)
-    deploy_templates(templates, options)
+    templates = parse_templates(templates, project_options)
+    deploy_templates(templates, project_options)
 
-    open(os.path.join( deploy_dir, '.sitegen' ), 'w').write( template )
-    os.system('chown -R %(user)s:%(group)s %(deploy_dir)s' % options[ 'Main' ])
+    open(os.path.join( deploy_dir, '.sitegen' ), 'w').write( template_string )
+    os.system('chown -R %(user)s:%(group)s %(deploy_dir)s' % project_options[ 'Main' ])
 
 
-def remove( project_name, template=None, config=None, branch=None ):
+def remove( project_name, options ):
     """ Remove project.
     """
-    __log__( "Remove branch '%s' in project '%s'" % (branch, project_name))
-    options = load_config( config )
-    deploy_dir = os.path.join( options[ 'Main' ][ 'sites_home' ], project_name, branch )
+    __log__( "Remove branch '%s' in project '%s'" % (options.branch, project_name))
+    project_options = load_config( options.config )
+    deploy_dir = os.path.join( project_options[ 'Main' ][ 'sites_home' ], project_name, options.branch )
 
     if not os.path.exists( deploy_dir ):
         __log__("Directory '%s' is not exists." % deploy_dir, error=True)
         sys.exit()
 
-    options[ 'Main' ].update(dict(
+    project_options[ 'Main' ].update(dict(
         project_name = project_name,
-        branch = branch,
+        branch = options.branch,
         deploy_dir = deploy_dir,
         basedir = BASEDIR,
     ))
-    try:
-        sitegen_template = open(os.path.join( deploy_dir, '.sitegen2', 'r' )).read()
-    except IOError:
-        sitegen_template = options[ 'Main' ][ 'template' ]
 
-    template = template if template else sitegen_template
-    templates = parse_templates(template, options)
-    remove_templates(templates, options)
+    try:
+        sitegen_template = open(os.path.join( deploy_dir, '.sitegen', 'r' )).read()
+    except IOError:
+        sitegen_template = project_options[ 'Main' ][ 'template' ]
+
+    template_string = options.template if options.template else sitegen_template
+    templates = template_string.split(',')
+    templates = parse_templates(templates, project_options)
+    remove_templates(templates, project_options)
+
     __log__( "Remove directory '%s'" % deploy_dir )
     shutil.rmtree(deploy_dir)
 
@@ -72,16 +78,38 @@ def remove( project_name, template=None, config=None, branch=None ):
         shutil.rmtree( project_dir )
 
 
+def list_projects( options ):
+    """ List projects.
+    """
+    project_options = load_config( options.config )
+    project_dir = project_options[ 'Main' ][ 'sites_home' ]
 
-def parse_templates( template, options ):
+    if not os.path.exists( project_dir ):
+        __log__("Projects directory '%s' not found." % project_dir)
+        sys.exit()
+
+    for item in os.walk(project_dir):
+        files = item[2]
+        root = item[0]
+        if '.sitegen' in files:
+            branch_name = os.path.basename( root )
+            project_name = os.path.basename( os.path.dirname( root ) )
+            template = open( os.path.join( root, '.sitegen' ) ).read()
+            __log__( "Found branch '%s' in project '%s': %s [%s]" % (branch_name, project_name, root, template))
+
+    sys.stdout.write('\n')
+
+
+def parse_templates( templates, options ):
     """ Parse templates hierarchy.
     """
     result = []
-    template_options = options[ template ] if options.has_key( template ) else dict()
-    if template_options.has_key( 'include' ):
-        result += parse_templates( template_options[ 'include' ], options )
+    for template in templates:
+        template_options = options[ template ] if options.has_key( template ) else dict()
+        if template_options.has_key( 'include' ):
+            result += parse_templates( [ template_options[ 'include' ] ], options )
 
-    result += [ ( template, template_options ) ]
+        result += [ ( template, template_options ) ]
     return result
 
 
@@ -93,7 +121,9 @@ def deploy_templates( templates, options ):
 
         # Deploy template
         __log__( "Deploy template '%s'" % template_name )
-        for root, dirs, files in os.walk(path):
+        for item in os.walk(path):
+            root = item[0]
+            files = item[2]
             curdir = os.path.join( options[ 'Main' ][ 'deploy_dir' ], root[ len( path ) + 1: ] )
             options[ 'Main' ][ 'curdir' ] = curdir
             create_dir( curdir )
@@ -189,25 +219,33 @@ def __log__( s, error=False ):
         sys.stdout.write(s)
 
 def main():
+    """ Parse arguments and do work.
+    """
     p = optparse.OptionParser(
-            usage="%prog [-r] [-t TEMPLATE] [-c CONFIGFILE] [-b BRANCHNAME] PROJECTNAME",
+            usage="%prog [-d] [-l] [-t TEMPLATE] [-c CONFIG] [-b BRANCH] [-r REPOSITORY] PROJECTNAME",
             description= "'sitegen' is simple script to create base project dirs and config files. ")
 
+    p.add_option('-d', '--delete', dest='delete', help='Delete project.', action="store_true")
+    p.add_option('-l', '--list', dest='list', help='List projects.', action="store_true")
     p.add_option('-t', '--template', dest='template', help='Config templates.')
     p.add_option('-b', '--branch', dest='branch', help='Project branch.', default='master')
     p.add_option('-c', '--config', dest='config', help='Config file.')
-    p.add_option('-r', '--remove', dest='remove', help='Remove project.', action="store_true")
+    p.add_option('-r', '--repo', dest='repo', help='CVS repository.')
 
     options, args = p.parse_args()
-    if not args:
+
+    # List projects
+    if options.list:
+        list_projects(options)
+
+    elif not args:
         p.print_help(sys.stdout)
-        sys.exit()
 
-    if options.remove:
-        # Remove project
-        remove( args[ 0 ], template=options.template, config=options.config, branch=options.branch )
+    # Delete project
+    elif options.delete:
+        remove( args[ 0 ], options )
 
+    # Deploy project
     else:
-        # Deploy project
-        deploy(args[ 0 ], template=options.template, config=options.config, branch=options.branch)
+        deploy(args[ 0 ], options )
 
