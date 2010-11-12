@@ -5,5 +5,6 @@ fi
 
 if [ -f /etc/init.d/supervisor ]; then
     /etc/init.d/supervisor stop
+    sleep 1
     /etc/init.d/supervisor start
 fi

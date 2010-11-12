@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import ConfigParser, optparse, os, shutil, sys
+import ConfigParser, optparse, os, shutil, sys, tempita
 
 
 BASEDIR = os.path.realpath(os.path.dirname(__file__))
@@ -129,15 +129,9 @@ def deploy_templates( templates, options ):
             options[ 'Main' ][ 'curdir' ] = curdir
             create_dir( curdir )
             for filename in files:
-                name, ext = os.path.splitext(filename)
                 f = open(os.path.join(root, filename))
-                if ext == '.tpl':
-                    s = f.read() % options[ 'Main' ]
-                else:
-                    name = name + ext
-                    s = f.read()
-
-                create_file(os.path.join(curdir, name), s)
+                s = tempita.sub( f.read(), **options[ 'Main' ] )
+                create_file(os.path.join(curdir, filename), s)
 
         # Parse hook
         if template_options.has_key( 'install_hook' ):
