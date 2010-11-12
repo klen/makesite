@@ -1,5 +1,15 @@
 # sitegen changelog
 
+## 2010-11-12 0.05
+
+* Add restart template
+
+
+## 2010-11-11 0.04
+
+* Add pip template
+
+
 ## 2010-11-11 0.03
 
 * Add listing project

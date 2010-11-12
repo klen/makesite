@@ -1,8 +1,10 @@
 #!/usr/bin/env python
+import os
 
 from setuptools import setup, find_packages
-import os
+
 from sitegen import VERSION
+
 
 package_data = [ '*.ini' ]
 for root, dirs, files in os.walk( 'sitegen/templates' ):

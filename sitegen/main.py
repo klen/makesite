@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-
 import ConfigParser, optparse, os, shutil, sys
+
 
 BASEDIR = os.path.realpath(os.path.dirname(__file__))
 BASECONFIG = os.path.join( BASEDIR, 'sitegen.ini' )
