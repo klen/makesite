@@ -1,5 +1,12 @@
 # sitegen changelog
 
+## 2010-11-12 0.07
+
+* Add option --path - required options (path to projects dir)
+
+* Now ini file also parsed from project_dir/sitegen.ini
+
+
 ## 2010-11-12 0.06
 
 * Add tempita template engine
