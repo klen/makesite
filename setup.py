@@ -20,7 +20,7 @@ setup(name='sitegen',
     url=' http://github.com/klen',
     packages=find_packages(),
     package_data = { '': package_data, },
-    install_requires = ['tempita', 'virtualenv', 'supervisor'],
+    install_requires = ['tempita', 'virtualenv'],
     entry_points={
         'console_scripts': [
             'sitegen = sitegen.main:main',
