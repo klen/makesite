@@ -1,5 +1,12 @@
 # sitegen changelog
 
+## 2010-11-13 0.08
+
+* Add $SITEGEN_SITES_PATH parsing
+
+* Sitegen now run from current user ( without sudo )
+
+
 ## 2010-11-12 0.07
 
 * Add option --path - required options (path to projects dir)

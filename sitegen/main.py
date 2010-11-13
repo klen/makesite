@@ -1,10 +1,11 @@
 #!/usr/bin/env python
-import ConfigParser, optparse, os, shutil, sys, tempita
+import ConfigParser, optparse, os, sys, tempita, subprocess
 
 
 BASEDIR = os.path.realpath(os.path.dirname(__file__))
 BASECONFIG = os.path.join( BASEDIR, 'sitegen.ini' )
 HOMECONFIG = os.path.join( os.getenv( 'HOME' ), '.sitegen.ini' )
+SITEGEN_PATH_VAR = 'SITEGEN_SITES_PATH'
 
 
 def do_work(project_name, options):
@@ -22,9 +23,8 @@ def do_work(project_name, options):
     for key, value in project_options[ 'Main' ].items():
         project_options[ 'Main' ][ key ] = value % project_options[ 'Main' ]
 
-    __log__("Options:")
     for item in project_options[ 'Main' ].items():
-        __log__("%s: %s" % item )
+        print " %s=%s" % item
 
     if options.delete:
         remove( project_options )
@@ -37,25 +37,21 @@ def deploy(options):
     """ Deploy project.
     """
     main_options = options[ 'Main' ]
-    __log__( "Deploy branch '%(branch)s' in project '%(project_name)s'\n" % main_options )
-
-    if os.path.exists( main_options[ 'deploy_dir' ] ):
-        __log__("Directory '%(deploy_dir)s' is exists." % main_options, error=True)
-        sys.exit()
+    print  "Deploy branch '%(branch)s' in project '%(project_name)s'\n" % main_options
 
     template_string = main_options[ 'template' ]
     templates = template_string.split(',')
     for template in templates:
         if not options[ 'Templates' ].has_key( template ):
-            __log__( "Template '%s' not found in project_options." % template, error=True )
+            print  "Template '%s' not found in project_options." % template
             sys.exit()
 
     templates = parse_templates(templates, options)
     create_dir( main_options[ 'deploy_dir' ] )
-    open(os.path.join( main_options[ 'deploy_dir' ], '.sitegen' ), 'w').write( template_string )
+    subprocess.call('sudo sh -c "echo -n %s > %s/.sitegen"' % ( template_string, main_options[ 'deploy_dir' ]), shell=True)
     deploy_templates(templates, options)
 
-    os.system('chown -R %(user)s:%(group)s %(deploy_dir)s' % main_options)
+    subprocess.check_call('sudo chown -R %(user)s:%(group)s %(deploy_dir)s' % main_options, shell=True)
 
 
 def remove( options ):
@@ -66,10 +62,10 @@ def remove( options ):
     if question and not question.lower().startswith('y'):
         sys.exit()
 
-    __log__("Remove branch '%(branch)s' in project '%(project_name)s'" % main_options)
+    print "Remove branch '%(branch)s' in project '%(project_name)s'" % main_options
 
     if not os.path.exists( main_options[ 'deploy_dir' ] ):
-        __log__("Directory '%s' is not exists." % main_options[ 'deploy_dir' ], error=True)
+        print "Directory '%s' is not exists." % main_options[ 'deploy_dir' ]
         sys.exit()
 
     try:
@@ -81,14 +77,14 @@ def remove( options ):
     templates = parse_templates(templates, options)
     remove_templates(templates, options)
 
-    __log__( "Remove directory '%s'" % main_options[ 'deploy_dir' ])
-    shutil.rmtree(main_options[ 'deploy_dir' ])
+    print "Remove directory '%s'" % main_options[ 'deploy_dir' ]
+    subprocess.check_call(" sudo rm -rf %s" % main_options[ 'deploy_dir' ], shell=True)
 
     # If project dir empty remove it
     project_dir = os.path.dirname( main_options[ 'deploy_dir' ] )
     if not os.listdir(project_dir):
-        __log__( "Remove directory '%s'" % project_dir )
-        shutil.rmtree( project_dir )
+        print "Remove directory '%s'" % project_dir
+        subprocess.check_call(" sudo rm -rf %s" % project_dir, shell=True)
 
 
 def list_projects( options ):
@@ -97,7 +93,7 @@ def list_projects( options ):
     project_dir = os.path.abspath( options.path )
 
     if not os.path.exists( project_dir ):
-        __log__("Projects directory '%s' not found." % project_dir)
+        print " Projects directory '%s' not found." % project_dir
         sys.exit()
 
     for item in os.walk(project_dir):
@@ -107,7 +103,7 @@ def list_projects( options ):
             branch_name = os.path.basename( root )
             project_name = os.path.basename( os.path.dirname( root ) )
             template = open( os.path.join( root, '.sitegen' ) ).read()
-            __log__( "Found branch '%s' in project '%s': %s [%s]" % (branch_name, project_name, root, template))
+            print " %s:%s [%s]" % ( project_name, branch_name, template )
 
     sys.stdout.write('\n')
 
@@ -128,7 +124,7 @@ def load_config(options):
             result[ section ].update(dict(parser.items( section )))
 
     if not result or not result.has_key( 'Main' ) or not result.has_key( 'Templates' ):
-        __log__("Not found currect config files.", error=True)
+        print "Not found currect config files."
         sys.exit()
 
     return result
@@ -154,7 +150,7 @@ def deploy_templates( templates, options ):
         path = options[ 'Templates' ][ template_name ] % options[ 'Main' ]
 
         # Deploy template
-        __log__( "Deploy template '%s'" % template_name )
+        print "Deploy template '%s'" % template_name
         for item in os.walk(path):
             root = item[0]
             files = item[2]
@@ -170,8 +166,8 @@ def deploy_templates( templates, options ):
         if template_options.has_key( 'install_hook' ):
             hook = template_options[ 'install_hook' ]
             path = os.path.join( options[ 'Main' ][ 'deploy_dir' ], hook )
-            __log__( "Start hook script '%s'" % path )
-            os.system( 'sh %s' % path )
+            print "Start hook script '%s'" % path
+            subprocess.call('sudo sh %s' % path, shell=True)
 
         sys.stdout.write('\n')
 
@@ -181,12 +177,12 @@ def remove_templates( templates, options ):
     """
     for template_name, template_options in templates:
         # Remove template
-        __log__( "Remove template '%s'" % template_name )
+        print "Remove template '%s'" % template_name
         if template_options.has_key( 'remove_hook' ):
             hook = template_options[ 'remove_hook' ]
             path = os.path.join( options[ 'Main' ][ 'deploy_dir' ], hook )
-            __log__( "Start hook script '%s'" % path )
-            os.system( 'sh %s' % path )
+            print "Start hook script '%s'" % path
+            subprocess.call('sudo sh %s' % path, shell=True)
 
         sys.stdout.write('\n')
 
@@ -195,13 +191,11 @@ def remove_templates( templates, options ):
 def create_dir(path):
     """ Create directory.
     """
-    if os.path.exists( path ):
-        return
     try:
-        os.makedirs(path)
-        __log__( "Create dir '%s'" % path )
-    except(OSError), e:
-        __log__( "Failed create dir '%s'. %s." % (path, e.strerror), error=True )
+        subprocess.check_call('sudo mkdir -p %s' % path, shell=True)
+        print "Create dir %s." % path
+    except subprocess.CalledProcessError:
+        print "Sitegen need sudo access."
         sys.exit()
 
 
@@ -209,30 +203,21 @@ def create_file( path, s ):
     """ Create file.
     """
     try:
-        f = open(path, 'w')
-        f.write(s)
-        __log__( "Create file '%s'" % path )
-    except (IOError, OSError), e:
-        __log__('Failed create file "%s". %s.\n'
-            % (path, e.strerror), error=True)
+        open('/tmp/sitegen.tmp', 'w').write(s)
+        subprocess.check_call('sudo mv /tmp/sitegen.tmp %s' % path, shell=True)
+        print "Create file '%s'" % path
+    except subprocess.CalledProcessError:
+        print 'Failed create file %s.' % path
 
-
-def __log__( s, error=False ):
-    """ Print messages.
-    """
-    s = "\n  * %s" % s
-    if error:
-        sys.stderr.write(s)
-    else:
-        sys.stdout.write(s)
 
 def main():
     """ Parse arguments and do work.
     """
+    path = os.environ[ SITEGEN_PATH_VAR ] if os.environ.has_key( SITEGEN_PATH_VAR ) else None
     p = optparse.OptionParser(
             usage="%prog -p PATH [-l] PROJECTNAME [-b BRANCH] [-t TEMPLATE] [-c CONFIG] [-r REPOSITORY] [-d]",
             description= "'sitegen' is simple script to create base project dirs and config files. ")
-    p.add_option('-p', '--path', dest='path', help='Path to project dir. Required option.')
+    p.add_option('-p', '--path', dest='path', default=path, help='Path to project dir. Required option.')
     p.add_option('-l', '--list', dest='list', help='List projects.', action="store_true")
     p.add_option('-b', '--branch', dest='branch', help='Project branch.', default='master')
     p.add_option('-t', '--template', dest='template', help='Config templates.')
