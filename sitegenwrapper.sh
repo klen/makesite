@@ -4,7 +4,7 @@
 sitegen_verify_sites_home () {
     if [ ! -d "$SITES_HOME" ]
     then
-        [ "$1" != "-q" ] && echo "ERROR: Sitegen sites directory '$SITES_HOME' does not exist.  Create it or set SITES_HOME to an existing directory." 1>&2
+        echo "ERROR: Sitegen sites directory '$SITES_HOME' does not exist.  Create it or set SITES_HOME to an existing directory." >&2
         return 1
     fi
     return 0
