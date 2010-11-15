@@ -5,7 +5,7 @@ import ConfigParser, optparse, os, sys, tempita, subprocess
 BASEDIR = os.path.realpath(os.path.dirname(__file__))
 BASECONFIG = os.path.join( BASEDIR, 'sitegen.ini' )
 HOMECONFIG = os.path.join( os.getenv( 'HOME' ), '.sitegen.ini' )
-SITEGEN_PATH_VAR = 'SITEGEN_SITES_PATH'
+SITEGEN_PATH_VAR = 'SITES_HOME'
 
 
 def do_work(project_name, options):
@@ -85,27 +85,6 @@ def remove( options ):
     if not os.listdir(project_dir):
         print "Remove directory '%s'" % project_dir
         subprocess.check_call(" sudo rm -rf %s" % project_dir, shell=True)
-
-
-def list_projects( options ):
-    """ List projects.
-    """
-    project_dir = os.path.abspath( options.path )
-
-    if not os.path.exists( project_dir ):
-        print " Projects directory '%s' not found." % project_dir
-        sys.exit()
-
-    for item in os.walk(project_dir):
-        files = item[2]
-        root = item[0]
-        if '.sitegen' in files:
-            branch_name = os.path.basename( root )
-            project_name = os.path.basename( os.path.dirname( root ) )
-            template = open( os.path.join( root, '.sitegen' ) ).read()
-            print " %s:%s [%s]" % ( project_name, branch_name, template )
-
-    sys.stdout.write('\n')
 
 
 def load_config(options):
@@ -218,7 +197,6 @@ def main():
             usage="%prog -p PATH [-l] PROJECTNAME [-b BRANCH] [-t TEMPLATE] [-c CONFIG] [-r REPOSITORY] [-d]",
             description= "'sitegen' is simple script to create base project dirs and config files. ")
     p.add_option('-p', '--path', dest='path', default=path, help='Path to project dir. Required option.')
-    p.add_option('-l', '--list', dest='list', help='List projects.', action="store_true")
     p.add_option('-b', '--branch', dest='branch', help='Project branch.', default='master')
     p.add_option('-t', '--template', dest='template', help='Config templates.')
     p.add_option('-c', '--config', dest='config', help='Config file.')
@@ -227,13 +205,7 @@ def main():
 
     options, args = p.parse_args()
 
-    if not options.path:
-        p.print_help(sys.stdout)
-
-    elif options.list:
-        list_projects(options)
-
-    elif not args:
+    if not options.path or not args:
         p.print_help(sys.stdout)
 
     else:
