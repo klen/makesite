@@ -1,10 +1,10 @@
 if [ -f /etc/init.d/nginx ]; then
-    /etc/init.d/nginx stop
-    /etc/init.d/nginx start
+    sudo /etc/init.d/nginx stop
+    sudo /etc/init.d/nginx start
 fi
 
 if [ -f /etc/init.d/supervisor ]; then
-    /etc/init.d/supervisor stop
+    sudo /etc/init.d/supervisor stop
     sleep 2
-    /etc/init.d/supervisor start
+    sudo /etc/init.d/supervisor start
 fi

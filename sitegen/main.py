@@ -146,7 +146,7 @@ def deploy_templates( templates, options ):
             hook = template_options[ 'install_hook' ]
             path = os.path.join( options[ 'Main' ][ 'deploy_dir' ], hook )
             print "Start hook script '%s'" % path
-            subprocess.call('sudo sh %s' % path, shell=True)
+            subprocess.call('sh %s' % path, shell=True)
 
         sys.stdout.write('\n')
 
@@ -161,7 +161,7 @@ def remove_templates( templates, options ):
             hook = template_options[ 'remove_hook' ]
             path = os.path.join( options[ 'Main' ][ 'deploy_dir' ], hook )
             print "Start hook script '%s'" % path
-            subprocess.call('sudo sh %s' % path, shell=True)
+            subprocess.call('sh %s' % path, shell=True)
 
         sys.stdout.write('\n')
 
