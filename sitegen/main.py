@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-import ConfigParser, optparse, os, sys, tempita, subprocess
+import ConfigParser, optparse, os, sys, subprocess
+
+from sitegen.pyratemp import Template
 
 
 BASEDIR = os.path.realpath(os.path.dirname(__file__))
@@ -138,7 +140,8 @@ def deploy_templates( templates, options ):
             create_dir( curdir )
             for filename in files:
                 f = open(os.path.join(root, filename))
-                s = tempita.sub( f.read(), **options[ 'Main' ] )
+                t = Template( f.read() )
+                s = t(**options[ 'Main' ])
                 create_file(os.path.join(curdir, filename), s)
 
         # Parse hook

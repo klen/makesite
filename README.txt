@@ -1,8 +1,8 @@
 ..   -*- mode: rst -*-
 
-#################
-virtualenvwrapper
-#################
+#######
+sitegen
+#######
 
 Simple script for make site structure.
 

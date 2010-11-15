@@ -1,5 +1,10 @@
 # sitegen changelog
 
+## 2010-11-13 0.1
+
+* Change template engine from tempita to pyratemp
+
+
 ## 2010-11-13 0.09
 
 * Drop -l options

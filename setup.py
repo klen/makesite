@@ -36,8 +36,6 @@ setup(name='sitegen',
 
     scripts=['sitegenwrapper.sh'],
 
-    install_requires = ['tempita', 'virtualenv'],
-
     packages=find_packages(),
     package_data = { '': package_data, },
 
