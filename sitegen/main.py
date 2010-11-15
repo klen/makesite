@@ -139,8 +139,7 @@ def deploy_templates( templates, options ):
             options[ 'Main' ][ 'curdir' ] = curdir
             create_dir( curdir )
             for filename in files:
-                f = open(os.path.join(root, filename))
-                t = Template( f.read() )
+                t = Template(filename=os.path.join( root, filename ))
                 s = t(**options[ 'Main' ])
                 create_file(os.path.join(curdir, filename), s)
 
