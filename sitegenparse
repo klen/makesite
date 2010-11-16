@@ -1,0 +1,43 @@
+#!/bin/sh
+
+if [ $# -ne 2 ]; then
+    echo "Usage: sitegenparse.sh PROJECT_BRANCH_PATH ACTION"
+    exit 0
+fi
+
+PROJECT_DIR=$1
+ACTION=$2
+TEMPLATE_FILE=$PROJECT_DIR/.sitegen
+SERVICE_DIR=$PROJECT_DIR/service
+
+_verify_project_dir () {
+    if [ ! -f $TEMPLATE_FILE ]; then
+        echo "Error: sitegen project '$PROJECT_DIR' not found."
+        return 1
+    fi
+}
+
+_get_project_templates () {
+    cat $TEMPLATE_FILE
+}
+
+_run_hooks () {
+    template=$1
+    action=$2
+    for f in $SERVICE_DIR/${template}_$action.sh
+    do
+        if [ -f $f ]; then
+            echo "Run $f\n----------" && sh $f && echo
+        fi
+    done
+}
+
+_action () {
+    _verify_project_dir || return 1
+    for t in $(_get_project_templates)
+    do
+        _run_hooks $t $ACTION
+    done
+}
+
+_action

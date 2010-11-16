@@ -1,4 +1,4 @@
-BRANCH=$!branch!$
-PROJECT_NAME=$!project_name!$
-DEPLOY_DIR=$!deploy_dir!$
+BRANCH={{ branch }}
+PROJECT={{ project }}
+DEPLOY_DIR={{ deploy_dir }}
 

@@ -1,58 +1,37 @@
 #!/usr/bin/env python
 import ConfigParser, optparse, os, sys, subprocess
 
-from sitegen.pyratemp import Template
+from sitegen.template import Template
 
 
 BASEDIR = os.path.realpath(os.path.dirname(__file__))
 BASECONFIG = os.path.join( BASEDIR, 'sitegen.ini' )
 HOMECONFIG = os.path.join( os.getenv( 'HOME' ), '.sitegen.ini' )
-SITEGEN_PATH_VAR = 'SITES_HOME'
+SITEGENPATH_VARNAME = 'SITES_HOME'
 
 
-def do_work(project_name, options):
-    """ Parse options and do work.
-    """
-    project_options = load_config( options )
-    project_options[ 'Main' ].update(dict(
-        project_name = project_name,
-        branch = options.branch,
-        deploy_dir = os.path.join( os.path.abspath( options.path ), project_name, options.branch ),
-        basedir = BASEDIR,
-    ))
-    project_options[ 'Main' ][ 'repo' ] = options.repo if options.repo else project_options[ 'Main' ][ 'repo' ]
-    project_options[ 'Main' ][ 'template' ] = options.template if options.template else project_options[ 'Main' ][ 'template' ]
-    for key, value in project_options[ 'Main' ].items():
-        project_options[ 'Main' ][ key ] = value % project_options[ 'Main' ]
-
-    for item in project_options[ 'Main' ].items():
-        print " %s=%s" % item
-
-    deploy( project_options )
-
-
-def deploy(options):
+def deploy(project, options):
     """ Deploy project.
     """
+    options = load_config( project, options )
     main_options = options[ 'Main' ]
-    print  "Deploy branch '%(branch)s' in project '%(project_name)s'\n" % main_options
+
+    for item in main_options.items():
+        print " %s=%s" % item
+
+    print  "Deploy branch '%(branch)s' in project '%(project)s'\n" % main_options
 
     template_string = main_options[ 'template' ]
     templates = template_string.split(',')
-    for template in templates:
-        if not options[ 'Templates' ].has_key( template ):
-            print  "Template '%s' not found in project_options." % template
-            sys.exit()
-
-    templates = parse_templates(templates, options)
+    templates = parse_templates(templates, options[ 'Templates' ])
     create_dir( main_options[ 'deploy_dir' ] )
-    subprocess.call('sudo sh -c "echo -n %s > %s/.sitegen"' % ( template_string, main_options[ 'deploy_dir' ]), shell=True)
+    subprocess.call('sudo sh -c "echo -n %s > %s/.sitegen"' % ( ' '.join(templates), main_options[ 'deploy_dir' ]), shell=True)
     deploy_templates(templates, options)
-
+    subprocess.check_call('sitegenparse %(deploy_dir)s install' % main_options, shell=True)
     subprocess.check_call('sudo chown -R %(user)s:%(group)s %(deploy_dir)s' % main_options, shell=True)
 
 
-def load_config(options):
+def load_config(project, options):
     """ Load config files.
     """
     project_root = os.path.join(os.path.abspath( options.path ), 'sitegen.ini')
@@ -67,33 +46,54 @@ def load_config(options):
                 result[ section ] = dict()
             result[ section ].update(dict(parser.items( section )))
 
-    if not result or not result.has_key( 'Main' ) or not result.has_key( 'Templates' ):
+    try:
+        result[ 'Main' ].update(dict(
+            project = project,
+            branch = options.branch,
+            deploy_dir = os.path.join( os.path.abspath( options.path ), project, options.branch ),
+            basedir = BASEDIR,
+        ))
+
+    except KeyError:
         print "Not found currect config files."
         sys.exit()
+
+    result[ 'Main' ][ 'repo' ] = options.repo if options.repo else result[ 'Main' ][ 'repo' ]
+    result[ 'Main' ][ 'template' ] = options.template if options.template else result[ 'Main' ][ 'template' ]
+
+    for key, value in result[ 'Main' ].items():
+        result[ 'Main' ][ key ] = value % result[ 'Main' ]
+
+    for key, value in result[ 'Templates' ].items():
+        result[ 'Templates' ][ key ] = value % result[ 'Main' ]
 
     return result
 
 
-def parse_templates( templates, options ):
+def parse_templates( templates, template_options ):
     """ Parse templates hierarchy.
     """
     result = []
     for template in templates:
-        template_options = options[ template ] if options.has_key( template ) else dict()
-        if template_options.has_key( 'include' ):
-            result += parse_templates( [ template_options[ 'include' ] ], options )
+        try:
+            f = open( os.path.join( template_options[ template ], 'include' ), 'r' )
+            child = f.read().strip()
+            result += parse_templates( child.split(' '), template_options )
+        except KeyError:
+            print  "Template '%s' not found in sitegen templates." % template
+            sys.exit()
+        except IOError:
+            pass
+        result.append( template )
 
-        result += [ ( template, template_options ) ]
     return result
 
 
 def deploy_templates( templates, options ):
     """ Deploy templates.
     """
-    for template_name, template_options in templates:
+    for template_name in templates:
         path = options[ 'Templates' ][ template_name ] % options[ 'Main' ]
-
-        # Deploy template
         print "Deploy template '%s'" % template_name
         for item in os.walk(path):
             root = item[0]
@@ -102,16 +102,11 @@ def deploy_templates( templates, options ):
             options[ 'Main' ][ 'curdir' ] = curdir
             create_dir( curdir )
             for filename in files:
+                if filename == 'include':
+                    continue
                 t = Template(filename=os.path.join( root, filename ))
                 s = t(**options[ 'Main' ])
-                create_file(os.path.join(curdir, filename), s)
-
-        # Parse hook
-        if template_options.has_key( 'install_hook' ):
-            hook = template_options[ 'install_hook' ]
-            path = os.path.join( options[ 'Main' ][ 'deploy_dir' ], hook )
-            print "Start hook script '%s'" % path
-            subprocess.call('sh %s' % path, shell=True)
+                create_file(os.path.join( curdir, filename ), s)
 
         sys.stdout.write('\n')
 
@@ -141,7 +136,7 @@ def create_file( path, s ):
 def main():
     """ Parse arguments and do work.
     """
-    path = os.environ[ SITEGEN_PATH_VAR ] if os.environ.has_key( SITEGEN_PATH_VAR ) else None
+    path = os.environ[ SITEGENPATH_VARNAME ] if os.environ.has_key( SITEGENPATH_VARNAME ) else None
     p = optparse.OptionParser(
             usage="%prog -p PATH [-l] PROJECTNAME [-b BRANCH] [-t TEMPLATE] [-c CONFIG] [-r REPOSITORY]",
             description= "'sitegen' is simple script to create base project dirs and config files. ")
@@ -157,5 +152,5 @@ def main():
         p.print_help(sys.stdout)
 
     else:
-        do_work( args[0], options )
+        deploy( args[0], options )
 

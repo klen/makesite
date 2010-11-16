@@ -1,12 +1,12 @@
-REPO=$!repo!$
-BRANCH=$!branch!$
-PROJECT_NAME=$!project_name!$
-DEPLOY_DIR=$!deploy_dir!$
-USER=$!user!$
-GROUP=$!group!$
+REPO={{ repo }}
+BRANCH={{ branch }}
+PROJECT={{ project }}
+DEPLOY_DIR={{ deploy_dir }}
+USER={{ user }}
+GROUP={{ group }}
 
 RANDOM_NAME=`</dev/urandom tr -dc A-Za-z0-9 | head -c 8`
-GIT_PROJECT_TEMP_DIR=/tmp/$BRANCH.$PROJECT_NAME-$RANDOM_NAME
+GIT_PROJECT_TEMP_DIR=/tmp/$BRANCH.$PROJECT-$RANDOM_NAME
 GIT_PROJECT_DIR=$DEPLOY_DIR/source
 
 echo "Copy $GIT_PROJECT_DIR to $GIT_PROJECT_TEMP_DIR."

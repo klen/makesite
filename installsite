@@ -1,0 +1,2 @@
+#!/bin/sh
+sitegenparse $1 install

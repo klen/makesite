@@ -1,3 +1,0 @@
-Drop install_hooks options. This hooks must be run automatic.
-
-Drop custom template options, include writen into template dir.

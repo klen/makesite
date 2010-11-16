@@ -8,8 +8,8 @@ from sitegen import VERSION, PROJECT
 
 package_data = [ '*.ini' ]
 for root, dirs, files in os.walk( 'sitegen/templates' ):
-    if files:
-        package_data.append(root[8:] + '/*')
+    for filename in files:
+        package_data.append("%s/%s" % ( root[8:], filename ))
 
 setup(name='sitegen',
     project=PROJECT,
@@ -34,7 +34,7 @@ setup(name='sitegen',
 
     platforms=('Any'),
 
-    scripts=['sitegenwrapper.sh', 'updatesite', 'removesite'],
+    scripts=['sitegenwrapper.sh', 'installsite', 'updatesite', 'removesite', 'sitegenparse'],
 
     packages=find_packages(),
     package_data = { '': package_data, },

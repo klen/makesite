@@ -90,6 +90,7 @@ if [ -n "$BASH" ] ; then
 
     complete -o default -o nospace -F _sites cdsite
     complete -o default -o nospace -F _sites envsite
+    complete -o default -o nospace -F _sites installsite
     complete -o default -o nospace -F _sites updatesite
     complete -o default -o nospace -F _sites removesite
 fi

@@ -1,11 +1,11 @@
-BRANCH=$!branch!$
-PROJECT_NAME=$!project_name!$
-DEPLOY_DIR=$!deploy_dir!$
-NGINX_CONF_PATH=$!nginx_conf_path!$
-SUPERVISOR_CONF_PATH=$!supervisor_conf_path!$
+BRANCH={{ branch }}
+PROJECT={{ project }}
+DEPLOY_DIR={{ deploy_dir }}
+NGINX_CONF_PATH={{ nginx_conf_path }}
+SUPERVISOR_CONF_PATH={{ supervisor_conf_path }}
 
-NGINX_CONF=$NGINX_CONF_PATH/$BRANCH.$PROJECT_NAME.conf
-SUPERVISOR_CONF=$SUPERVISOR_CONF_PATH/$BRANCH.$PROJECT_NAME.conf
+NGINX_CONF=$NGINX_CONF_PATH/$BRANCH.$PROJECT.conf
+SUPERVISOR_CONF=$SUPERVISOR_CONF_PATH/$BRANCH.$PROJECT.conf
 VIRTUALENV=$DEPLOY_DIR/.virtualenv
 
 echo '  * Create virtualenv:'$VIRTUALENV

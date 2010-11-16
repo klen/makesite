@@ -1,28 +1,2 @@
 #!/bin/sh
-
-if [ $# -ne 1 ]; then
-    echo "Usage: updatesite PROJECT_BRANCH_PATH"
-    exit 0
-fi
-
-PROJECT_DIR=$1
-SERVICE_DIR=$PROJECT_DIR/service
-
-_verify_project_dir () {
-    if [ ! -d $PROJECT_DIR ]; then
-        echo "Error: project dir '$PROJECT_DIR' not found."
-        return 1
-    fi
-}
-
-_update () {
-    echo "Update project '$PROJECT_DIR'."
-    for f in $SERVICE_DIR/*_update.sh
-    do
-        echo "Run '$f'"
-        sh $f
-    done
-}
-
-_verify_project_dir || return 1
-_update
+sitegenparse $1 update
