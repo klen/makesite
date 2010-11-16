@@ -1,3 +1,5 @@
+echo "Restart services"
+
 if [ -f /etc/init.d/nginx ]; then
     sudo /etc/init.d/nginx stop
     sudo /etc/init.d/nginx start

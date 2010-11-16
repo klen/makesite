@@ -31,7 +31,8 @@ sitegen_find_sites () {
 sitegen_showsite () {
     typeset site=$1
     echo -n $site | \sed 's|^/sites/||' | \sed 's|/|:|'
-    if [ -d $site ]; then
+
+    if [ -f $site/.sitegen ]; then
         echo -n ' [' && cat $site/.sitegen && echo ']'
     fi
 }
@@ -90,5 +91,6 @@ if [ -n "$BASH" ] ; then
     complete -o default -o nospace -F _sites cdsite
     complete -o default -o nospace -F _sites envsite
     complete -o default -o nospace -F _sites updatesite
+    complete -o default -o nospace -F _sites removesite
 fi
 

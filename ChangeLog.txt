@@ -6,6 +6,8 @@
 
 * Change bash complete
 
+* Add removesite, drop options -d
+
 
 ## 2010-11-16 0.1.2
 

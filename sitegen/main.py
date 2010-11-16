@@ -28,11 +28,7 @@ def do_work(project_name, options):
     for item in project_options[ 'Main' ].items():
         print " %s=%s" % item
 
-    if options.delete:
-        remove( project_options )
-
-    else:
-        deploy( project_options )
+    deploy( project_options )
 
 
 def deploy(options):
@@ -54,39 +50,6 @@ def deploy(options):
     deploy_templates(templates, options)
 
     subprocess.check_call('sudo chown -R %(user)s:%(group)s %(deploy_dir)s' % main_options, shell=True)
-
-
-def remove( options ):
-    """ Remove project.
-    """
-    main_options = options[ 'Main' ]
-    question = raw_input("\n  Delete branch '%(branch)s' on project '%(project_name)s' [Y/n]?" % main_options)
-    if question and not question.lower().startswith('y'):
-        sys.exit()
-
-    print "Remove branch '%(branch)s' in project '%(project_name)s'" % main_options
-
-    if not os.path.exists( main_options[ 'deploy_dir' ] ):
-        print "Directory '%s' is not exists." % main_options[ 'deploy_dir' ]
-        sys.exit()
-
-    try:
-        template_string = open(os.path.join( main_options[ 'deploy_dir' ], '.sitegen', 'r' )).read()
-    except IOError:
-        template_string = options[ 'Main' ][ 'template' ]
-
-    templates = template_string.split(',')
-    templates = parse_templates(templates, options)
-    remove_templates(templates, options)
-
-    print "Remove directory '%s'" % main_options[ 'deploy_dir' ]
-    subprocess.check_call(" sudo rm -rf %s" % main_options[ 'deploy_dir' ], shell=True)
-
-    # If project dir empty remove it
-    project_dir = os.path.dirname( main_options[ 'deploy_dir' ] )
-    if not os.listdir(project_dir):
-        print "Remove directory '%s'" % project_dir
-        subprocess.check_call(" sudo rm -rf %s" % project_dir, shell=True)
 
 
 def load_config(options):
@@ -153,22 +116,6 @@ def deploy_templates( templates, options ):
         sys.stdout.write('\n')
 
 
-def remove_templates( templates, options ):
-    """ Remove templates.
-    """
-    for template_name, template_options in templates:
-        # Remove template
-        print "Remove template '%s'" % template_name
-        if template_options.has_key( 'remove_hook' ):
-            hook = template_options[ 'remove_hook' ]
-            path = os.path.join( options[ 'Main' ][ 'deploy_dir' ], hook )
-            print "Start hook script '%s'" % path
-            subprocess.call('sh %s' % path, shell=True)
-
-        sys.stdout.write('\n')
-
-
-
 def create_dir(path):
     """ Create directory.
     """
@@ -203,7 +150,6 @@ def main():
     p.add_option('-t', '--template', dest='template', help='Config templates.')
     p.add_option('-c', '--config', dest='config', help='Config file.')
     p.add_option('-r', '--repo', dest='repo', help='CVS repository.')
-    p.add_option('-d', '--delete', dest='delete', help='Delete project.', action="store_true")
 
     options, args = p.parse_args()
 
