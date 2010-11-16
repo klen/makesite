@@ -34,7 +34,7 @@ setup(name='sitegen',
 
     platforms=('Any'),
 
-    scripts=['sitegenwrapper.sh'],
+    scripts=['sitegenwrapper.sh', 'sitegenupdate.sh'],
 
     packages=find_packages(),
     package_data = { '': package_data, },
