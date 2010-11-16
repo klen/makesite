@@ -6,8 +6,7 @@ GIT_GROUP={{ group }}
 GIT_PROJECT_DIR={{ git_project_dir }}
 GIT_PROJECT_TEMP_DIR=/tmp/$BRANCH.$PROJECT-$USER
 
-# Check git
-type -P git &>/dev/null || { echo "I require git but it's not installed.  Aborting." >&2; exit 1; }
+if ! which git >/dev/null; then echo "  * I require git but it's not installed."; exit 0; fi
 
 echo "Copy $GIT_PROJECT_DIR to $GIT_PROJECT_TEMP_DIR."
 rm -rf $GIT_PROJECT_TEMP_DIR

@@ -8,4 +8,4 @@ remove:
 	sudo pip uninstall sitegen
 
 _install:
-	sudo python setup.py install
+	sudo pip install -U .

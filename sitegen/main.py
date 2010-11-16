@@ -58,7 +58,7 @@ def load_config(project, options):
 
     for opts in ( result[ 'Main' ], result[ 'Templates' ] ):
         for key, value in opts.items():
-            opts[ key ] = Template.sub( value, **opts )
+            opts[ key ] = Template.sub( value, **result[ 'Main' ] )
 
     return result[ 'Main' ], result[ 'Templates' ]
 

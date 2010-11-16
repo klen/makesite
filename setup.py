@@ -3,7 +3,7 @@ import os
 
 from setuptools import setup, find_packages
 
-from sitegen import VERSION, PROJECT
+from sitegen import VERSION
 
 
 package_data = [ '*.ini' ]
@@ -12,7 +12,6 @@ for root, dirs, files in os.walk( 'sitegen/templates' ):
         package_data.append("%s/%s" % ( root[8:], filename ))
 
 setup(name='sitegen',
-    project=PROJECT,
     version=VERSION,
 
     description='sitegen: generate site structure',

@@ -3,30 +3,27 @@ NGINX_CONFPATH={{ nginx_confpath }}
 SUPERVISOR_CONFPATH={{ supervisor_confpath }}
 VIRTUALENVDIR={{ virtualenvdir }}
 
-_create_virtualenv () {
-    # Check virtualenv
-    type -P virtualenv &>/dev/null || { echo "I require virtualenv but it's not installed.  Aborting." >&2; return 1; }
+_require () {
+    echo "  * I require $1 but it's not installed."
+}
 
+if which virtualenv >/dev/null; then
     echo '  * Create virtualenv:'$VIRTUALENVDIR
     sudo virtualenv --no-site-packages $VIRTUALENVDIR
-}
+else
+    _require virtualenv 
+fi
 
-_link_to_nginx () {
-    # Check nginx
-    type -P nginx &>/dev/null || { echo "I require nginx but it's not installed.  Aborting." >&2; return 1; }
-    
+if which nginx >/dev/null; then
     echo '  * Create link to nginx conf:'$NGINX_CONFPATH
     sudo ln -sf $DEPLOY_DIR/deploy/nginx.conf $NGINX_CONFPATH
-}
+else
+    _require nginx 
+fi
 
-_link_to_supervisor () {
-    # Check supervisord
-    type -P supervisord &>/dev/null || { echo "I require supervisord but it's not installed.  Aborting." >&2; return 1; }
-    
+if which supervisord >/dev/null; then
     echo '  * Create link to supervisor conf:'$SUPERVISOR_CONF
     sudo ln -sf $DEPLOY_DIR/deploy/supervisor.conf $SUPERVISOR_CONF 
-}
-
-_create_virtualenv
-_link_to_nginx
-_link_to_supervisor
+else
+    _require supervisor 
+fi
