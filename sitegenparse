@@ -24,7 +24,7 @@ _get_project_templates () {
 _run_hooks () {
     template=$1
     action=$2
-    for f in $SERVICE_DIR/${template}_$action.sh
+    for f in $SERVICE_DIR/${template}_*$action*.sh
     do
         if [ -f $f ]; then
             echo "Run $f\n----------" && sh $f && echo

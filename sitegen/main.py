@@ -8,26 +8,22 @@ BASEDIR = os.path.realpath(os.path.dirname(__file__))
 BASECONFIG = os.path.join( BASEDIR, 'sitegen.ini' )
 HOMECONFIG = os.path.join( os.getenv( 'HOME' ), '.sitegen.ini' )
 SITEGENPATH_VARNAME = 'SITES_HOME'
+SITEGEN_INCLUDE_FILENAME = '.sitegen'
 
 
 def deploy(project, options):
     """ Deploy project.
     """
-    options = load_config( project, options )
-    main_options = options[ 'Main' ]
-
-    for item in main_options.items():
-        print " %s=%s" % item
-
+    main_options, template_options = load_config( project, options )
+    print '\n '.join( [ "%s=%s" % item for item in main_options.items() ])
     print  "Deploy branch '%(branch)s' in project '%(project)s'\n" % main_options
 
-    template_string = main_options[ 'template' ]
-    templates = template_string.split(',')
-    templates = parse_templates(templates, options[ 'Templates' ])
+    templates = parse_templates(main_options[ 'template' ].split(','), template_options)
+
     create_dir( main_options[ 'deploy_dir' ] )
     subprocess.call('sudo sh -c "echo -n %s > %s/.sitegen"' % ( ' '.join(templates), main_options[ 'deploy_dir' ]), shell=True)
-    deploy_templates(templates, options)
-    subprocess.check_call('sitegenparse %(deploy_dir)s install' % main_options, shell=True)
+
+    deploy_templates(templates, main_options, template_options)
     subprocess.check_call('sudo chown -R %(user)s:%(group)s %(deploy_dir)s' % main_options, shell=True)
 
 
@@ -52,22 +48,19 @@ def load_config(project, options):
             branch = options.branch,
             deploy_dir = os.path.join( os.path.abspath( options.path ), project, options.branch ),
             basedir = BASEDIR,
+            repo = options.repo if options.repo else result[ 'Main' ][ 'repo' ],
+            template = options.template if options.template else result[ 'Main' ][ 'template' ]
         ))
 
     except KeyError:
         print "Not found currect config files."
         sys.exit()
 
-    result[ 'Main' ][ 'repo' ] = options.repo if options.repo else result[ 'Main' ][ 'repo' ]
-    result[ 'Main' ][ 'template' ] = options.template if options.template else result[ 'Main' ][ 'template' ]
+    for opts in ( result[ 'Main' ], result[ 'Templates' ] ):
+        for key, value in opts.items():
+            opts[ key ] = Template.sub( value, **opts )
 
-    for key, value in result[ 'Main' ].items():
-        result[ 'Main' ][ key ] = value % result[ 'Main' ]
-
-    for key, value in result[ 'Templates' ].items():
-        result[ 'Templates' ][ key ] = value % result[ 'Main' ]
-
-    return result
+    return result[ 'Main' ], result[ 'Templates' ]
 
 
 def parse_templates( templates, template_options ):
@@ -76,7 +69,7 @@ def parse_templates( templates, template_options ):
     result = []
     for template in templates:
         try:
-            f = open( os.path.join( template_options[ template ], 'include' ), 'r' )
+            f = open( os.path.join( template_options[ template ], SITEGEN_INCLUDE_FILENAME ), 'r' )
             child = f.read().strip()
             result += parse_templates( child.split(' '), template_options )
         except KeyError:
@@ -89,26 +82,27 @@ def parse_templates( templates, template_options ):
     return result
 
 
-def deploy_templates( templates, options ):
+def deploy_templates( templates, main_options, template_options ):
     """ Deploy templates.
     """
     for template_name in templates:
-        path = options[ 'Templates' ][ template_name ] % options[ 'Main' ]
-        print "Deploy template '%s'" % template_name
+        path = template_options[ template_name ]
+        print "Deploy template '%s'." % template_name
         for item in os.walk(path):
             root = item[0]
             files = item[2]
-            curdir = os.path.join( options[ 'Main' ][ 'deploy_dir' ], root[ len( path ) + 1: ] )
-            options[ 'Main' ][ 'curdir' ] = curdir
+            curdir = os.path.join( main_options[ 'deploy_dir' ], root[ len( path ) + 1: ] )
+            main_options[ 'curdir' ] = curdir
             create_dir( curdir )
             for filename in files:
-                if filename == 'include':
+                if filename == SITEGEN_INCLUDE_FILENAME:
                     continue
                 t = Template(filename=os.path.join( root, filename ))
-                s = t(**options[ 'Main' ])
-                create_file(os.path.join( curdir, filename ), s)
+                create_file(os.path.join( curdir, filename ), t(**main_options))
 
         sys.stdout.write('\n')
+
+    subprocess.check_call('sitegenparse %(deploy_dir)s install' % main_options, shell=True)
 
 
 def create_dir(path):

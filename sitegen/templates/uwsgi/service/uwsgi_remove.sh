@@ -1,13 +1,12 @@
-BRANCH={{ branch }}
-PROJECT={{ project }}
-NGINX_CONF_PATH={{ nginx_conf_path }}
-SUPERVISOR_CONF_PATH={{ supervisor_conf_path }}
+NGINX_CONFPATH={{ nginx_confpath }}
+SUPERVISOR_CONFPATH={{ supervisor_confpath }}
 
-NGINX_CONF=$NGINX_CONF_PATH/$BRANCH.$PROJECT.conf
-SUPERVISOR_CONF=$SUPERVISOR_CONF_PATH/$BRANCH.$PROJECT.conf
+if [ -f $NGINX_CONFPATH ]; then
+    echo '  * Remove link to nginx conf:'$NGINX_CONFPATH
+    sudo rm -rf $NGINX_CONFPATH
+fi
 
-echo '  * Remove link to nginx conf:'$NGINX_CONF
-sudo rm -rf $NGINX_CONF
-
-echo '  * Remove link to supervisor conf:'$SUPERVISOR_CONF
-sudo rm -rf $SUPERVISOR_CONF
+if [ -f $SUPERVISOR_CONFPATH ]; then
+    echo '  * Remove link to supervisor conf:'$SUPERVISOR_CONFPATH
+    sudo rm -rf $SUPERVISOR_CONFPATH
+fi
