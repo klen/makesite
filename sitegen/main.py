@@ -143,7 +143,7 @@ def main():
     """
     path = os.environ[ SITEGEN_PATH_VAR ] if os.environ.has_key( SITEGEN_PATH_VAR ) else None
     p = optparse.OptionParser(
-            usage="%prog -p PATH [-l] PROJECTNAME [-b BRANCH] [-t TEMPLATE] [-c CONFIG] [-r REPOSITORY] [-d]",
+            usage="%prog -p PATH [-l] PROJECTNAME [-b BRANCH] [-t TEMPLATE] [-c CONFIG] [-r REPOSITORY]",
             description= "'sitegen' is simple script to create base project dirs and config files. ")
     p.add_option('-p', '--path', dest='path', default=path, help='Path to project dir. Required option.')
     p.add_option('-b', '--branch', dest='branch', help='Project branch.', default='master')
