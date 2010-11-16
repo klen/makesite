@@ -13,9 +13,9 @@ sitegen_verify_sites_home () {
 # Verify that the requested site exists
 sitegen_verify_site () {
     typeset project="$1"
-    if [ ! -d "$SITES_HOME/$project" ]
+    if [ ! -d "$project" ]
     then
-       echo "ERROR: Project '$project' does not exist." >&2
+       echo "ERROR: Project '`sitegen_showsite $project`' does not exist." >&2
        return 1
     fi
     return 0
@@ -24,16 +24,16 @@ sitegen_verify_site () {
 # List of available sites.
 sitegen_find_sites () {
     sitegen_verify_sites_home || return 1
-    ( cd "$SITES_HOME"; for f in */*/.sitegen; do echo $f; done ) 2>/dev/null | \sed 's|/\.sitegen||' | \sed 's|\*/\*||' | \sort
+    ( for f in $SITES_HOME/*/*/.sitegen; do echo $f; done ) 2>/dev/null | \sed 's|/\.sitegen||' | \sed 's|\*/\*||' | \sort
 }
 
 # Show site info
 sitegen_showsite () {
     typeset site=$1
-    echo -n $site | \sed 's|/|:|'
-    echo -n ' ['
-    cat $SITES_HOME/$site/.sitegen
-    echo ']'
+    echo -n $site | \sed 's|^/sites/||' | \sed 's|/|:|'
+    if [ -d $site ]; then
+        echo -n ' [' && cat $site/.sitegen && echo ']'
+    fi
 }
 
 lssites () {
@@ -49,8 +49,13 @@ lssites () {
 cdsite () {
     typeset project="$1"
     sitegen_verify_sites_home || return 1
-    sitegen_verify_site $project || return 1
-    cd $SITES_HOME/$project
+    echo $project
+    if [ "$project" != "" ]; then
+        sitegen_verify_site $project || return 1
+        cd $project
+    else
+        cd $SITES_HOME
+    fi
 }
 
 envsite () {
@@ -58,10 +63,10 @@ envsite () {
     sitegen_verify_sites_home || return 1
     sitegen_verify_site $project || return 1
 
-    activate=$SITES_HOME/$project/.virtualenv/bin/activate
+    activate=$project/.virtualenv/bin/activate
     if [ ! -f "$activate" ]
     then
-        echo "ERROR: Project '$SITES_HOME/$project' does not contain an activate script." >&2
+        echo "ERROR: Project '`sitegen_showsite $project`' does not contain an activate script." >&2
         return 1
     fi
 
@@ -84,5 +89,6 @@ if [ -n "$BASH" ] ; then
 
     complete -o default -o nospace -F _sites cdsite
     complete -o default -o nospace -F _sites envsite
+    complete -o default -o nospace -F _sites updatesite
 fi
 
