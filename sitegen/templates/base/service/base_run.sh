@@ -1,9 +1,13 @@
 VIRTUALENVDIR={{ virtualenvdir }}
 VIRTUALENVDIR_ACTIVATE=$VIRTUALENVDIR/bin/activate
+USER={{ user }}
 COMMAND=$@
 
-# Activate virtialenv
+PATH="{{ project_sourcedir }}:$PATH"
+
 if [ -f $VIRTUALENVDIR_ACTIVATE ]; then
-    PATH="{{ project_sourcedir }}:$VIRTUALENVDIR/bin:$PATH"
-    $COMMAND
+    PATH="$VIRTUALENVDIR/bin:$PATH"
 fi
+
+export PATH
+sudo -u $USER $COMMAND

@@ -1,1 +1,1 @@
-uwsgi git pip cron
+uwsgi git pip cron django
