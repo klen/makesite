@@ -21,13 +21,15 @@ def parse_crontab( content ):
 def main():
     try:
         content = open(CRON_PROJECTFILE).readlines()
-        print "Parse project crontab file: '%s'." % CRON_PROJECTFILE
         output = open(CRON_OUTPUTFILE, 'w')
+        print "  * Parse project crontab file: '%s'." % CRON_PROJECTFILE
     except IOError:
         return
 
-    print "Write to crontab file: '%s'" % CRON_OUTPUTFILE
-    output.writelines(list(parse_crontab(content)))
+    content = '\n'.join(list(parse_crontab(content)))
+    print "  * Write to crontab file: '%s'" % CRON_OUTPUTFILE
+    print content
+    output.write(content)
 
 
 if __name__ == '__main__':

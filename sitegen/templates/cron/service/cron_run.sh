@@ -4,8 +4,6 @@ COMMAND=$@
 
 # Activate virtialenv
 if [ -f $VIRTUALENVDIR_ACTIVATE ]; then
-    PATH="{{ project_sourcedir }}:$VIRTUALENVDIR:$PATH"
-    export PATH
-    echo "Run $COMMAND"
+    PATH="{{ project_sourcedir }}:$VIRTUALENVDIR/bin:$PATH"
     $COMMAND
 fi
