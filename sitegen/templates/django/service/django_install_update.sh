@@ -10,5 +10,5 @@ if [ -f $BASERUN ]; then
 
     echo "Run django collect static files."
     sudo chown $USER:$GROUP $STATIC_DIR
-    sudo -u $USER sh $BASERUN manage.py collectstatic --settings=$DJANGO_SETTINGS
+    sudo -u $USER sh $BASERUN manage.py collectstatic --noinput --settings=$DJANGO_SETTINGS
 fi
