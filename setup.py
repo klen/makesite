@@ -41,7 +41,7 @@ setup(
 
     platforms=('Any'),
 
-    scripts=['sitegenwrapper.sh', 'installsite', 'updatesite', 'removesite', 'sitegenparse'],
+    scripts=map( lambda x: 'scripts/' + x, os.listdir( 'scripts' )),
 
     packages=find_packages(),
     package_data = { '': package_data, },
