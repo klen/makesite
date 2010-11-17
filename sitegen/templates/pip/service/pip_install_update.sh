@@ -1,4 +1,4 @@
-VIRTUALENVDIR={{ virtualenv  }}
+VIRTUALENVDIR={{ virtualenvdir  }}
 PIP_PROJECTFILE={{ pip_projectfile }}
 
 # Check pip

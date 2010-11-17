@@ -22,8 +22,8 @@ else
 fi
 
 if which supervisord >/dev/null; then
-    echo '  * Create link to supervisor conf:'$SUPERVISOR_CONF
-    sudo ln -sf $DEPLOY_DIR/deploy/supervisor.conf $SUPERVISOR_CONF 
+    echo '  * Create link to supervisor conf:'$SUPERVISOR_CONFPATH
+    sudo ln -sf $DEPLOY_DIR/deploy/supervisor.conf $SUPERVISOR_CONFPATH
 else
     _require supervisor 
 fi
