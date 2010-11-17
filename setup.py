@@ -3,7 +3,7 @@ import os
 
 from setuptools import setup, find_packages
 
-from sitegen import VERSION
+from sitegen import VERSION, PROJECT
 
 
 package_data = [ '*.ini' ]
@@ -11,17 +11,25 @@ for root, dirs, files in os.walk( 'sitegen/templates' ):
     for filename in files:
         package_data.append("%s/%s" % ( root[8:], filename ))
 
-setup(name='sitegen',
-    version=VERSION,
 
-    description='sitegen: generate site structure',
-    long_description="Simple script for make site structure.",
+def read( fname ):
+    try:
+        return open( os.path.join( os.path.dirname( __file__ ), fname ) ).read()
+    except IOError:
+        return ''
+
+
+setup(
+    name=PROJECT,
+    version=VERSION,
+    description=read( 'DESCRIPTION' ),
+    long_description=read( 'README.rst' ),
+    license='Public domain',
 
     author='Kirill Klenov',
     author_email='horneds@gmail.com',
 
     url=' http://github.com/klen',
-
     classifiers=[
         'Development Status :: 4 - Beta',
         'Programming Language :: Python',
