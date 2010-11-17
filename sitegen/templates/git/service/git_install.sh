@@ -3,7 +3,7 @@ BRANCH={{ branch }}
 PROJECT={{ project }}
 DEPLOY_DIR={{ deploy_dir }}
 
-GIT_PROJECT_DIR={{ git_project_dir }}
+PROJECT_SOURCEDIR={{ project_sourcedir }}
 GIT_PROJECT_TEMP_DIR=/tmp/$BRANCH.$PROJECT-$USER
 
 if ! which git >/dev/null; then echo "  * I require git but it's not installed."; exit 0; fi
@@ -18,6 +18,6 @@ git push origin origin:refs/heads/$BRANCH
 git fetch origin
 git checkout --track origin/$BRANCH
 
-echo "Move $GIT_PROJECT_TEMP_DIR to $GIT_PROJECT_DIR"
-sudo mv $GIT_PROJECT_TEMP_DIR $GIT_PROJECT_DIR
+echo "Move $GIT_PROJECT_TEMP_DIR to $PROJECT_SOURCEDIR"
+sudo mv $GIT_PROJECT_TEMP_DIR $PROJECT_SOURCEDIR
 

@@ -15,7 +15,7 @@ def deploy(project, options):
     """ Deploy project.
     """
     main_options, template_options = load_config( project, options )
-    print '\n '.join( [ "%s=%s" % item for item in main_options.items() ])
+    print ' \n'.join( [ "%s=%s" % item for item in main_options.items() ])
     print  "Deploy branch '%(branch)s' in project '%(project)s'\n" % main_options
 
     templates = parse_templates(main_options[ 'template' ].split(','), template_options)
