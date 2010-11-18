@@ -1,7 +1,17 @@
 #!/bin/sh
 
-if [ $# -ne 2 ]; then
-    echo "Usage: sitegenparse.sh PROJECT_BRANCH_PATH ACTION"
+if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    echo "Usage: $1site PROJECT_BRANCH_PATH\n"
+    echo -n "'$1site' part of sitegen scripts. "
+    case $1 in
+        install )
+            echo "Activate install hooks for target project." ;;
+        remove )
+            echo "Activate remove hooks for target project and remove project dir." ;;
+        update )
+            echo "Activate update hooks for target project." ;;
+    esac
+    sitegen --version
     exit 0
 fi
 
