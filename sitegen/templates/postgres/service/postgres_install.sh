@@ -6,6 +6,13 @@ DBNAME={{ project.replace('-', '_') }}_master
 DBUSER={{ project.replace('-', '_') }}
 DBPASSWORD={{ project.replace('-', '_') }}
 
+if ! which psql >/dev/null; then echo "  * I require psql but it's not installed."; exit 0; fi
+
+if [ -z "$PGUSER" ] || [ -z $PGHOST ] || [ -z $PGPASSWORD ]; then
+    # pass
+    exit 0
+fi
+
 export PGUSER=$PGUSER
 export PGPASSWORD=$PGPASSWORD
 export PGHOST=$PGHOST
@@ -19,12 +26,12 @@ _check_db_exist () {
 }
 
 _create_role () {
-    echo "  * Create user $DBUSER."
+    echo "  * Create user '$DBUSER'."
     $PSQL -c "$SQL_CREATE_ROLE"
 }
 
 _create_db () {
-    echo "  * Create database $DBNAME."
+    echo "  * Create database '$DBNAME'."
     $PSQL -c "$SQL_CREATE_DB"
 }
 
@@ -32,5 +39,5 @@ if [ $(_check_db_exist) -eq 0 ]; then
     _create_role
     _create_db
 else
-    echo "  * Database $DBNAME exist."
+    echo "  * Database '$DBNAME' exist."
 fi
