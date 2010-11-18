@@ -28,7 +28,6 @@ def main():
 
     content = '\n'.join(list(parse_crontab(content)))
     print "  * Write to crontab file: '%s'" % CRON_OUTPUTFILE
-    print content
     output.write(content)
 
 
