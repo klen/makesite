@@ -5,10 +5,11 @@ from sitegen.template import Template
 
 
 BASEDIR = os.path.realpath(os.path.dirname(__file__))
+BASETEMPLATESDIR = os.path.join( BASEDIR, 'templates' )
 BASECONFIG = os.path.join( BASEDIR, 'sitegen.ini' )
 HOMECONFIG = os.path.join( os.getenv( 'HOME' ), '.sitegen.ini' )
 SITEGENPATH_VARNAME = 'SITES_HOME'
-SITEGEN_INCLUDE_FILENAME = '.sitegen'
+SITEGEN_TEMPLATES_FILE = '.sitegen'
 
 
 def deploy(project, options):
@@ -21,9 +22,11 @@ def deploy(project, options):
     templates = parse_templates(main_options[ 'template' ].split(','), template_options)
 
     create_dir( main_options[ 'deploy_dir' ] )
-    subprocess.call('sudo sh -c "echo -n %s > %s/.sitegen"' % ( ' '.join(templates), main_options[ 'deploy_dir' ]), shell=True)
+    create_file(
+        os.path.join( main_options[ 'deploy_dir' ], SITEGEN_TEMPLATES_FILE ),
+        ' '.join([t[0] for t in templates]), )
 
-    deploy_templates(templates, main_options, template_options)
+    deploy_templates(templates, main_options)
     subprocess.check_call('sudo chown -R %(user)s:%(group)s %(deploy_dir)s' % main_options, shell=True)
 
 
@@ -63,31 +66,34 @@ def load_config(project, options):
     return result[ 'Main' ], result[ 'Templates' ]
 
 
-def parse_templates( templates, template_options ):
+def parse_templates( templates, options ):
     """ Parse templates hierarchy.
     """
     result = []
+
     for template in templates:
-        try:
-            f = open( os.path.join( template_options[ template ], SITEGEN_INCLUDE_FILENAME ), 'r' )
-            child = f.read().strip()
-            result += parse_templates( child.split(' '), template_options )
-        except KeyError:
-            print  "Template '%s' not found in sitegen templates." % template
+        path = options[ template ] if options.has_key( template ) else os.path.join( BASETEMPLATESDIR, template )
+        if not os.path.exists( path ):
+            print  "Template '%s' not found in base and custom templates." % template
             sys.exit()
+
+        try:
+            f = open( os.path.join( path, SITEGEN_TEMPLATES_FILE ), 'r' )
+            child = f.read().strip()
+            result += parse_templates( child.split(' '), options )
         except IOError:
             pass
-        result.append( template )
+
+        result.append(( template, path ))
 
     return result
 
 
-def deploy_templates( templates, main_options, template_options ):
+def deploy_templates( templates, main_options ):
     """ Deploy templates.
     """
-    for template_name in templates:
-        path = template_options[ template_name ]
-        print "Deploy template '%s'." % template_name
+    for template, path in templates:
+        print "Deploy template '%s'." % template
         for item in os.walk(path):
             root = item[0]
             files = item[2]
@@ -95,7 +101,7 @@ def deploy_templates( templates, main_options, template_options ):
             main_options[ 'curdir' ] = curdir
             create_dir( curdir )
             for filename in files:
-                if filename == SITEGEN_INCLUDE_FILENAME:
+                if filename == SITEGEN_TEMPLATES_FILE:
                     continue
                 t = Template(filename=os.path.join( root, filename ))
                 create_file(os.path.join( curdir, filename ), t(**main_options))
