@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import ConfigParser, optparse, os, sys, subprocess
 
+from sitegen import VERSION
 from sitegen.template import Template
 
 
@@ -139,6 +140,7 @@ def main():
     path = os.environ[ SITEGENPATH_VARNAME ] if os.environ.has_key( SITEGENPATH_VARNAME ) else None
     p = optparse.OptionParser(
             usage="%prog -p PATH PROJECTNAME [-b BRANCH] [-t TEMPLATE] [-c CONFIG] [-r REPOSITORY]",
+            version='%prog ' + VERSION,
             description= "'sitegen' is simple script to create base project dirs and config files. ")
     p.add_option('-p', '--path', dest='path', default=path, help='Path to project dir. Required option.')
     p.add_option('-b', '--branch', dest='branch', help='Project branch.', default='master')
