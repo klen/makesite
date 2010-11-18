@@ -1,5 +1,11 @@
 #!/bin/sh
 
+if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    echo "Usage: removesite PROJECT_BRANCH_PATH"
+    echo "\n'removesite' part of sitegen scripts. Activate remove hooks for target project and remove project dir."
+    exit 0
+fi
+
 sitegenparse $1 remove
 
 PROJECT_DIR=$1
