@@ -10,7 +10,7 @@ sudo chown $USER:$GROUP $STATIC_DIR
 for d in $STATIC_DIR/*/css; do
     if [ -d $d ]; then
         echo "  * Compass compile dir: '$d'."
-        compass --css_dir=$d --sass_dir=$d
+        compass compile --css-dir=$d --sass-dir=$d
     fi
 done
 
@@ -18,6 +18,8 @@ for d in $STATIC_DIR/*/sass; do
     if [ -d $d ]; then
         echo "  * Compass compile dir: '$d'."
         dirname=$(dirname $d)/css
-        compass --css_dir=$dirname --sass_dir=$d
+        compass compile --css-dir=$dirname --sass-dir=$d
     fi
 done
+
+sudo find $STATIC_DIR -name "*.scss" -delete
