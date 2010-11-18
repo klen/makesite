@@ -1,2 +1,8 @@
 #!/bin/sh
+if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    echo "Usage: installsite PROJECT_BRANCH_PATH"
+    echo "\n'installsite' part of sitegen scripts. Activate install hooks for target project."
+    exit 0
+fi
+
 sitegenparse $1 install

@@ -6,7 +6,7 @@ DJANGO_SETTINGS={{ django_settings }}
 
 if [ -f $BASERUN ]; then
     echo "Run django migration."
-    sudo -u $USER sh $BASERUN manage.py migrate --settings=$DJANGO_SETTINGS
+    sudo -u $USER sh $BASERUN manage.py migrate --noinput --settings=$DJANGO_SETTINGS
 
     echo "Run django collect static files."
     sudo chown $USER:$GROUP $STATIC_DIR
