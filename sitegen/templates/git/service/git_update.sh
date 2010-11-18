@@ -12,7 +12,7 @@ echo "Copy $PROJECT_SOURCEDIR to $GIT_PROJECT_TEMP_DIR."
 rm -rf $GIT_PROJECT_TEMP_DIR
 cp -r $PROJECT_SOURCEDIR $GIT_PROJECT_TEMP_DIR
 
-cd $GIT_PROJECT_TEMP_DIR && git reset --hard HEAD && git pull
+cd $GIT_PROJECT_TEMP_DIR && git reset --hard HEAD && git clean -df && git pull
 
 echo "Move $GIT_PROJECT_TEMP_DIR to $PROJECT_SOURCEDIR"
 sudo rm -rf $PROJECT_SOURCEDIR
