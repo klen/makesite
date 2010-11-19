@@ -20,6 +20,14 @@ ACTION=$2
 TEMPLATE_FILE=$PROJECT_DIR/.sitegen
 SERVICE_DIR=$PROJECT_DIR/service
 
+_deactivate_ve () {
+    ve="$VIRTUAL_ENV"
+    if [ ! -z $ve  ]; then
+        echo "Deactivate VIRTUALENV.\n----------"
+        deactivate
+    fi
+}
+
 _verify_project_dir () {
     if [ ! -f $TEMPLATE_FILE ]; then
         echo "Error: sitegen project '$PROJECT_DIR' not found."
@@ -44,6 +52,7 @@ _run_hooks () {
 
 _action () {
     _verify_project_dir || return 1
+    _deactivate_ve
     for t in $(_get_project_templates)
     do
         _run_hooks $t $ACTION

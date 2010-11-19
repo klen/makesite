@@ -7,9 +7,17 @@ _require () {
     echo "  * I require $1 but it's not installed."
 }
 
+_pylint_to_ve () {
+    if [ -d /usr/lib/pymodules/python2.6/pylint ] && [ -d /usr/lib/pymodules/python2.6/logilab ]; then
+        ln -sf /usr/lib/pymodules/python2.6/pylint $VIRTUALENVDIR/lib
+        ln -sf /usr/lib/pymodules/python2.6/logilab $VIRTUALENVDIR/lib
+    fi
+}
+
 if which virtualenv >/dev/null; then
     echo '  * Create virtualenv:'$VIRTUALENVDIR
     sudo virtualenv --no-site-packages $VIRTUALENVDIR
+    _pylint_to_ve
 else
     _require virtualenv 
 fi
