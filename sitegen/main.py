@@ -16,6 +16,10 @@ SITEGEN_TEMPLATES_FILE = '.sitegen'
 def deploy(project, options):
     """ Deploy project.
     """
+    if os.environ.has_key( 'VIRTUAL_ENV' ):
+        print "Please deactivate virtualenv '%s' first." % os.environ[ 'VIRTUAL_ENV' ]
+        sys.exit()
+
     main_options, template_options = load_config( project, options )
     print ' \n'.join( [ "%s=%s" % item for item in main_options.items() ])
     print  "Deploy branch '%(branch)s' in project '%(project)s'\n" % main_options
