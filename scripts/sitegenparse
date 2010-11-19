@@ -20,11 +20,12 @@ ACTION=$2
 TEMPLATE_FILE=$PROJECT_DIR/.sitegen
 SERVICE_DIR=$PROJECT_DIR/service
 
+# FIXME
 _deactivate_ve () {
     ve="$VIRTUAL_ENV"
     if [ ! -z $ve  ]; then
-        echo "Deactivate VIRTUALENV.\n----------"
-        deactivate
+        echo "Please deactivate VIRTUALENV '$VIRTUAL_ENV' first."
+        exit 1
     fi
 }
 
