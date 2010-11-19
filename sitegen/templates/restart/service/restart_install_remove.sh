@@ -7,11 +7,11 @@ if [ -f /etc/init.d/nginx ]; then
 fi
 
 if [ -f /etc/init.d/supervisor ]; then
-    echo 'Restart supervisord'
-    if [ ! -z "$(pgrep supervisord)" ]; then
-        sudo supervisorctl shutdown
+    while [ ! -z "$(pgrep supervisord)" ]; do
+        echo '  * Stop supervisord'
         sudo /etc/init.d/supervisor stop
         sleep 2
-    fi
+    done
+    echo '  * Start supervisord'
     sudo supervisord
 fi
