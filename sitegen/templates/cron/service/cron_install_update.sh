@@ -8,7 +8,7 @@ if ! which cron >/dev/null; then echo "  * I require cron but it's not installed
 if [ -f $CRON_PROJECTFILE ]; then
     sudo python $CRON_PARSESCRIPT
     if [ -f $CRON_GENERATEFILE ]; then
-        echo '  * Create link to generate project crontabfile:'$CRON_GENERATEFILE
+        echo "  * Create link to generate project crontabfile:"$CRON_GENERATEFILE
         sudo ln -sf $CRON_GENERATEFILE $CRON_CRONFILE
     fi
 fi
