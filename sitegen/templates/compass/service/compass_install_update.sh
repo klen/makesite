@@ -1,7 +1,4 @@
-STATIC_DIR=/sites/intranet/twimonitor/static
-COMPASSPARAM_IMAGES_DIR=images
-COMPASSPARAM_JAVASCRIPT_DIR=javascript
-COMPASSPARAM_HTTP_PATH="/"
+STATIC_DIR={{ deploy_dir }}/static
 
 if ! which compass >/dev/null; then echo "  * I require compass but it's not installed."; exit 0; fi
 
