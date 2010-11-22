@@ -58,14 +58,11 @@ _action () {
     _deactivate_ve
 
     echo "Run $ACTION for '$PROJECT_DIR'\n=========="
-    if [ ! -f $SERVICE_DIR/*_*$ACTION*.sh ]; then
-        echo "  * Not found $ACTION hooks."
-    else
-        for t in $(_get_project_templates)
-        do
-            _run_hooks $t $ACTION
-        done
-    fi
+    for t in $(_get_project_templates)
+    do
+        _run_hooks $t $ACTION
+    done
 }
 
 _action
+

@@ -7,7 +7,7 @@ for f in $(find $STATIC_DIR -name '*.scss'); do
     dir=$(dirname $f)
     if [ ! "$olddir" = "$dir" ]; then
         olddir=$dir
-        echo "  * Compass compile dir: '%s'" % $dir
+        echo "  * Compass compile dir: '$dir'"
         sudo compass compile --css-dir=$dir --sass-dir=$dir
     fi
 done
