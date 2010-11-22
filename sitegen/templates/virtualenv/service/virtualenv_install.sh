@@ -1,23 +1,34 @@
 VIRTUALENVDIR={{ virtualenvdir }}
 PIP_PROJECTFILE={{ pip_projectfile }}
-PYTHONPREFIX=python2.6
+PYTHON_PREFIX={{ python_prefix }}
 
 # Check virtualenv
 if ! which virtualenv >/dev/null; then echo "  * I require virtualenv but it's not installed."; exit 0; fi
 
 _psycopg_to_ve () {
-    psycopg_path=/usr/lib/$PYTHONPREFIX/dist-packages/psycopg2
-    mx_path=/usr/lib/$PYTHONPREFIX/dist-packages/mx
-    if [ -d $psycopg_path ]; then
-        echo "  * Create links to psycopg in virtualenv."
-        sudo ln -sf $psycopg_path $VIRTUALENVDIR/lib/$PYTHONPREFIX
-        sudo ln -sf $mx_path $VIRTUALENVDIR/lib/$PYTHONPREFIX
+    psycopg=`python -c "import psycopg2 as mod;print mod.__path__[0]"`
+    mx=`python -c "import mx as mod;print mod.__path__[0]"`
+    if [ -d $psycopg ] && [ -d $mx ]; then
+        echo "  * Create links to psycopg and mx in virtualenv."
+        sudo ln -sf $psycopg $VIRTUALENVDIR/lib/$PYTHON_PREFIX
+        sudo ln -sf $mx $VIRTUALENVDIR/lib/$PYTHON_PREFIX
+    fi    
+}
+
+_pylint_to_ve () {
+    pylint=`python -c "import pylint as mod;print mod.__path__[0]"`
+    logilab=`python -c "import logilab as mod;print mod.__path__[0]"`
+    if [ -d $pylint ] && [ -d $logilab ]; then
+        echo "  * Create links to pylint and logilab in virtualenv."
+        sudo ln -sf $pylint $VIRTUALENVDIR/lib/$PYTHON_PREFIX
+        sudo ln -sf $logilab $VIRTUALENVDIR/lib/$PYTHON_PREFIX
     fi    
 }
 
 echo '  * Create virtualenv:'$VIRTUALENVDIR
 sudo virtualenv --no-site-packages $VIRTUALENVDIR
 _psycopg_to_ve
+_pylint_to_ve
 
 # Check pip
 if ! which pip >/dev/null; then echo "  * I require pip but it's not installed."; exit 0; fi

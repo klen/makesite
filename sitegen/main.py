@@ -11,6 +11,7 @@ BASECONFIG = os.path.join( BASEDIR, 'sitegen.ini' )
 HOMECONFIG = os.path.join( os.getenv( 'HOME' ), '.sitegen.ini' )
 SITEGENPATH_VARNAME = 'SITES_HOME'
 SITEGEN_TEMPLATES_FILE = '.sitegen'
+PYTHON_PREFIX = 'python' + '.'.join( str(x) for x in sys.version_info[:2] )
 
 
 def deploy(project, options):
@@ -54,6 +55,7 @@ def load_config(project, options):
         result[ 'Main' ].update(dict(
             project = project,
             branch = options.branch,
+            python_prefix = PYTHON_PREFIX,
             deploy_dir = os.path.join( os.path.abspath( options.path ), project, options.branch ),
             basedir = BASEDIR,
             repo = options.repo if options.repo else result[ 'Main' ][ 'repo' ],
