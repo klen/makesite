@@ -18,7 +18,7 @@ Add this lines to your shell startup file .bashrc, .profile, etc)
 
 ::
     if [ -f /usr/local/bin/sitegenwrapper.sh ]; then
-        export SITES_HOME=<path to your sites home>
+        export SITES_HOME=PATH_TO_YOUR_SITES_HOME
         source /usr/local/bin/sitegenwrapper.sh
     fi
 
