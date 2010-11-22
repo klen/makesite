@@ -108,5 +108,6 @@ if [ -n "$BASH" ] ; then
     complete -o default -o nospace -F _sites installsite
     complete -o default -o nospace -F _sites updatesite
     complete -o default -o nospace -F _sites removesite
+    complete -o default -o nospace -F _sites testsite
 fi
 

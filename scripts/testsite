@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sitegenparse $1 test
