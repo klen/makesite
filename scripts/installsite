@@ -1,3 +1,7 @@
 #!/bin/sh
 
 sitegenparse $1 install
+
+if [ "$2" = "--autotest" ]; then
+    testsite $1 --auto
+fi

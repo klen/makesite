@@ -5,11 +5,11 @@ if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     echo -n "'$1site' part of sitegen scripts. "
     case $1 in
         install )
-            echo "Activate install hooks for target project." ;;
+            echo "Activate install hooks for target project. Run tests for master branch wich option --autotest." ;;
         remove )
             echo "Activate remove hooks for target project and remove project dir." ;;
         update )
-            echo "Activate update hooks for target project. Enable tests for master branch wich option --autotest" ;;
+            echo "Activate update hooks for target project. Run tests for master branch wich option --autotest." ;;
         test )
             echo "Activate test hooks for target project. Enable test only master branch wich option --auto." ;;
     esac
