@@ -9,9 +9,9 @@ if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
         remove )
             echo "Activate remove hooks for target project and remove project dir." ;;
         update )
-            echo "Activate update hooks for target project." ;;
+            echo "Activate update hooks for target project. Enable tests for master branch wich option --autotest" ;;
         test )
-            echo "Activate test hooks for target project." ;;
+            echo "Activate test hooks for target project. Enable test only master branch wich option --auto." ;;
     esac
     sitegen --version
     exit 0
@@ -56,6 +56,8 @@ _run_hooks () {
 _action () {
     _verify_project_dir || return 1
     _deactivate_ve
+
+    echo "Run $ACTION for '$PROJECT_DIR'\n=========="
     if [ ! -f $SERVICE_DIR/*_*$ACTION*.sh ]; then
         echo "  * Not found $ACTION hooks."
     else

@@ -1,2 +1,1 @@
-Fix supervisor reboot
-Add cron log
+Repaire help for testsite
