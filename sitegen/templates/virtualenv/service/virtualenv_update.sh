@@ -13,5 +13,6 @@ if [ -f $PIP_PROJECTFILE ]; then
         echo "  * Changes not found."
     else
         sudo pip -E $VIRTUALENVDIR install -r $PIP_PROJECTFILE
+        sudo rm -rf $VIRTUALENVDIR/.reqsum && sudo sh -c "md5sum $PIP_PROJECTFILE > $VIRTUALENVDIR/.reqsum"
     fi
 fi

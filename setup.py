@@ -6,10 +6,12 @@ from setuptools import setup, find_packages
 from sitegen import VERSION, PROJECT
 
 
-package_data = [ '*.ini' ]
-for root, dirs, files in os.walk( 'sitegen/templates' ):
+MODULE_NAME = 'sitegen'
+PACKAGE_DATA = [ '*.ini' ]
+
+for root, dirs, files in os.walk( os.path.join( MODULE_NAME, 'templates' ) ):
     for filename in files:
-        package_data.append("%s/%s" % ( root[8:], filename ))
+        PACKAGE_DATA.append("%s/%s" % ( root[len(MODULE_NAME)+1:], filename ))
 
 
 def read( fname ):
@@ -44,7 +46,7 @@ setup(
     scripts=map( lambda x: 'scripts/' + x, os.listdir( 'scripts' )),
 
     packages=find_packages(),
-    package_data = { '': package_data, },
+    package_data = { '': PACKAGE_DATA, },
 
     entry_points={
         'console_scripts': [
