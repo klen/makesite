@@ -73,13 +73,12 @@ cdsite () {
 }
 
 logsite () {
-    typeset project="$1"
+    typeset log="$1"
     _sitegen_verify_sites_home || return 1
-    if [ "$project" != "" ]; then
-        _sitegen_verify_site $project || return 1
-        cat $project
+    if [ -f "$log" ]; then
+        tailf -n 50 $log
     else
-        echo "Not found log '$project'."
+        echo "Not found logfile '$log'."
     fi
 }
 
