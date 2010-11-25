@@ -64,12 +64,22 @@ statsites () {
 cdsite () {
     typeset project="$1"
     _sitegen_verify_sites_home || return 1
-    echo $project
     if [ "$project" != "" ]; then
         _sitegen_verify_site $project || return 1
         cd $project
     else
         cd $SITES_HOME
+    fi
+}
+
+logsite () {
+    typeset project="$1"
+    _sitegen_verify_sites_home || return 1
+    if [ "$project" != "" ]; then
+        _sitegen_verify_site $project || return 1
+        cat $project
+    else
+        echo "Not found log '$project'."
     fi
 }
 
@@ -109,5 +119,6 @@ if [ -n "$BASH" ] ; then
     complete -o default -o nospace -F _sites updatesite
     complete -o default -o nospace -F _sites removesite
     complete -o default -o nospace -F _sites testsite
+    complete -o default -o nospace -F _sites logsite
 fi
 
