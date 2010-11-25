@@ -21,7 +21,7 @@ def read( fname ):
         return ''
 
 
-setup(
+META_DATA = dict(
     name=PROJECT,
     version=VERSION,
     description=read( 'DESCRIPTION' ),
@@ -54,3 +54,8 @@ setup(
         ]
     },
 )
+
+
+if __name__ == "__main__":
+    setup( **META_DATA )
+
