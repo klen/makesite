@@ -14,6 +14,10 @@ Sitegen should be installed using pip: ::
 
     pip install git+git://github.com/klen/sitegen.git
 
+
+Setup
+------
+
 The variable SITES_HOME tell sitegen where to place your sites.
 Add this lines to your shell startup file .bashrc, .profile, etc) ::
 
