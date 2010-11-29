@@ -107,6 +107,12 @@ envsite () {
     fi
 
     source "$activate"
+
+    # Path virtualenv bash promt
+    if [ ! -z "$_OLD_VIRTUAL_PS1" ]; then
+        PS1=(`_sitename $project`)$_OLD_VIRTUAL_PS1
+        export PS1
+    fi
 }
 
 if [ -n "$BASH" ] ; then
