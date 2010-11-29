@@ -6,7 +6,7 @@ TEST_FILE={{ deploy_dir }}/source/.tests
 
 if [ "$BRANCH" = "master" ] || [ "$BRANCH" = "test" ]; then
     if [ -f $BASE_RUN ] && [ -f $TEST_FILE ]; then
-        command=$(cat $TEST_FILE)
+        command=`cat $TEST_FILE`
         echo "  * Run tests for $PROJECT."
         sudo -u $USER sh $BASERUN $command
     fi

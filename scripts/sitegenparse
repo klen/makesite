@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# Sitegen show error
+_sitegen_error () {
+    echo "ERROR: "$1 1>&2
+    exit 1
+}
+
+# Check usage
 if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     echo "Usage: $1site PROJECT_BRANCH_PATH\n"
     echo -n "'$1site' part of sitegen scripts. "
@@ -19,50 +26,23 @@ fi
 
 PROJECT_DIR=$1
 ACTION=$2
+
 TEMPLATE_FILE=$PROJECT_DIR/.sitegen
 SERVICE_DIR=$PROJECT_DIR/service
 
-# FIXME
-_deactivate_ve () {
-    ve="$VIRTUAL_ENV"
-    if [ ! -z $ve  ]; then
-        echo "Please deactivate VIRTUALENV '$VIRTUAL_ENV' first."
-        exit 1
-    fi
-}
+if [ ! -z "$VIRTUAL_ENV" ]; then
+    _sitegen_error "Please deactivate VIRTUALENV '$VIRTUAL_ENV' first."
+fi
 
-_verify_project_dir () {
-    if [ ! -f $TEMPLATE_FILE ]; then
-        echo "Error: sitegen project '$PROJECT_DIR' not found."
-        return 1
-    fi
-}
+if [ ! -f $TEMPLATE_FILE ]; then
+    _sitegen_error "Sitegen not found templates in '$PROJECT_DIR'."
+fi
 
-_get_project_templates () {
-    cat $TEMPLATE_FILE
-}
-
-_run_hooks () {
-    template=$1
-    action=$2
-    for f in $SERVICE_DIR/${template}_*$action*.sh
-    do
+echo "Run $ACTION for '$PROJECT_DIR'\n=========="
+for t in `cat $TEMPLATE_FILE`; do
+    for f in $SERVICE_DIR/${t}_*$ACTION*.sh; do
         if [ -f $f ]; then
             echo "Run $f\n----------" && sh $f && echo
         fi
     done
-}
-
-_action () {
-    _verify_project_dir || return 1
-    _deactivate_ve
-
-    echo "Run $ACTION for '$PROJECT_DIR'\n=========="
-    for t in $(_get_project_templates)
-    do
-        _run_hooks $t $ACTION
-    done
-}
-
-_action
-
+done

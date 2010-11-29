@@ -1,10 +1,14 @@
 # -*- mode: shell-script -*-
 
+# Sitegen show error
+_sitegen_error () {
+    echo "ERROR: "$1 1>&2
+}
+
 # Verify that the SITES_HOME directory exists
 _sitegen_verify_sites_home () {
-    if [ ! -d "$SITES_HOME" ]
-    then
-        echo "ERROR: Sitegen sites directory '$SITES_HOME' does not exist.  Create it or set SITES_HOME to an existing directory." >&2
+    if [ ! -d "$SITES_HOME" ]; then
+        _sitegen_error "Sitegen sites directory '$SITES_HOME' does not exist.  Create it or set SITES_HOME to an existing directory."
         return 1
     fi
     return 0
@@ -12,11 +16,9 @@ _sitegen_verify_sites_home () {
 
 # Verify that the requested site exists
 _sitegen_verify_site () {
-    typeset project="$1"
-    if [ ! -d "$project" ]
-    then
-       echo "ERROR: Project '`_sitegen_showsite $project`' does not exist." >&2
-       return 1
+    if [ ! -d "$1" ]; then
+        _sitegen_error "Project '$1' not found."
+        return 1
     fi
     return 0
 }
@@ -24,74 +26,76 @@ _sitegen_verify_site () {
 # List of available sites.
 _sitegen_find_sites () {
     _sitegen_verify_sites_home || return 1
-    ( for f in $SITES_HOME/*/*/.sitegen; do echo $f; done ) 2>/dev/null | \sed 's|/\.sitegen||' | \sed 's|\*/\*||' | \sort
+    find $SITES_HOME -name '.sitegen' | xargs dirname | sort
 }
 
 # Get sitename
 _sitename () {
-    typeset site=$1
-    echo -n $site | \sed 's|^/sites/||' | \sed 's|/|.|'
+    if [ -z "$1" ]; then
+        return 1
+    fi
+    branch=`basename $1`
+    project=`dirname $1 | xargs basename`
+    echo -n $project"."$branch
 }
 
 # Show site info
-_sitegen_showsite () {
-    typeset site=$1
-    _sitename $site
-    if [ -f $site/.sitegen ]; then
-        echo -n ' [' && cat $site/.sitegen && echo ']'
+_sitegen_showinfo () {
+    _sitename $1
+    if [ -f "$1/.sitegen" ]; then
+        echo -n ' [' && cat "$1/.sitegen" && echo ']'
     fi
 }
 
 # List sites
 lssites () {
-    _sitegen_verify_sites_home || return 1
-
-    for site in $(_sitegen_find_sites)
-    do
-        _sitegen_showsite "$site"
+    sites=`_sitegen_find_sites`
+    for site in $sites; do
+        _sitegen_showinfo "$site"
     done
 }
 
 # View status sites
 statsites () {
-    for site in $(_sitegen_find_sites)
-    do
+    sites=`_sitegen_find_sites`
+    for site in $sites; do
         sudo supervisorctl status `_sitename $site`
     done
 }
 
 # Change dir to site dir
 cdsite () {
-    typeset project="$1"
-    _sitegen_verify_sites_home || return 1
-    if [ "$project" != "" ]; then
+    project="$1"
+    if [ -z "$1" ]; then
+        _sitegen_verify_sites_home || return 1
+        cd $SITES_HOME
+    else
         _sitegen_verify_site $project || return 1
         cd $project
-    else
-        cd $SITES_HOME
     fi
 }
 
+# View site log
 logsite () {
-    typeset log="$1"
     _sitegen_verify_sites_home || return 1
-    if [ -f "$log" ]; then
-        tailf -n 50 $log
+    if [ -f "$1" ]; then
+        tailf -n 50 $1
     else
-        echo "Not found logfile '$log'."
+        _sitegen_error "Not found logfile '$log'."
     fi
 }
 
 # Activate site virtualenv
 envsite () {
-    typeset project="$1"
+    project="$1"
+    activate=$project/.virtualenv/bin/activate
+
     _sitegen_verify_sites_home || return 1
     _sitegen_verify_site $project || return 1
 
-    activate=$project/.virtualenv/bin/activate
     if [ ! -f "$activate" ]
     then
-        echo "ERROR: Project '`_sitegen_showsite $project`' does not contain an activate script." >&2
+        _sitegen_error "Project '`_sitegen_showinfo $project`' does not contain an activate script."
         return 1
     fi
 
@@ -101,7 +105,7 @@ envsite () {
         deactivate
         unset -f deactivate >/dev/null 2>&1
     fi
-    
+
     source "$activate"
 }
 

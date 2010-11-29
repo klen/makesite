@@ -6,7 +6,7 @@ DBNAME={{ project.replace('-', '_') }}_master
 DBUSER={{ project.replace('-', '_') }}
 DBPASSWORD={{ project.replace('-', '_') }}
 
-if ! which psql >/dev/null; then echo "  * I require psql but it's not installed."; exit 0; fi
+which psql 1>/dev/null || { echo "ERROR: * I require psql but it's not installed."; exit 0; }
 
 if [ -z "$PGUSER" ] || [ -z $PGHOST ] || [ -z $PGPASSWORD ]; then
     # pass

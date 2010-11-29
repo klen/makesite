@@ -1,19 +1,15 @@
 #!/bin/sh
 
-sitegenparse $1 remove || exit 1
+sitegenparse $1 remove || exit 0
 
 PROJECT_DIR=$1
 
-_verify_project_dir () {
-    if [ ! -d $PROJECT_DIR ]; then
-        echo "Error: project dir '$PROJECT_DIR' not found."
-        return 1
-    fi
-}
-
-_verify_project_dir || return 1
+if [ ! -d $PROJECT_DIR ]; then
+    echo "ERROR: Project dir '$PROJECT_DIR' not found." 1>&2
+    exit 0
+fi
 sudo rm -rf $PROJECT_DIR
 
-if [ "$SITES_HOME" != "" ] && [ -d $SITES_HOME ]; then
+if [ ! -z "$SITES_HOME" ] && [ -d $SITES_HOME ]; then
     find $SITES_HOME -depth -type d -empty -exec sudo rmdir {} \;
 fi

@@ -3,7 +3,7 @@ PIP_PROJECTFILE={{ pip_projectfile }}
 PYTHON_PREFIX={{ python_prefix }}
 
 # Check virtualenv
-if ! which virtualenv >/dev/null; then echo "  * I require virtualenv but it's not installed."; exit 0; fi
+which virtualenv 1>/dev/null || { echo "ERROR: * I require virtualenv but it's not installed."; exit 0; }
 
 _psycopg_to_ve () {
     psycopg=`python -c "import psycopg2 as mod;print mod.__path__[0]"`
@@ -30,8 +30,7 @@ sudo virtualenv --no-site-packages $VIRTUALENVDIR
 _psycopg_to_ve
 _pylint_to_ve
 
-# Check pip
-if ! which pip >/dev/null; then echo "  * I require pip but it's not installed."; exit 0; fi
+which pip 1>/dev/null || { echo "ERROR: * I require pip but it's not installed."; exit 0; }
 
 if [ -f $PIP_PROJECTFILE ]; then
     echo "Update virtualenv requirements '$PIP_PROJECTFILE'."

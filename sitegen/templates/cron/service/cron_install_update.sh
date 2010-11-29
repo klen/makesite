@@ -3,7 +3,7 @@ CRON_PROJECTFILE={{ cron_projectfile }}
 CRON_PARSESCRIPT={{ deploy_dir }}/service/cron_parse.py
 CRON_GENERATEFILE={{ deploy_dir }}/deploy/{{ project }}.{{ branch }}.cron
 
-if ! which cron >/dev/null; then echo "  * I require cron but it's not installed."; exit 0; fi
+which cron 1>/dev/null || { echo "ERROR: * I require cron but it's not installed."; exit 0; }
 
 if [ -f $CRON_PROJECTFILE ]; then
     sudo python $CRON_PARSESCRIPT
