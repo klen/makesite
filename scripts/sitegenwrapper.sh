@@ -26,7 +26,7 @@ _sitegen_verify_site () {
 # List of available sites.
 _sitegen_find_sites () {
     _sitegen_verify_sites_home || return 1
-    find $SITES_HOME -name '.sitegen' | xargs dirname | sort
+    find $SITES_HOME -name '.sitegen' | sed 's|/\.sitegen||' | sort
 }
 
 # Get sitename
