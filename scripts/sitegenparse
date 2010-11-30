@@ -29,6 +29,7 @@ ACTION=$2
 
 TEMPLATE_FILE=$PROJECT_DIR/.sitegen
 SERVICE_DIR=$PROJECT_DIR/service
+SOURCE_DIR=$PROJECT_DIR/source
 
 if [ ! -z "$VIRTUAL_ENV" ]; then
     _sitegen_error "Please deactivate VIRTUALENV '$VIRTUAL_ENV' first."
@@ -46,3 +47,8 @@ for t in `cat $TEMPLATE_FILE`; do
         fi
     done
 done
+
+# Post install, update action
+if [ -f $SOURCE_DIR/.sitegen_*$ACTION* ]; then
+    echo "Run $f\n----------" && sh $f && echo
+fi
