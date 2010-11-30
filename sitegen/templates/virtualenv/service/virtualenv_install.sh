@@ -25,10 +25,23 @@ _pylint_to_ve () {
     fi    
 }
 
+_ipython_to_ve () {
+    ipython=`python -c "import IPython as mod;print mod.__path__[0]"`
+    ipdb=`python -c "import ipdb as mod;print mod.__path__[0]"`
+    if [ -d $ipdb ] && [ -d $ipython ]; then
+        echo "  * Create links to ipdb and ipython in virtualenv."
+        sudo ln -sf $ipdb $VIRTUALENVDIR/lib/$PYTHON_PREFIX
+        sudo ln -sf $ipython $VIRTUALENVDIR/lib/$PYTHON_PREFIX
+        sudo sh -c "echo '#!/bin/sh\npython -c \"from IPython.ipapi import launch_new_instance; launch_new_instance()\"' > $VIRTUALENVDIR/bin/ipython"
+        sudo chmod +x $VIRTUALENVDIR/bin/ipython
+    fi    
+}
+
 echo '  * Create virtualenv:'$VIRTUALENVDIR
 sudo virtualenv --no-site-packages $VIRTUALENVDIR
 _psycopg_to_ve
 _pylint_to_ve
+_ipython_to_ve
 
 which pip 1>/dev/null || { echo "ERROR: * I require pip but it's not installed."; exit 0; }
 
