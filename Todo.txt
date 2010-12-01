@@ -1,2 +1,1 @@
-Repaire help for testsite and etc
-Not found project stop all other action ( exit )
+Django syncdb multidb support
