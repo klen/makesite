@@ -99,13 +99,6 @@ envsite () {
         return 1
     fi
 
-    type deactivate >/dev/null 2>&1
-    if [ $? -eq 0 ]
-    then
-        deactivate
-        unset -f deactivate >/dev/null 2>&1
-    fi
-
     source "$activate"
 
     # Path virtualenv bash promt
