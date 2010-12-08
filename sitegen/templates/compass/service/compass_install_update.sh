@@ -1,4 +1,4 @@
-STATIC_DIR={{ deploy_dir }}/static
+STATIC_DIR={{ project_staticdir }}
 
 which compass 1>/dev/null || { echo "ERROR: * I require compass but it's not installed."; exit 0; }
 
