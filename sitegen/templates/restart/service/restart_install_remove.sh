@@ -1,3 +1,5 @@
+PROGRAMM_NAME={{ project }}.{{ branch }}
+
 if [ -f /etc/init.d/nginx ]; then
     echo 'Restart nginx'
     if [ ! -z "`pgrep nginx`" ]; then
@@ -7,10 +9,7 @@ if [ -f /etc/init.d/nginx ]; then
 fi
 
 if [ -f /etc/init.d/supervisor ]; then
-    echo 'Restart supervisord'
-    while [ ! -z "`pgrep supervisord`" ]; do
-        sudo /etc/init.d/supervisor stop
-        sleep 2
-    done
-    sudo supervisord
+    echo 'Update supervisord'
+    sudo supervisorctl reread
+    sudo supervisorctl reload $PROGRAMM_NAME
 fi
