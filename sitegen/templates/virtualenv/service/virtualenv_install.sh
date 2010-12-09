@@ -46,7 +46,7 @@ _ipython_to_ve
 which pip 1>/dev/null || { echo "ERROR: * I require pip but it's not installed."; exit 0; }
 
 if [ -f $PIP_PROJECTFILE ]; then
-    echo "Update virtualenv requirements '$PIP_PROJECTFILE'."
+    echo "  * Update virtualenv requirements '$PIP_PROJECTFILE'."
     sudo pip -E $VIRTUALENVDIR install -r $PIP_PROJECTFILE
     sudo rm -rf $VIRTUALENVDIR/.reqsum && sudo sh -c "md5sum $PIP_PROJECTFILE > $VIRTUALENVDIR/.reqsum"
 fi

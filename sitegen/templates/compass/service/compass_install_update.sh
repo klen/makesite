@@ -12,6 +12,7 @@ for f in `find $STATIC_DIR -name '*.scss'`; do
     fi
 done
 
+echo "  * Drop sass files from static."
 sudo chown $USER:$GROUP $STATIC_DIR
 sudo find $STATIC_DIR -name "*.scss" -delete
 sudo find $STATIC_DIR -name "*.rb" -delete

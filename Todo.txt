@@ -1,1 +1,2 @@
 Django syncdb multidb support
+Drop options from unused templates

@@ -8,7 +8,7 @@ from sitegen.template import Template
 BASEDIR = os.path.realpath(os.path.dirname(__file__))
 BASETEMPLATESDIR = os.path.join( BASEDIR, 'templates' )
 BASECONFIG = os.path.join( BASEDIR, 'sitegen.ini' )
-HOMECONFIG = os.path.join( os.getenv( 'HOME' ), '.sitegen.ini' )
+HOMECONFIG = os.path.join( os.getenv('HOME'), '.sitegen.ini' )
 SITEGENPATH_VARNAME = 'SITES_HOME'
 SITEGEN_TEMPLATES_FILE = '.sitegen'
 PYTHON_PREFIX = 'python' + '.'.join( str(x) for x in sys.version_info[:2] )
@@ -17,30 +17,50 @@ PYTHON_PREFIX = 'python' + '.'.join( str(x) for x in sys.version_info[:2] )
 def deploy(project, options):
     """ Deploy project.
     """
-    if os.environ.has_key( 'VIRTUAL_ENV' ):
-        print "Please deactivate virtualenv '%s' first." % os.environ[ 'VIRTUAL_ENV' ]
+    # This not work in virtual env
+    if os.environ.has_key('VIRTUAL_ENV'):
+        print "Please deactivate virtualenv '%s' first." % os.environ['VIRTUAL_ENV']
         sys.exit()
 
-    main_options, template_options = load_config( project, options )
-    print ' \n'.join( [ "%s=%s" % item for item in main_options.items() ])
-    print  "Deploy branch '%(branch)s' in project '%(project)s'\n" % main_options
+    # Compile project options
+    main_options, template_options = load_config(project, options)
 
-    templates = parse_templates(main_options[ 'template' ].split(','), template_options)
+    # Show project options
+    print  "\nDeploy branch '%(branch)s' in project '%(project)s'\n" % main_options
+    keys = main_options.keys()
+    keys.sort()
+    print ' \n'.join(["{0:<20} = {1}".format(key, main_options[key]) for key in keys])
+    print
 
+    # Exit if requested only info
+    if options.info:
+        sys.exit()
+
+    # Get templates
+    templates = parse_templates(main_options['template'].split(','), template_options)
+
+    # Create dir and sitegen templates file
     create_dir( main_options[ 'deploy_dir' ] )
     create_file(
         os.path.join( main_options[ 'deploy_dir' ], SITEGEN_TEMPLATES_FILE ),
         ' '.join([t[0] for t in templates]), )
 
+    # Deploy templates
     deploy_templates(templates, main_options)
+
+    # Make user, group rights
     subprocess.check_call('sudo chown -R %(user)s:%(group)s %(deploy_dir)s' % main_options, shell=True)
 
 
 def load_config(project, options):
     """ Load config files.
     """
-    project_root = os.path.join(os.path.abspath( options.path ), 'sitegen.ini')
-    paths = (BASECONFIG, HOMECONFIG, project_root, options.config or '' )
+
+    # Deploy projects dir
+    projects_dir = os.path.join(os.path.abspath(options.path), 'sitegen.ini')
+
+    # Load config in this order
+    paths = (BASECONFIG, HOMECONFIG, projects_dir, options.config or '' )
     parser = ConfigParser.RawConfigParser()
     result = dict()
 
@@ -51,8 +71,9 @@ def load_config(project, options):
                 result[ section ] = dict()
             result[ section ].update(dict(parser.items( section )))
 
+    # Default params
     try:
-        result[ 'Main' ].update(dict(
+        result['Main'].update(dict(
             project = project,
             branch = options.branch,
             python_prefix = PYTHON_PREFIX,
@@ -66,11 +87,16 @@ def load_config(project, options):
         print "Not found currect config files."
         sys.exit()
 
-    for opts in ( result[ 'Main' ], result[ 'Templates' ] ):
-        for key, value in opts.items():
-            opts[ key ] = Template.sub( value, **result[ 'Main' ] )
+    # Path for install from dir (config file in this dir)
+    if options.config:
+        result['Main']['sourcedir'] = os.path.abspath(os.path.dirname(options.config))
 
-    return result[ 'Main' ], result[ 'Templates' ]
+    # Parse options template
+    for opts in ( result['Main'], result['Templates'] ):
+        for key, value in opts.items():
+            opts[key] = Template.sub( value, **result['Main'] )
+
+    return result['Main'], result['Templates']
 
 
 def parse_templates( templates, options ):
@@ -153,6 +179,7 @@ def main():
     p.add_option('-t', '--template', dest='template', help='Config templates.')
     p.add_option('-c', '--config', dest='config', help='Config file.')
     p.add_option('-r', '--repo', dest='repo', help='CVS repository.')
+    p.add_option('-i', '--info', dest='info', action="store_true", default=False, help='Show compiled project params without action.')
 
     options, args = p.parse_args()
 
