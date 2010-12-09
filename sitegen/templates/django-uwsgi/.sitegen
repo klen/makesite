@@ -1,1 +1,1 @@
-git virtualenv uwsgi cron django
+virtualenv uwsgi cron django
