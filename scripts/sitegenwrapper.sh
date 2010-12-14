@@ -85,6 +85,14 @@ logsite () {
     fi
 }
 
+# View site info
+siteinfo () {
+    _sitegen_verify_sites_home || return 1
+    _sitegen_verify_site $1 || return 1
+    _sitegen_showinfo $1
+    cat $1/.project.ini
+}
+
 # Activate site virtualenv
 envsite () {
     project="$1"
@@ -117,6 +125,7 @@ if [ -n "$BASH" ] ; then
 
     complete -o default -o nospace -F _sites cdsite
     complete -o default -o nospace -F _sites envsite
+    complete -o default -o nospace -F _sites siteinfo
     complete -o default -o nospace -F _sites installsite
     complete -o default -o nospace -F _sites updatesite
     complete -o default -o nospace -F _sites removesite
