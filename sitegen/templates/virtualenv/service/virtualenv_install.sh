@@ -52,13 +52,21 @@ _ipython_to_ve () {
     fi    
 }
 
+_memcache_to_ve () {
+    memcache=`python -c "import memcache as mod;print mod.__file__"`
+    if [ -f $memcache ]; then
+        echo "  * Create links to memcache in virtualenv."
+        sudo ln -sf $memcache $VIRTUALENVDIR/lib/$PYTHON_PREFIX
+    fi    
+    
+}
+
 echo '  * Create virtualenv:'$VIRTUALENVDIR
 sudo virtualenv --no-site-packages $VIRTUALENVDIR
 _psycopg_to_ve
 _pylint_to_ve
 _ipython_to_ve
-
-which pip 1>/dev/null || { echo "ERROR: * I require pip but it's not installed."; exit 0; }
+_memcache_to_ve
 
 if [ -f $PIP_PROJECTFILE ]; then
     echo "  * Update virtualenv requirements '$PIP_PROJECTFILE'."
