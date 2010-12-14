@@ -6,7 +6,16 @@ DEPLOY_DIR={{ deploy_dir }}
 PROJECT_SOURCEDIR={{ project_sourcedir }}
 GIT_PROJECT_TEMP_DIR=/tmp/$BRANCH.$PROJECT-$USER
 
-which git 1>/dev/null || { echo "ERROR: * I require git but it's not installed."; exit 0; }
+which git 1>/dev/null || {
+        echo -e "  * Git not found! Attempting to install..."
+        if [ -f /etc/lsb-release ] ; then
+                sudo apt-get install git
+        elif [ -f /etc/fedora-release ] ; then
+                sudo yum install git
+        elif [ -f /etc/debian_version ] ; then
+                sudo apt-get install git
+        fi
+}
 
 echo "  * Clone $REPO to $GIT_PROJECT_TEMP_DIR."
 rm -rf $GIT_PROJECT_TEMP_DIR

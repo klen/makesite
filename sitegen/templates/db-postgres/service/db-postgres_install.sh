@@ -2,9 +2,9 @@ PGUSER={{ pguser }}
 PGPASSWORD={{ pgpassword }}
 PGHOST={{ pghost }}
 PSQL="psql -At"
-DBNAME={{ project.replace('-', '_') }}_master
-DBUSER={{ project.replace('-', '_') }}
-DBPASSWORD={{ project.replace('-', '_') }}
+DBNAME={{ dbname }}
+DBUSER={{ dbuser }}
+DBPASSWORD={{ dbpassword }}
 
 which psql 1>/dev/null || { echo "ERROR: * I require psql but it's not installed."; exit 0; }
 

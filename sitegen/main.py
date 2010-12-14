@@ -11,6 +11,7 @@ BASECONFIG = os.path.join( BASEDIR, 'sitegen.ini' )
 HOMECONFIG = os.path.join( os.getenv('HOME'), '.sitegen.ini' )
 SITEGENPATH_VARNAME = 'SITES_HOME'
 SITEGEN_TEMPLATES_FILE = '.sitegen'
+SITEGEN_OPTIONS_INIFILE = '.project.ini'
 PYTHON_PREFIX = 'python' + '.'.join( str(x) for x in sys.version_info[:2] )
 
 
@@ -27,9 +28,7 @@ def deploy(project, options):
 
     # Show project options
     print  "\nDeploy branch '%(branch)s' in project '%(project)s'\n" % main_options
-    keys = main_options.keys()
-    keys.sort()
-    print ' \n'.join(["{0:<20} = {1}".format(key, main_options[key]) for key in keys])
+    print get_options(main_options)
     print
 
     # Exit if requested only info
@@ -41,15 +40,20 @@ def deploy(project, options):
 
     # Create dir and sitegen templates file
     create_dir( main_options[ 'deploy_dir' ] )
-    create_file(
-        os.path.join( main_options[ 'deploy_dir' ], SITEGEN_TEMPLATES_FILE ),
-        ' '.join([t[0] for t in templates]), )
+    create_file(os.path.join( main_options[ 'deploy_dir' ], SITEGEN_TEMPLATES_FILE ), ' '.join([t[0] for t in templates]))
+    create_file(os.path.join(main_options['deploy_dir'], SITEGEN_OPTIONS_INIFILE), "[Main]\n%s" % get_options(main_options))
 
     # Deploy templates
     deploy_templates(templates, main_options)
 
     # Make user, group rights
     subprocess.check_call('sudo chown -R %(user)s:%(group)s %(deploy_dir)s' % main_options, shell=True)
+
+
+def get_options(main_options):
+    keys = main_options.keys()
+    keys.sort()
+    return ' \n'.join(["{0:<20} = {1}".format(key, main_options[key]) for key in keys])
 
 
 def load_config(project, options):

@@ -3,7 +3,7 @@ import os
 
 from setuptools import setup, find_packages
 
-from sitegen import VERSION, PROJECT
+from sitegen import VERSION, PROJECT, LICENSE
 
 
 MODULE_NAME = 'sitegen'
@@ -24,9 +24,9 @@ def read( fname ):
 META_DATA = dict(
     name=PROJECT,
     version=VERSION,
+    license=LICENSE,
     description=read( 'DESCRIPTION' ),
     long_description=read( 'README.rst' ),
-    license='GNU LGPL',
 
     author='Kirill Klenov',
     author_email='horneds@gmail.com',
@@ -53,6 +53,8 @@ META_DATA = dict(
             'sitegen = sitegen.main:main',
         ]
     },
+
+    install_requires = [ 'pip' ],
 )
 
 
