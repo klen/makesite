@@ -8,18 +8,6 @@ which virtualenv 1>/dev/null || {
     sudo pip install virtualenv
 }
 
-# Check pylint
-python -c "import pylint" 2>/dev/null || {
-    echo "  * Python pylint not found! Attempting to install..."
-    sudo pip install pylint
-}
-
-# Check ipdb
-python -c "import ipdb" 2>/dev/null || {
-    echo "  * Python ipdb not found! Attempting to install..."
-    sudo pip install ipdb
-}
-
 _psycopg_to_ve () {
     psycopg=`python -c "import psycopg2 as mod;print mod.__path__[0]"`
     mx=`python -c "import mx as mod;print mod.__path__[0]"`
@@ -31,6 +19,12 @@ _psycopg_to_ve () {
 }
 
 _pylint_to_ve () {
+
+    python -c "import pylint" 2>/dev/null || {
+        echo "  * Python pylint not found! Attempting to install..."
+        sudo pip install pylint
+    }
+
     pylint=`python -c "import pylint as mod;print mod.__path__[0]"`
     logilab=`python -c "import logilab as mod;print mod.__path__[0]"`
     if [ -d $pylint ] && [ -d $logilab ]; then
@@ -41,6 +35,12 @@ _pylint_to_ve () {
 }
 
 _ipython_to_ve () {
+
+    python -c "import ipdb" 2>/dev/null || {
+        echo "  * Python ipdb not found! Attempting to install..."
+        sudo pip install ipdb
+    }
+
     ipython=`python -c "import IPython as mod;print mod.__path__[0]"`
     ipdb=`python -c "import ipdb as mod;print mod.__path__[0]"`
     if [ -d $ipdb ] && [ -d $ipython ]; then
@@ -53,6 +53,12 @@ _ipython_to_ve () {
 }
 
 _memcache_to_ve () {
+
+    python -c "import memcache" 2>/dev/null || {
+        echo "  * Python memcache not found! Attempting to install..."
+        sudo pip install python-memcached
+    }
+
     memcache=`python -c "import memcache as mod;print mod.__file__"`
     if [ -f $memcache ]; then
         echo "  * Create links to memcache in virtualenv."
