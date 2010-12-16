@@ -4,19 +4,19 @@ PYTHON_PREFIX={{ python_prefix }}
 
 # Check virtualenv
 which virtualenv 1>/dev/null || {
-    echo -e "  * Virtualenv not found! Attempting to install..."
+    echo "  * Virtualenv not found! Attempting to install..."
     sudo pip install virtualenv
 }
 
 # Check pylint
 python -c "import pylint" 2>/dev/null || {
-    echo -e "  * Python pylint not found! Attempting to install..."
+    echo "  * Python pylint not found! Attempting to install..."
     sudo pip install pylint
 }
 
 # Check ipdb
 python -c "import ipdb" 2>/dev/null || {
-    echo -e "  * Python ipdb not found! Attempting to install..."
+    echo "  * Python ipdb not found! Attempting to install..."
     sudo pip install ipdb
 }
 

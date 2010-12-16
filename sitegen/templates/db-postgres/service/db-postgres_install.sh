@@ -6,7 +6,7 @@ DBNAME={{ dbname }}
 DBUSER={{ dbuser }}
 DBPASSWORD={{ dbpassword }}
 
-which psql 1>/dev/null || { echo "ERROR: * I require psql but it's not installed."; exit 0; }
+which psql 1>/dev/null || { echo "  * ERROR: I require psql but it's not installed."; exit 0; }
 
 if [ -z "$PGUSER" ] || [ -z $PGHOST ] || [ -z $PGPASSWORD ]; then
     # pass

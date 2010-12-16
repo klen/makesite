@@ -3,7 +3,7 @@ NGINX_CONFPATH={{ nginx_confpath }}
 SUPERVISOR_CONFPATH={{ supervisor_confpath }}
 
 which nginx 1>/dev/null || {
-        echo -e "  * NGINX not found! Attempting to install..."
+        echo "  * NGINX not found! Attempting to install..."
         if [ -f /etc/lsb-release ] ; then
                 sudo apt-get install nginx
         elif [ -f /etc/fedora-release ] ; then
@@ -16,7 +16,7 @@ echo '  * Create link to nginx conf:'$NGINX_CONFPATH
 sudo ln -sf $DEPLOY_DIR/deploy/nginx.conf $NGINX_CONFPATH
 
 which supervisord 1>/dev/null || {
-        echo -e "  * SUPERVISOR not found! Attempting to install..."
+        echo "  * SUPERVISOR not found! Attempting to install..."
         if [ -f /etc/lsb-release ] ; then
                 sudo apt-get install supervisor
         elif [ -f /etc/fedora-release ] ; then

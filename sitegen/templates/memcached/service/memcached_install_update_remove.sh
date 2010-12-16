@@ -6,7 +6,7 @@ if [ -z "$MEMCACHED_HOST" ] || [ -z "$MEMCACHED_PORT" ]; then
 fi
 
 python -c "import memcache" 2>/dev/null || {
-    echo -e "  * Python memcache not found! Attempting to install..."
+    echo "  * Python memcache not found! Attempting to install..."
     sudo pip install python-memcached
 }
 

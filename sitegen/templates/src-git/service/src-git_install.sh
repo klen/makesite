@@ -7,7 +7,7 @@ PROJECT_SOURCEDIR={{ project_sourcedir }}
 GIT_PROJECT_TEMP_DIR=/tmp/$BRANCH.$PROJECT-$USER
 
 which git 1>/dev/null || {
-        echo -e "  * Git not found! Attempting to install..."
+        echo "  * Git not found! Attempting to install..."
         if [ -f /etc/lsb-release ] ; then
                 sudo apt-get install git
         elif [ -f /etc/fedora-release ] ; then
