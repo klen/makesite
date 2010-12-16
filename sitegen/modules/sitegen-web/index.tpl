@@ -20,7 +20,7 @@
                 <li class="sites_item">
                     <a class="sites_item_link" href="http://{{ site['domain'] }}:{{ site['port'] }}">{{ site['branch'] }}.{{ site['project'] }}</a>
                     %if site.get('revision'):
-                        <span class="sites_item_revision">[{{ site['revision'] }}]</span>
+                        <span class="sites_item_revision">{{ site['revision'] }}</span>
                     %end
                     <br/>
                     <a class="toggle sites_item_info zeta" href="#" onclick="return { rel: '.sites_item_options_{{ counter }}' }">информация</a>
