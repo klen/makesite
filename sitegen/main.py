@@ -6,12 +6,18 @@ from sitegen.template import Template
 
 
 BASEDIR = os.path.realpath(os.path.dirname(__file__))
-BASETEMPLATESDIR = os.path.join( BASEDIR, 'templates' )
-BASECONFIG = os.path.join( BASEDIR, 'sitegen.ini' )
-HOMECONFIG = os.path.join( os.getenv('HOME'), '.sitegen.ini' )
-SITEGENPATH_VARNAME = 'SITES_HOME'
+BASE_TEMPLATES_DIR = os.path.join(BASEDIR, 'templates')
+MODULES_DIR = os.path.join(BASEDIR, 'modules')
+
+INI_FILENAME = "sitegen.ini"
 SITEGEN_TEMPLATES_FILE = '.sitegen'
 SITEGEN_OPTIONS_INIFILE = '.project.ini'
+
+BASECONFIG = os.path.join( BASEDIR, INI_FILENAME )
+HOMECONFIG = os.path.join( os.getenv('HOME'), INI_FILENAME )
+
+SITEGENPATH_VARNAME = 'SITES_HOME'
+
 PYTHON_PREFIX = 'python' + '.'.join( str(x) for x in sys.version_info[:2] )
 
 
@@ -60,11 +66,19 @@ def load_config(project, options):
     """ Load config files.
     """
 
+    if options.module:
+        config = os.path.join(options.module, INI_FILENAME)
+        if not os.path.exists(config):
+            config = os.path.join(MODULES_DIR, options.module, INI_FILENAME)
+    else:
+        config = options.config or ''
+
+
     # Deploy projects dir
-    projects_dir = os.path.join(os.path.abspath(options.path), 'sitegen.ini')
+    projects_dir = os.path.join(os.path.abspath(options.path), INI_FILENAME)
 
     # Load config in this order
-    paths = (BASECONFIG, HOMECONFIG, projects_dir, options.config or '' )
+    paths = (BASECONFIG, HOMECONFIG, projects_dir, config)
     parser = ConfigParser.RawConfigParser()
     result = dict()
 
@@ -80,6 +94,7 @@ def load_config(project, options):
         result['Main'].update(dict(
             project = project,
             branch = options.branch,
+            sitesdir = options.path,
             python_prefix = PYTHON_PREFIX,
             deploy_dir = os.path.join( os.path.abspath( options.path ), project, options.branch ),
             basedir = BASEDIR,
@@ -92,8 +107,8 @@ def load_config(project, options):
         sys.exit()
 
     # Path for install from dir (config file in this dir)
-    if options.config:
-        result['Main']['sourcedir'] = os.path.abspath(os.path.dirname(options.config))
+    if config:
+        result['Main']['sourcedir'] = os.path.abspath(os.path.dirname(config))
 
     # Parse options template
     for opts in ( result['Main'], result['Templates'] ):
@@ -109,7 +124,7 @@ def parse_templates( templates, options ):
     result = []
 
     for template in templates:
-        path = options[ template ] if options.has_key( template ) else os.path.join( BASETEMPLATESDIR, template )
+        path = options[template] if options.has_key(template) else os.path.join( BASE_TEMPLATES_DIR, template )
         if not os.path.exists( path ):
             print  "Template '%s' not found in base and custom templates." % template
             sys.exit()
@@ -134,7 +149,7 @@ def deploy_templates( templates, main_options ):
         for item in os.walk(path):
             root = item[0]
             files = item[2]
-            curdir = os.path.join( main_options[ 'deploy_dir' ], root[ len( path ) + 1: ] )
+            curdir = os.path.join(main_options['deploy_dir'], root[len( path ) + 1:])
             main_options[ 'curdir' ] = curdir
             create_dir( curdir )
             for filename in files:
@@ -175,7 +190,7 @@ def main():
     """
     path = os.environ[ SITEGENPATH_VARNAME ] if os.environ.has_key( SITEGENPATH_VARNAME ) else None
     p = optparse.OptionParser(
-            usage="%prog -p PATH PROJECTNAME [-b BRANCH] [-t TEMPLATE] [-c CONFIG] [-r REPOSITORY]",
+            usage="%prog -p PATH PROJECTNAME [-b BRANCH] [-t TEMPLATE] [-c CONFIG] [-r REPOSITORY] [-m MODULENAME or MODULEPATH]",
             version='%prog ' + VERSION,
             description= "'sitegen' is simple script to create base project dirs and config files. ")
     p.add_option('-p', '--path', dest='path', default=path, help='Path to project dir. Required option.')
@@ -183,6 +198,7 @@ def main():
     p.add_option('-t', '--template', dest='template', help='Config templates.')
     p.add_option('-c', '--config', dest='config', help='Config file.')
     p.add_option('-r', '--repo', dest='repo', help='CVS repository.')
+    p.add_option('-m', '--module', dest="module", help="Deploy module")
     p.add_option('-i', '--info', dest='info', action="store_true", default=False, help='Show compiled project params without action.')
 
     options, args = p.parse_args()

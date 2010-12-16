@@ -9,9 +9,10 @@ from sitegen import VERSION, PROJECT, LICENSE
 MODULE_NAME = 'sitegen'
 PACKAGE_DATA = [ '*.ini' ]
 
-for root, dirs, files in os.walk( os.path.join( MODULE_NAME, 'templates' ) ):
-    for filename in files:
-        PACKAGE_DATA.append("%s/%s" % ( root[len(MODULE_NAME)+1:], filename ))
+for folder in ['templates', 'modules']:
+    for root, dirs, files in os.walk(os.path.join(MODULE_NAME, folder)):
+        for filename in files:
+            PACKAGE_DATA.append("%s/%s" % ( root[len(MODULE_NAME)+1:], filename ))
 
 
 def read( fname ):

@@ -1,0 +1,21 @@
+.sites {
+    padding: 5px;
+}
+
+    .sites_item {
+        margin-bottom: .5em;
+    }
+
+        .sites_item_link {
+            font-size: 1.5em;
+        }
+
+        .sites_item_info {
+            text-decoration:none;
+            color: #ccc;
+            border-bottom: 1px dashed #ccc;
+        }
+
+        .sites_item_options {
+            display: none;
+        }
