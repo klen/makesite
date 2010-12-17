@@ -34,7 +34,7 @@ def deploy(project, options):
 
     # Get templates
     templates = parse_templates(main_options['template'].split(','), template_options)
-    main_options['template'] = ' '.join(templates)
+    main_options['template'] = ' '.join([t[0] for t in templates ])
 
     # Show project options
     print  "\nDeploy branch '%(branch)s' in project '%(project)s'\n" % main_options
