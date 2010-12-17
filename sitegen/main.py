@@ -32,6 +32,10 @@ def deploy(project, options):
     # Compile project options
     main_options, template_options = load_config(project, options)
 
+    # Get templates
+    templates = parse_templates(main_options['template'].split(','), template_options)
+    main_options['template'] = ' '.join(templates)
+
     # Show project options
     print  "\nDeploy branch '%(branch)s' in project '%(project)s'\n" % main_options
     print get_options(main_options)
@@ -40,9 +44,6 @@ def deploy(project, options):
     # Exit if requested only info
     if options.info:
         sys.exit()
-
-    # Get templates
-    templates = parse_templates(main_options['template'].split(','), template_options)
 
     # Create dir and sitegen templates file
     create_dir( main_options[ 'deploy_dir' ] )
