@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sitegenparse $1 update || exit 0
+makesiteparse $1 update || exit 0
 
 if [ "$2" = "--autotest" ]; then
     testsite $1 --auto

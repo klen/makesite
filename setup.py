@@ -3,7 +3,7 @@ import os
 
 from setuptools import setup, find_packages
 
-from sitegen import VERSION, PROJECT, LICENSE
+from makesite import VERSION, PROJECT, LICENSE
 
 
 PACKAGE_DATA = [ '*.ini' ]
@@ -31,7 +31,7 @@ META_DATA = dict(
 
     author='Kirill Klenov',
     author_email='horneds@gmail.com',
-    url=' http://github.com/klen/sitegen',
+    url=' http://github.com/klen/makesite',
 
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -51,7 +51,7 @@ META_DATA = dict(
 
     entry_points={
         'console_scripts': [
-            'sitegen = sitegen.main:main',
+            'makesite = makesite.main:main',
         ]
     },
 )
@@ -59,4 +59,3 @@ META_DATA = dict(
 
 if __name__ == "__main__":
     setup( **META_DATA )
-

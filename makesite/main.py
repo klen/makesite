@@ -1,22 +1,22 @@
 #!/usr/bin/env python
 import ConfigParser, optparse, os, sys, subprocess
 
-from sitegen import VERSION
-from sitegen.template import Template
+from makesite import VERSION
+from makesite.template import Template
 
 
 BASEDIR = os.path.realpath(os.path.dirname(__file__))
 BASE_TEMPLATES_DIR = os.path.join(BASEDIR, 'templates')
 MODULES_DIR = os.path.join(BASEDIR, 'modules')
 
-INI_FILENAME = "sitegen.ini"
-SITEGEN_TEMPLATES_FILE = '.sitegen'
-SITEGEN_OPTIONS_INIFILE = '.project.ini'
+INI_FILENAME = "makesite.ini"
+makesite_TEMPLATES_FILE = '.makesite'
+makesite_OPTIONS_INIFILE = '.project.ini'
 
 BASECONFIG = os.path.join( BASEDIR, INI_FILENAME )
 HOMECONFIG = os.path.join( os.getenv('HOME'), INI_FILENAME )
 
-SITEGENPATH_VARNAME = 'SITES_HOME'
+makesitePATH_VARNAME = 'SITES_HOME'
 
 PYTHON_PREFIX = 'python' + '.'.join( str(x) for x in sys.version_info[:2] )
 
@@ -45,10 +45,10 @@ def deploy(project, options):
     if options.info:
         sys.exit()
 
-    # Create dir and sitegen templates file
+    # Create dir and makesite templates file
     create_dir( main_options[ 'deploy_dir' ] )
-    create_file(os.path.join( main_options[ 'deploy_dir' ], SITEGEN_TEMPLATES_FILE ), ' '.join([t[0] for t in templates]))
-    create_file(os.path.join(main_options['deploy_dir'], SITEGEN_OPTIONS_INIFILE), "[Main]\n%s" % get_options(main_options))
+    create_file(os.path.join( main_options[ 'deploy_dir' ], makesite_TEMPLATES_FILE ), ' '.join([t[0] for t in templates]))
+    create_file(os.path.join(main_options['deploy_dir'], makesite_OPTIONS_INIFILE), "[Main]\n%s" % get_options(main_options))
 
     # Deploy templates
     deploy_templates(templates, main_options)
@@ -131,7 +131,7 @@ def parse_templates( templates, options ):
             sys.exit()
 
         try:
-            f = open( os.path.join( path, SITEGEN_TEMPLATES_FILE ), 'r' )
+            f = open( os.path.join( path, makesite_TEMPLATES_FILE ), 'r' )
             child = f.read().strip()
             result += parse_templates( child.split(' '), options )
         except IOError:
@@ -154,14 +154,14 @@ def deploy_templates( templates, main_options ):
             main_options[ 'curdir' ] = curdir
             create_dir( curdir )
             for filename in files:
-                if filename == SITEGEN_TEMPLATES_FILE:
+                if filename == makesite_TEMPLATES_FILE:
                     continue
                 t = Template(filename=os.path.join( root, filename ))
                 create_file(os.path.join( curdir, filename ), t(**main_options))
 
         sys.stdout.write('\n')
 
-    subprocess.check_call('sitegenparse %(deploy_dir)s install' % main_options, shell=True)
+    subprocess.check_call('makesiteparse %(deploy_dir)s install' % main_options, shell=True)
 
 
 def create_dir(path):
@@ -171,7 +171,7 @@ def create_dir(path):
         subprocess.check_call('sudo mkdir -p %s' % path, shell=True)
         print "Create dir %s." % path
     except subprocess.CalledProcessError:
-        print "Sitegen need sudo access."
+        print "makesite need sudo access."
         sys.exit()
 
 
@@ -179,8 +179,8 @@ def create_file( path, s ):
     """ Create file.
     """
     try:
-        open('/tmp/sitegen.tmp', 'w').write(s)
-        subprocess.check_call('sudo mv /tmp/sitegen.tmp %s' % path, shell=True)
+        open('/tmp/makesite.tmp', 'w').write(s)
+        subprocess.check_call('sudo mv /tmp/makesite.tmp %s' % path, shell=True)
         print "Create file '%s'" % path
     except subprocess.CalledProcessError:
         print 'Failed create file %s.' % path
@@ -189,11 +189,11 @@ def create_file( path, s ):
 def main():
     """ Parse arguments and do work.
     """
-    path = os.environ[ SITEGENPATH_VARNAME ] if os.environ.has_key( SITEGENPATH_VARNAME ) else None
+    path = os.environ[ makesitePATH_VARNAME ] if os.environ.has_key( makesitePATH_VARNAME ) else None
     p = optparse.OptionParser(
             usage="%prog -p PATH PROJECTNAME [-b BRANCH] [-t TEMPLATE] [-c CONFIG] [-r REPOSITORY] [-m MODULENAME or MODULEPATH]",
             version='%prog ' + VERSION,
-            description= "'sitegen' is simple script to create base project dirs and config files. ")
+            description= "'Makesite' is scripts collection for create base project dirs and config files. ")
     p.add_option('-p', '--path', dest='path', default=path, help='Path to project dir. Required option.')
     p.add_option('-b', '--branch', dest='branch', help='Project branch.', default='master')
     p.add_option('-t', '--template', dest='template', help='Config templates.')

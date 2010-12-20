@@ -5,4 +5,4 @@ if [ ! -z "$1" ] && [ "$2" = "--auto" ] && [ "$(basename $1)" != "master" ]; the
     exit 0
 fi
 
-sitegenparse $1 test
+makesiteparse $1 test

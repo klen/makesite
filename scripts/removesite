@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sitegenparse $1 remove || exit 0
+makesiteparse $1 remove || exit 0
 
 PROJECT_DIR=$1
 

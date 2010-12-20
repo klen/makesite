@@ -1,2 +1,2 @@
-recursive-include sitegen *
+recursive-include makesite *
 exclude *.pyc *.orig

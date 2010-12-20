@@ -1,4 +1,4 @@
-MODULE=sitegen
+MODULE=makesite
 
 clean:
 	sudo rm -rf build dist $(MODULE).egg-info/

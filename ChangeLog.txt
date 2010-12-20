@@ -1,4 +1,9 @@
-# sitegen changelog
+# makesite changelog
+
+## 2010-12-16 0.1.9
+
+* Public in pypi
+* Rename project from sitegen to makesite
 
 ## 2010-12-16 0.1.7
 

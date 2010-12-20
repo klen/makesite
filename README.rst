@@ -1,9 +1,9 @@
 ..   -*- mode: rst -*-
 
-sitegen
-#######
+Makesite
+########
 
-Sitegen is collection scripts for make and control site structure.
+Makesite is collection scripts for make and control site structure.
 
 .. contents::
 
@@ -17,9 +17,9 @@ Requirements
 Installation
 ------------
 
-**Sitegen** should be installed using pip: ::
+**Makesite** should be installed using pip: ::
 
-    pip install sitegen
+    pip install makesite
 
 
 Setup
@@ -36,5 +36,4 @@ Add this lines to your shell startup file .bashrc, .profile, etc) ::
 
 Using
 -----
-Run sitegen for help message.
-
+Run makesite for help message.
