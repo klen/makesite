@@ -12,12 +12,23 @@
 
     <body>
 
-        <h1>Sitegen sites:</h1>
-        <ul class="sites">
+        <div class="header">
+            <h1 class="header_title">Sitegen Sites Index</h1>
+        </div>
+
+        <div class="sites"><ul class="sites_content">
+            <h1 class="sites_title">Summary</h1>
+            <p>There are {{ len(sites) }} sites installed.</p>
+            <p>
+            %for site in sites:
+                <a href="#{{ site['branch'] }}_{{ site['project'] }}">{{ site['branch'] }}.{{ site['project'] }}</a>
+            %end
+            </p>
+            <h1 class="sites_title">Sites</h1>
             % counter = 0
             %for site in sites:
                 % counter += 1
-                <li class="sites_item">
+                <li class="sites_item" id="{{ site['branch'] }}_{{ site['project'] }}">
                     <a class="sites_item_link" href="http://{{ site['domain'] }}:{{ site['port'] }}">{{ site['branch'] }}.{{ site['project'] }}</a>
                     %if site.get('revision'):
                         <span class="sites_item_revision">{{ site['revision'] }}</span>
@@ -34,7 +45,7 @@
                     </div>
                 </li>
             %end
-        </ul>
+        </ul></div>
         <script language="javascript" type="text/javascript" src="/static/_main.js"></script>
     </body>
 </html>

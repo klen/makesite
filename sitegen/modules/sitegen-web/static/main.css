@@ -1,2 +1,12 @@
 @import url(zeta://f/boilerplate.css);
 @import url(b/sites/sites.css);
+
+.header {
+    background: #057;
+    padding: 5px 2em;
+}
+
+.header_title {
+    font-size: 2em;
+    color: #fff;
+}

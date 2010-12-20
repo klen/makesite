@@ -1,6 +1,21 @@
 .sites {
-    padding: 5px;
+    padding: 0 1.5em;
 }
+
+    .sites p {
+        margin-bottom: 1em;
+    }
+
+    .sites_content {
+        background: #efefef;
+        border: 1px dotted #999;
+        padding: .5em 1.5em;
+    }
+
+    .sites_title {
+        color: #125;
+        font-size: 1.5em;
+    }
 
     .sites_item {
         margin-bottom: .5em;
@@ -11,7 +26,7 @@
         }
 
         .sites_item_revision {
-            color: #ccc;
+            color: #333;
             margin-left: 1em;
         }
 
