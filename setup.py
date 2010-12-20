@@ -6,13 +6,12 @@ from setuptools import setup, find_packages
 from sitegen import VERSION, PROJECT, LICENSE
 
 
-MODULE_NAME = 'sitegen'
 PACKAGE_DATA = [ '*.ini' ]
 
 for folder in ['templates', 'modules']:
-    for root, dirs, files in os.walk(os.path.join(MODULE_NAME, folder)):
+    for root, dirs, files in os.walk(os.path.join(PROJECT, folder)):
         for filename in files:
-            PACKAGE_DATA.append("%s/%s" % ( root[len(MODULE_NAME)+1:], filename ))
+            PACKAGE_DATA.append("%s/%s" % ( root[len(PROJECT)+1:], filename ))
 
 
 def read( fname ):
@@ -28,25 +27,26 @@ META_DATA = dict(
     license=LICENSE,
     description=read( 'DESCRIPTION' ),
     long_description=read( 'README.rst' ),
+    platforms=('Any'),
 
     author='Kirill Klenov',
     author_email='horneds@gmail.com',
+    url=' http://github.com/klen/sitegen',
 
-    url=' http://github.com/klen',
     classifiers=[
         'Development Status :: 4 - Beta',
-        'Programming Language :: Python',
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
+        'Natural Language :: Russian',
+        'Natural Language :: English',
+        'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',
+        'Programming Language :: Python',
         'Environment :: Console',
-        'License :: Public domain',
+        'Topic :: Software Development :: Code Generators',
     ],
 
-    platforms=('Any'),
-
-    scripts=map( lambda x: 'scripts/' + x, os.listdir( 'scripts' )),
-
     packages=find_packages(),
+    scripts=map( lambda x: 'scripts/' + x, os.listdir( 'scripts' )),
     package_data = { '': PACKAGE_DATA, },
 
     entry_points={
@@ -54,8 +54,6 @@ META_DATA = dict(
             'sitegen = sitegen.main:main',
         ]
     },
-
-    install_requires = [ 'pip' ],
 )
 
 

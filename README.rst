@@ -19,7 +19,7 @@ Installation
 
 **Sitegen** should be installed using pip: ::
 
-    pip install git+git://github.com/klen/sitegen.git
+    pip install sitegen
 
 
 Setup
