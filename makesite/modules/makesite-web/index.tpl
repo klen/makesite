@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="Format-Detection" content="telephone=yes" />
         <meta name="Viewport" content="width=device-width" />
-        <title>Sitegen web</title>
+        <title>Makesite web</title>
         <link rel="home" href="/" />
         <link rel="stylesheet" type="text/css" href="/static/_main.css" />
         
@@ -13,7 +13,7 @@
     <body>
 
         <div class="header">
-            <h1 class="header_title">Sitegen Sites Index</h1>
+            <h1 class="header_title">Makesite Sites Index</h1>
         </div>
 
         <div class="sites"><ul class="sites_content">
