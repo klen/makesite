@@ -2,6 +2,25 @@ VIRTUALENVDIR={{ virtualenvdir }}
 PIP_PROJECTFILE={{ pip_projectfile }}
 PYTHON_PREFIX={{ python_prefix }}
 
+# Check easy_install
+which easy_install 1>/dev/null || {
+    echo "  * Python setuptools not found! Attempting to install..."
+    if [ -f /etc/lsb-release ] ; then
+            sudo apt-get install python-setuptools
+    elif [ -f /etc/fedora-release ] ; then
+            sudo yum install python-setuptools
+    elif [ -f /etc/debian_version ] ; then
+            sudo apt-get install python-setuptools
+    fi
+}
+
+# Check pip
+which pip 1>/dev/null || {
+    echo "  * Pip not found! Attempting to install..."
+    sudo easy_install -U setuptools
+    sudo easy_install -U pip
+}
+
 # Check virtualenv
 which virtualenv 1>/dev/null || {
     echo "  * Virtualenv not found! Attempting to install..."
