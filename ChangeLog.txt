@@ -1,7 +1,8 @@
 # makesite changelog
 
-## 2010-12-16 0.2.1
+## 2010-12-16 0.2.2
 
+* Cosmetic updates in makesite-web
 * Public in pypi
 * Rename project from sitegen to makesite
 * Fix makesite-web and wsgi module

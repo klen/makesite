@@ -36,7 +36,9 @@
                     <br/>
                     <a class="toggle sites_item_info zeta" href="#" onclick="return { rel: '.sites_item_options_{{ counter }}' }">information</a>
                     <div class="sites_item_options sites_item_options_{{ counter }}">
-                        %for k,v in site.items():
+                        % values = site.items()
+                        % values.sort(key=lambda k: k[0])
+                        %for k,v in values:
                             %if not 'password' in k:
                                 <b>{{ k }}</b> = {{ v }}
                                 <br/>
