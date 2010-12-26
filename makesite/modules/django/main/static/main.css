@@ -1,0 +1,8 @@
+/* Base settings */
+@import url(zeta://zeta.css);
+
+.header {
+    background: #057;
+    color: #fff;
+    padding: 5px;
+}

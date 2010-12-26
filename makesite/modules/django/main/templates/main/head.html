@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="Format-Detection" content="telephone=yes" />
+        <meta name="Viewport" content="width=device-width" />
+        
+        {% if keywords %} <meta name="Keywords" lang="ru" content="{{ keywords }}" /> {% endif %}
+        {% if description %} <meta name="Description" lang="ru" content="{{ description }}" /> {% endif %}
+
+        {# Extra meta #}
+        {% block head_meta %}{% endblock head_meta %}
+
+        {# Page title #}
+        <title>{% block head_title %}{% endblock head_title %}</title>
+        
+        <link rel="home" href="/" />
+
+        {# Styles #}
+        {% block head_styles %}
+            <link href="{{ STATIC_URL }}_main.css" media="screen, projection" rel="stylesheet" type="text/css" />
+            <link href="{{ STATIC_URL }}_print.css" media="print" rel="stylesheet" type="text/css" />
+            <!--[if lt IE 8]>
+                <link href="{{ STATIC_URL }}_ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
+            <![endif]-->
+        {% endblock head_styles %}
+    </head>
+
+    <body>
+        {% block head_body %}{%endblock head_body %}
+
+        {# Scripts #}
+        {% block head_scripts %}
+            <script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}_main.js"></script>
+        {%endblock head_scripts %}
+        {% block head_extra_scripts %}{% endblock head_extra_scripts %}
+
+    </body>
+</html>

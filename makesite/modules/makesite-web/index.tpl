@@ -7,47 +7,59 @@
         <title>Makesite web</title>
         <link rel="home" href="/" />
         <link rel="stylesheet" type="text/css" href="/static/_main.css" />
-        
     </head>
 
     <body>
 
-        <div class="header">
-            <h1 class="header_title">Makesite Sites Index</h1>
-        </div>
-
-        <div class="sites"><ul class="sites_content">
-            <h1 class="sites_title">Summary</h1>
-            <p>There are {{ len(sites) }} sites installed.</p>
-            <p>
-            %for site in sites:
-                <a href="#{{ site['branch'] }}_{{ site['project'] }}">{{ site['branch'] }}.{{ site['project'] }}</a>
-            %end
-            </p>
-            <h1 class="sites_title">Sites</h1>
-            % counter = 0
-            %for site in sites:
-                % counter += 1
-                <li class="sites_item" id="{{ site['branch'] }}_{{ site['project'] }}">
-                    <a class="sites_item_link" href="http://{{ site['domain'] }}:{{ site['port'] }}">{{ site['branch'] }}.{{ site['project'] }}</a>
-                    %if site.get('revision'):
-                        <span class="sites_item_revision">{{ site['revision'] }}</span>
-                    %end
-                    <br/>
-                    <a class="toggle sites_item_info zeta" href="#" onclick="return { rel: '.sites_item_options_{{ counter }}' }">information</a>
-                    <div class="sites_item_options sites_item_options_{{ counter }}">
-                        % values = site.items()
-                        % values.sort(key=lambda k: k[0])
-                        %for k,v in values:
-                            %if not 'password' in k:
-                                <b>{{ k }}</b> = {{ v }}
-                                <br/>
-                            %end
-                        %end
+        <div class="z-grid_table">
+            <div class="z-grid_row">
+                <div class="z-grid-12 z-grid_column">
+                    <div class="header">
+                        <h1 class="header_title">Makesite Sites Index</h1>
                     </div>
-                </li>
-            %end
-        </ul></div>
+                </div>
+            </div>
+            <div class="z-grid_row">
+                <div class="z-grid-2 z-grid_column">
+                    <h1 class="sites_title">Summary</h1>
+                    <p>There are {{ len(sites) }} sites installed.</p>
+                    <p>
+                    %for site in sites:
+                        <a href="#{{ site['branch'] }}_{{ site['project'] }}">{{ site['branch'] }}.{{ site['project'] }}</a>
+                    %end
+                    </p>
+                </div>
+                <div class="z-grid-10 z-grid_column">
+                    <div class="sites">
+                        <h1 class="sites_title">Sites</h1>
+                        <ul>
+                            % counter = 0
+                            %for site in sites:
+                                % counter += 1
+                                <li class="sites_item" id="{{ site['branch'] }}_{{ site['project'] }}">
+                                    <a class="sites_item_link" href="http://{{ site['domain'] }}:{{ site['port'] }}">{{ site['branch'] }}.{{ site['project'] }}</a>
+                                    %if site.get('revision'):
+                                        <span class="sites_item_revision">{{ site['revision'] }}</span>
+                                    %end
+                                    <br/>
+                                    <a class="toggle sites_item_info zeta" href="#" onclick="return { rel: '.sites_item_options_{{ counter }}' }">information</a>
+                                    <div class="sites_item_options sites_item_options_{{ counter }}">
+                                        % values = site.items()
+                                        % values.sort(key=lambda k: k[0])
+                                        %for k,v in values:
+                                            %if not 'password' in k:
+                                                <b>{{ k }}</b> = {{ v }}
+                                                <br/>
+                                            %end
+                                        %end
+                                    </div>
+                                </li>
+                            %end
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script language="javascript" type="text/javascript" src="/static/_main.js"></script>
     </body>
 </html>

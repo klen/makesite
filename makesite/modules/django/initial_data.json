@@ -1,0 +1,20 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "username": "intaxi", 
+            "first_name": "John", 
+            "last_name": "Driver", 
+            "is_active": true, 
+            "is_superuser": true, 
+            "is_staff": true, 
+            "last_login": "2010-01-01 00:00:00", 
+            "groups": [], 
+            "user_permissions": [], 
+            "password": "sha1$507fa$a858b4bad6495b8b76978b1ded0b1b4d157f7781", 
+            "email": "dummy@intaxi.ru", 
+            "date_joined": "2010-01-01 00:00:00"
+        }
+    }
+]

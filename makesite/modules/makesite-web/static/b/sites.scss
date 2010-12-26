@@ -1,0 +1,26 @@
+.sites {
+
+    background: #efefef;
+    border: 1px dotted #999;
+
+    &_title {
+        color: #125;
+        font-size: 1.5em; }
+
+    &_item {
+        margin-bottom: 0.5em;
+
+        &_link {
+            font-size: 1.5em; } 
+
+        &_revision {
+            color: #333;
+            margin-left: 1em; }
+
+        &_info {
+            text-decoration:none;
+            color: #ccc;
+            border-bottom: 1px dashed #ccc; }
+
+        &_options {
+            display: none; } } }

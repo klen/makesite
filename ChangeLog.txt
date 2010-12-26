@@ -1,5 +1,10 @@
 # makesite changelog
 
+## 2010-12-26 0.2.3
+
+* Add django module
+
+
 ## 2010-12-16 0.2.2
 
 * Cosmetic updates in makesite-web

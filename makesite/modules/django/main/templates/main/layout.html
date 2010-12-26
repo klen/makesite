@@ -1,0 +1,19 @@
+{% extends "main/head.html" %}
+
+{% block head_body %}
+    <div class="z-grid_table">
+        <div class="z-grid-12">
+            <h1 class="header">Django Base Project</h1>
+        </div>
+    </div>
+    <div class="z-grid_table">
+        <div class="z-grid_column z-grid-8">
+            {% block layout_content %}{% endblock %}
+        </div>
+        <div class="z-grid_column z-grid-4">
+            {% if request.user.is_authenticated %}
+                <a href="{% url logout %}">logout</a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

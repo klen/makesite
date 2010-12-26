@@ -1,0 +1,1 @@
+manage.py test main --settings=settings.test
