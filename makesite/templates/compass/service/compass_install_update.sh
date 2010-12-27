@@ -1,4 +1,6 @@
 STATIC_DIR={{ project_staticdir }}
+USER={{ user }}
+GROUP={{ group }}
 
 which compass 1>/dev/null || { echo "ERROR: * I require compass but it's not installed."; exit 0; }
 

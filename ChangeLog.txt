@@ -1,5 +1,10 @@
 # makesite changelog
 
+## 2010-12-27 0.2.4
+
+* Fix compass and src-dir templates
+
+
 ## 2010-12-26 0.2.3
 
 * Add django module
