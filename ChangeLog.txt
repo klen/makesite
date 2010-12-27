@@ -1,6 +1,6 @@
 # makesite changelog
 
-## 2010-12-27 0.2.4
+## 2010-12-27 0.2.5
 
 * Fix compass and src-dir templates
 

@@ -5,8 +5,8 @@ SOURCE_DIR={{ project_sourcedir }}
 SRC_DIR={{ sourcedir }}
 SRC_STATIC_DIR={{ deploy_dir }}/source/static
 
-echo "  * Clone $SRC_DIR to $DEPLOY_DIR"
-sudo cp -r $SRC_DIR $DEPLOY_DIR/source
+echo "  * Clone $SRC_DIR to $SOURCE_DIR."
+sudo cp -r $SRC_DIR $SOURCE_DIR
 
 # Copy static in static dir
 if [ -d $SRC_STATIC_DIR ]; then
