@@ -1,5 +1,10 @@
 # makesite changelog
 
+## 2011-01-19 0.2.6
+
+* Fix 404 and 500 templates in django module
+
+
 ## 2010-12-27 0.2.5
 
 * Fix compass and src-dir templates
