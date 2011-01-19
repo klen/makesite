@@ -1,6 +1,6 @@
 # makesite changelog
 
-## 2011-01-19 0.2.6
+## 2011-01-19 0.2.7
 
 * Fix 404 and 500 templates in django module
 
