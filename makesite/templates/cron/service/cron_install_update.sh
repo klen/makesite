@@ -1,3 +1,4 @@
+#!/bin/sh
 CRON_CRONFILE={{ cron_conffile }}
 CRON_PROJECTFILE={{ cron_projectfile }}
 CRON_PARSESCRIPT={{ deploy_dir }}/service/cron_parse.py

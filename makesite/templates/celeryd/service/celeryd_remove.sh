@@ -1,3 +1,4 @@
+#!/bin/sh
 PROGRAMM_NAME={{ project }}.{{ branch }}.celeryd
 SUPERVISOR_CONFPATH={{ supervisor_confpath }}.celeryd.conf
 

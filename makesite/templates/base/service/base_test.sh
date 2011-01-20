@@ -1,3 +1,4 @@
+#!/bin/sh
 USER={{ user }}
 BRANCH={{ branch }}
 PROJECT={{ project }}

@@ -1,3 +1,4 @@
+#!/bin/sh
 VIRTUALENVDIR={{ virtualenvdir }}
 VIRTUALENVDIR_ACTIVATE=$VIRTUALENVDIR/bin/activate
 COMMAND=$@

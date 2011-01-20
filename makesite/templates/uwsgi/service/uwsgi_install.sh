@@ -1,3 +1,4 @@
+#!/bin/sh
 DEPLOY_DIR={{ deploy_dir }}
 NGINX_CONFPATH={{ nginx_confpath }}
 SUPERVISOR_CONFPATH={{ supervisor_confpath }}

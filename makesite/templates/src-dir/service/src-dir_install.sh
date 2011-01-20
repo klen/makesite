@@ -1,3 +1,4 @@
+#!/bin/sh
 USER={{ user }}
 GROUP={{ group }}
 STATIC_DIR={{ project_staticdir }}

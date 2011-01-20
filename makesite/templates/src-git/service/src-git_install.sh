@@ -1,3 +1,4 @@
+#!/bin/sh
 REPO={{ repo }}
 BRANCH={{ branch }}
 PROJECT={{ project }}

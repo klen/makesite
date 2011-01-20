@@ -1,3 +1,4 @@
+#!/bin/sh
 ZETA_STATICDIR={{ project_staticdir }}
 
 # Check zeta-library

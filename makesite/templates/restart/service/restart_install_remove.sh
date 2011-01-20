@@ -1,3 +1,4 @@
+#!/bin/sh
 PROGRAMM_NAME={{ project }}.{{ branch }}
 
 if [ -f /etc/init.d/nginx ]; then

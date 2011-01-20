@@ -1,3 +1,4 @@
+#!/bin/sh
 CRON_OUTPUTFILE={{ cron_outputfile }}
 
 if [ -f $CRON_OUTPUTFILE ]; then

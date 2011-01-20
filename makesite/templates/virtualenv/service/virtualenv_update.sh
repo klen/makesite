@@ -1,3 +1,4 @@
+#!/bin/sh
 VIRTUALENVDIR={{ virtualenvdir  }}
 PIP_PROJECTFILE={{ pip_projectfile }}
 

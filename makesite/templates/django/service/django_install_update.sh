@@ -1,3 +1,4 @@
+#!/bin/sh
 USER={{ user }}
 GROUP={{ group }}
 BASERUN={{ deploy_dir }}/service/base_run.sh

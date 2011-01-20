@@ -1,3 +1,4 @@
+#!/bin/sh
 USER={{ user }}
 BASERUN={{ deploy_dir }}/service/base_run.sh
 DJANGO_SETTINGS={{ django_settings }}

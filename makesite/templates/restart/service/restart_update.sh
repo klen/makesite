@@ -1,3 +1,4 @@
+#!/bin/sh
 BRANCH={{ branch }}
 PROJECT={{ project }}
 SUPERVISOR_PROGRAMM_NAME=$PROJECT.$BRANCH

@@ -1,3 +1,4 @@
+#!/bin/sh
 NGINX_CONFPATH={{ nginx_confpath }}
 SUPERVISOR_CONFPATH={{ supervisor_confpath }}
 
