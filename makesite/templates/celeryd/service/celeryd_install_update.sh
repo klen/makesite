@@ -14,7 +14,7 @@ which supervisord 1>/dev/null || {
         fi
 }
 echo '  * Create link to supervisor conf:'$SUPERVISOR_CONFPATH
-sudo ln -sf $DEPLOY_DIR/supervisor.celeryd.conf $SUPERVISOR_CONFPATH
+sudo ln -sf $DEPLOY_DIR/deploy/supervisor.celeryd.conf $SUPERVISOR_CONFPATH
 
 if [ -f /etc/init.d/supervisor ]; then
     echo '  * Update supervisord for celeryd'
