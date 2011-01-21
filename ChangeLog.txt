@@ -1,6 +1,6 @@
 # makesite changelog
 
-## 2011-01-21 0.2.8
+## 2011-01-21 0.2.9
 
 * Add celeryd template and fix template scripts (denya.msk@gmail.com)
 
