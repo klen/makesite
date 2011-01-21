@@ -1,5 +1,10 @@
 # makesite changelog
 
+## 2011-01-21 0.2.8
+
+* Add celeryd template and fix template scripts (denya.msk@gmail.com)
+
+
 ## 2011-01-19 0.2.7
 
 * Fix 404 and 500 templates in django module
