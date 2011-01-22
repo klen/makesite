@@ -1,5 +1,10 @@
 # makesite changelog
 
+## 2011-01-23 0.2.91
+
+* Fix virtualenv template (denya.msk@gmail.com)
+
+
 ## 2011-01-21 0.2.9
 
 * Add celeryd template and fix template scripts (denya.msk@gmail.com)
