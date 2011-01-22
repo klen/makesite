@@ -96,6 +96,6 @@ _memcache_to_ve
 
 if [ -f $PIP_PROJECTFILE ]; then
     echo "  * Update virtualenv requirements '$PIP_PROJECTFILE'."
-    sudo pip -E $VIRTUALENVDIR install -r $PIP_PROJECTFILE
+    sudo pip -E $VIRTUALENVDIR install -I -r $PIP_PROJECTFILE
     sudo rm -rf $VIRTUALENVDIR/.reqsum && sudo sh -c "md5sum $PIP_PROJECTFILE > $VIRTUALENVDIR/.reqsum"
 fi
