@@ -1,16 +1,12 @@
-from django.test.client import RequestFactory
+from django.test.client import Client
 from django.utils import unittest
 
-from views import Index
 
+class BaseTestCase(unittest.TestCase):
 
-class BaseTestCase( unittest.TestCase ):
-
-    def setUp( self ):
-        self.factory = RequestFactory()
+    def setUp(self):
+        self.client = Client()
 
     def test_response(self):
-        request = self.factory.get('/')
-        view = Index.as_view()
-        response = view(request)
-        self.assertEquals(response.status_code, 200)
+        response = self.client.get('')
+        self.assertEqual(response.status_code, 200)
