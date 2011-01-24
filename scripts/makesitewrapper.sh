@@ -96,6 +96,9 @@ siteinfo () {
 # Activate site virtualenv
 envsite () {
     project="$1"
+    if [ -z $project ]; then
+        project=$PWD
+    fi
     activate=$project/.virtualenv/bin/activate
 
     _makesite_verify_sites_home || return 1
@@ -116,6 +119,16 @@ envsite () {
     fi
 }
 
+# Cahnge dir to site source and activate virtualenv
+worksite () {
+    project="$1"
+    cdsite $1
+    envsite $1
+    if [ -d $1/source ]; then
+        cd $1/source
+    fi
+}
+
 if [ -n "$BASH" ] ; then
     _sites ()
     {
@@ -125,6 +138,7 @@ if [ -n "$BASH" ] ; then
 
     complete -o default -o nospace -F _sites cdsite
     complete -o default -o nospace -F _sites envsite
+    complete -o default -o nospace -F _sites worksite
     complete -o default -o nospace -F _sites siteinfo
     complete -o default -o nospace -F _sites installsite
     complete -o default -o nospace -F _sites updatesite

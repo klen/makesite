@@ -1,5 +1,11 @@
 # makesite changelog
 
+## 2011-01-24 0.2.92
+
+* Add worksite command
+* envsite now check directory
+
+
 ## 2011-01-23 0.2.91
 
 * Fix virtualenv template (denya.msk@gmail.com)
