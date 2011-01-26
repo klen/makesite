@@ -3,6 +3,7 @@ MODULE=makesite
 clean:
 	sudo rm -rf build dist $(MODULE).egg-info/
 	find . -name "*.pyc" -delete
+	find . -name "*.orig" -delete
 
 install: remove _install clean
 
