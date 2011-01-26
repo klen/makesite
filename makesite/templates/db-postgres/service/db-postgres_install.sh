@@ -1,4 +1,5 @@
 #!/bin/sh
+
 PGUSER={{ pguser }}
 PGPASSWORD={{ pgpassword }}
 PGHOST={{ pghost }}

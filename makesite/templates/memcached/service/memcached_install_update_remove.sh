@@ -1,4 +1,5 @@
 #!/bin/sh
+
 MEMCACHED_HOST={{ memcached_host }}
 MEMCACHED_PORT={{ memcached_port }}
 

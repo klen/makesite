@@ -1,4 +1,5 @@
 #!/bin/sh
+
 PROGRAMM_NAME={{ project }}.{{ branch }}.celeryd
 DEPLOY_DIR={{ deploy_dir }}
 SUPERVISOR_CONFPATH={{ supervisor_confpath }}.celeryd.conf

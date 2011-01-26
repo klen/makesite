@@ -1,5 +1,8 @@
 #!/bin/sh
-ZETA_STATICDIR={{ project_staticdir }}
+
+SITE_USER={{ site_user }}
+SITE_GROUP={{ site_group }}
+PROJECT_STATICDIR={{ project_staticdir }}
 
 # Check zeta-library
 which zeta 1>/dev/null || {
@@ -7,4 +10,7 @@ which zeta 1>/dev/null || {
     sudo pip install zetalibrary
 }
 
-sudo zeta $ZETA_STATICDIR
+sudo zeta $PROJECT_STATICDIR
+
+# Restore rights
+sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_STATICDIR

@@ -1,8 +1,10 @@
 #!/bin/sh
+
 REPO={{ repo }}
 BRANCH={{ branch }}
 PROJECT={{ project }}
-DEPLOY_DIR={{ deploy_dir }}
+SITE_USER={{ site_user }}
+SITE_GROUP={{ site_group }}
 
 PROJECT_SOURCEDIR={{ project_sourcedir }}
 GIT_PROJECT_TEMP_DIR=/tmp/$BRANCH.$PROJECT-$USER
@@ -31,3 +33,5 @@ git checkout --track origin/$BRANCH
 echo "  * Move $GIT_PROJECT_TEMP_DIR to $PROJECT_SOURCEDIR"
 sudo mv $GIT_PROJECT_TEMP_DIR $PROJECT_SOURCEDIR
 
+# Restore rights
+sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_SOURCEDIR

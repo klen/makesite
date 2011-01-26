@@ -53,8 +53,8 @@ def deploy(project, options):
     # Deploy templates
     deploy_templates(templates, main_options)
 
-    # Make user, group rights
-    subprocess.check_call('sudo chown -R %(user)s:%(group)s %(deploy_dir)s' % main_options, shell=True)
+    # Run install site
+    subprocess.check_call('makesiteparse %(deploy_dir)s install' % main_options, shell=True)
 
 
 def get_options(main_options):
@@ -122,7 +122,7 @@ def load_config(project, options):
 def parse_templates( templates, options ):
     """ Parse templates hierarchy.
     """
-    result = []
+    result = list()
 
     for template in templates:
         path = options[template] if options.has_key(template) else os.path.join( BASE_TEMPLATES_DIR, template )
@@ -160,8 +160,6 @@ def deploy_templates( templates, main_options ):
                 create_file(os.path.join( curdir, filename ), t(**main_options))
 
         sys.stdout.write('\n')
-
-    subprocess.check_call('makesiteparse %(deploy_dir)s install' % main_options, shell=True)
 
 
 def create_dir(path):

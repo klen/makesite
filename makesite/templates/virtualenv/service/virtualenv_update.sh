@@ -1,4 +1,5 @@
 #!/bin/sh
+
 VIRTUALENVDIR={{ virtualenvdir  }}
 PIP_PROJECTFILE={{ pip_projectfile }}
 
@@ -14,3 +15,6 @@ if [ -f $PIP_PROJECTFILE ]; then
         sudo rm -rf $VIRTUALENVDIR/.reqsum && sudo sh -c "md5sum $PIP_PROJECTFILE > $VIRTUALENVDIR/.reqsum"
     fi
 fi
+
+# Restore rights
+sudo chown -R $USER:$GROUP $VIRTUALENVDIR

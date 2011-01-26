@@ -1,11 +1,12 @@
 #!/bin/sh
+
 BRANCH={{ branch }}
 PROJECT={{ project }}
-GIT_USER={{ user }}
-GIT_GROUP={{ group }}
+SITE_USER={{ site_user }}
+SITE_GROUP={{ site_group }}
 
 PROJECT_SOURCEDIR={{ project_sourcedir }}
-GIT_PROJECT_TEMP_DIR="/tmp/$BRANCH.$PROJECT-$USER"
+GIT_PROJECT_TEMP_DIR="/tmp/$BRANCH.$PROJECT-$SITE_USER"
 
 which git 1>/dev/null || { echo "ERROR: * I require git but it's not installed."; exit 0; }
 
@@ -18,5 +19,6 @@ cd $GIT_PROJECT_TEMP_DIR && git reset --hard HEAD && git clean -df && git pull
 echo "  * Move $GIT_PROJECT_TEMP_DIR to $PROJECT_SOURCEDIR"
 sudo rm -rf $PROJECT_SOURCEDIR
 sudo mv $GIT_PROJECT_TEMP_DIR $PROJECT_SOURCEDIR
-sudo chown -R $GIT_USER:$GIT_GROUP $PROJECT_SOURCEDIR
 
+# Restore rights
+sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_SOURCEDIR

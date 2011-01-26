@@ -1,5 +1,10 @@
 # makesite changelog
 
+## 2011-01-27 0.3.0
+
+* Fix templates
+
+
 ## 2011-01-26 0.2.93
 
 * Another fix celeryd (debya.msk@gmail.com)

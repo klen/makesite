@@ -1,12 +1,13 @@
 #!/bin/sh
-STATIC_DIR={{ project_staticdir }}
-USER={{ user }}
-GROUP={{ group }}
+
+PROJECT_STATICDIR={{ project_staticdir }}
+SITE_USER={{ site_user }}
+SITE_GROUP={{ site_group }}
 
 which compass 1>/dev/null || { echo "ERROR: * I require compass but it's not installed."; exit 0; }
 
 olddir=""
-for f in `find $STATIC_DIR -name '*.scss'`; do
+for f in `find $PROJECT_STATICDIR -name '*.scss'`; do
     dir=`dirname $f`
     if [ ! "$olddir" = "$dir" ]; then
         olddir=$dir
@@ -15,7 +16,9 @@ for f in `find $STATIC_DIR -name '*.scss'`; do
     fi
 done
 
+# Restore rights
+sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_STATICDIR
+
 echo "  * Drop sass files from static."
-sudo chown $USER:$GROUP $STATIC_DIR
-sudo find $STATIC_DIR -name "*.scss" -delete
-sudo find $STATIC_DIR -name "*.rb" -delete
+sudo find $PROJECT_STATICDIR -name "*.scss" -delete
+sudo find $PROJECT_STATICDIR -name "*.rb" -delete
