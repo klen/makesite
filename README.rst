@@ -25,10 +25,10 @@ Installation
 Setup
 ------
 
-The variable SITES_HOME tell sitegen where to place your sites.
+The variable SITES_HOME tell makesite where to place your sites.
 Add this lines to your shell startup file .bashrc, .profile, etc) ::
 
-    if [ -f /usr/local/bin/sitegenwrapper.sh ]; then
+    if [ -f /usr/local/bin/makesitewrapper.sh ]; then
         export SITES_HOME=PATH_TO_YOUR_SITES_HOME
         source /usr/local/bin/makesitewrapper.sh
     fi
@@ -37,3 +37,27 @@ Add this lines to your shell startup file .bashrc, .profile, etc) ::
 Using
 -----
 Run makesite for help message.
+
+
+Examples
+--------
+
+Deploy standart django template from makesite to project "beta": ::
+    
+    makesite -m django beta
+
+
+Deploy branch 'test' from project 'alpha': ::
+
+    makesite -b test alpha
+
+Update branch 'test' from project 'alpha': ::
+
+    updatesite /sites/alpha/test
+
+View deployed projects: ::
+
+    lssites
+    statsites
+
+And etc, etc, etc
