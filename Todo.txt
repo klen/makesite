@@ -1,4 +1,5 @@
 Add db-sqlite template
+Add install/remove custom templates
 Fix django module ( errors in install process )
 Fix supervisor restart ( only one service )
 Django syncdb multidb support

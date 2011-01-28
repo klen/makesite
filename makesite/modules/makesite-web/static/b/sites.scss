@@ -1,11 +1,17 @@
 .sites {
 
+    padding: 10px 10px 50px;
     background: #efefef;
     border: 1px dotted #999;
+    margin: 0 $content-margin;
 
     &_title {
         color: #125;
         font-size: 1.5em; }
+
+    &_list {
+        margin: 0;
+    }
 
     &_item {
         margin-bottom: 0.5em;

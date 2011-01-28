@@ -1,0 +1,8 @@
+.footer {
+    margin-top: 20px;
+    padding-left: $content-margin;
+
+    &_info {
+        @include float;
+    }
+}
