@@ -1,5 +1,10 @@
 # makesite changelog
 
+## 2011-01-27 0.3.1
+
+* New makesite-web template
+
+
 ## 2011-01-27 0.3.0
 
 * Fix templates
