@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.defaults import page_not_found, server_error
 
-import views as rootviews
+from main.views import base
 
 
 # 404 and 500 handlers
@@ -12,7 +12,7 @@ handler500 = server_error
 
 # Project urls
 urlpatterns = patterns( '',
-    url('^$', rootviews.Index.as_view(), name='index'),
+    url('^$', base.Index.as_view(), name='index'),
     url('^logout/$', 'django.contrib.auth.views.logout', name='logout'),
 )
 

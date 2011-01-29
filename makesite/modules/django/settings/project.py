@@ -1,4 +1,6 @@
+from settings import PROJECT_NAME
 from settings.core import *
+
 
 # PROJECT SETTINGS
 # -----------------

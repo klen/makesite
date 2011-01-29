@@ -1,5 +1,5 @@
 import os, logging
-from settings import PROJECT_ROOT, DEVZONE_ROOT, PROJECT_NAME, parse_db, parse_cache
+from settings import PROJECT_ROOT, DEVZONE_ROOT, parse_db, parse_cache
 
 
 # Databases
@@ -17,7 +17,7 @@ DATABASES = parse_db() or {
 CACHES = parse_cache()
 
 # Base urls config
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'main.urls'
 
 # Media settigns
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'static')

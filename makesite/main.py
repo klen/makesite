@@ -191,7 +191,7 @@ def main():
     p = optparse.OptionParser(
             usage="%prog -p PATH PROJECTNAME [-b BRANCH] [-t TEMPLATE] [-c CONFIG] [-r REPOSITORY] [-m MODULENAME or MODULEPATH]",
             version='%prog ' + VERSION,
-            description= "'Makesite' is scripts collection for create base project dirs and config files. ")
+            description= "'Makesite' is scripts collection for create base project dirs and config files. \n See also next utilities: installsite, updatesite, removesite, cdsite, worksite, lssites, statsites.")
     p.add_option('-p', '--path', dest='path', default=path, help='Path to project dir. Required option.')
     p.add_option('-b', '--branch', dest='branch', help='Project branch.', default='master')
     p.add_option('-t', '--template', dest='template', help='Config templates.')
