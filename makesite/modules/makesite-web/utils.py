@@ -1,13 +1,20 @@
 import ConfigParser
 import os
 
+from makesite import INI_FILENAME, TEMPLATES_FILE
+
+
 DEPLOYDIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '../'))
 
+
 def read_config(folder):
-    path = os.path.join(folder, '.project.ini')
+    path = os.path.join(folder, INI_FILENAME)
     parser = ConfigParser.RawConfigParser()
     parser.read(path)
-    site = dict(parser.items('Main'))
+    try:
+        site = dict(parser.items('Main'))
+    except Exception:
+        return None
 
     git_head = os.path.join(folder, 'source', '.git', 'HEAD')
     if os.path.exists(git_head):
@@ -19,8 +26,16 @@ def read_config(folder):
 def get_sites():
     config = read_config(DEPLOYDIR)
     sites = []
-    for root, dirs, files in os.walk(config['sitesdir']):
-        if '.project.ini' in files:
-            sites.append(read_config(root))
+    root = config['sitesdir']
+    for prj_name in os.listdir(root):
+        prj = os.path.join(root, prj_name)
+        if os.path.isdir(prj):
+            for brn_name in os.listdir(prj):
+                brn = os.path.join(prj, brn_name)
+                if os.path.isdir(brn):
+                    for f in os.listdir(brn):
+                        if f == TEMPLATES_FILE:
+                            sites.append(read_config(brn))
+
     sites.sort(key=lambda x: x['project'])
     return sites
