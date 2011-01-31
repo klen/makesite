@@ -26,7 +26,7 @@ _makesite_verify_site () {
 # List of available sites.
 _makesite_find_sites () {
     _makesite_verify_sites_home || return 1
-    find $SITES_HOME -name '.makesite' | sed 's|/\.makesite||' | sort
+    find $SITES_HOME -maxdepth 3 -name '.makesite' | sed 's|/\.makesite||' | sort
 }
 
 # Get sitename
