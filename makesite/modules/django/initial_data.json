@@ -3,7 +3,7 @@
         "model": "auth.user",
         "pk": 1,
         "fields": {
-            "username": "intaxi", 
+            "username": "admin", 
             "first_name": "John", 
             "last_name": "Driver", 
             "is_active": true, 
@@ -12,8 +12,8 @@
             "last_login": "2010-01-01 00:00:00", 
             "groups": [], 
             "user_permissions": [], 
-            "password": "sha1$507fa$a858b4bad6495b8b76978b1ded0b1b4d157f7781", 
-            "email": "dummy@intaxi.ru", 
+            "password": "sha1$bb19a$51b2bac8dd83c30e6cf6694bf3049241a14124ea", 
+            "email": "admin@admin.admin", 
             "date_joined": "2010-01-01 00:00:00"
         }
     }
