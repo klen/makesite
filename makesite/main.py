@@ -41,6 +41,11 @@ def deploy(project, options):
     if options.info:
         sys.exit()
 
+    # Check path exists
+    if os.path.exists(main_options['deploy_dir']):
+        print "\n %s exists. Stop deploy."
+        sys.exit()
+
     # Create dir and makesite templates file
     create_dir( main_options[ 'deploy_dir' ] )
     create_file(os.path.join( main_options[ 'deploy_dir' ], TEMPLATES_FILE ), ' '.join([t[0] for t in templates]))
