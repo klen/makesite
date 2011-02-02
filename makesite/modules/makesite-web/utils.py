@@ -1,7 +1,7 @@
 import ConfigParser
 import os
 
-from makesite import INI_FILENAME, TEMPLATES_FILE
+from makesite import INI_FILENAME
 
 
 DEPLOYDIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '../'))
@@ -14,7 +14,7 @@ def read_config(folder):
     try:
         site = dict(parser.items('Main'))
     except Exception:
-        return None
+        return dict(project=None)
 
     git_head = os.path.join(folder, 'source', '.git', 'HEAD')
     if os.path.exists(git_head):
@@ -34,7 +34,7 @@ def get_sites():
                 brn = os.path.join(prj, brn_name)
                 if os.path.isdir(brn):
                     for f in os.listdir(brn):
-                        if f == TEMPLATES_FILE:
+                        if f == INI_FILENAME:
                             sites.append(read_config(brn))
 
     sites.sort(key=lambda x: x['project'])

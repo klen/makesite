@@ -1,5 +1,3 @@
-Check django template
-Check new project.ini name
 Add db-sqlite template
 Add install/remove custom templates
 Fix django module ( errors in install process )

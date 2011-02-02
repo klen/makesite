@@ -13,6 +13,9 @@ upload: _upload install
 
 _upload:
 	python setup.py sdist upload
+	git add .
+	git add . -u
+	git commit
 
 _register:
 	python setup.py register
