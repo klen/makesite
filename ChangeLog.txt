@@ -1,6 +1,7 @@
-## 2011-02-02 0.3.8
+## 2011-02-02 0.3.9
 
 * Fix makesite-web template
+* Fix siteinfo command
 * Add ckeck path exists in project deploy
 
 

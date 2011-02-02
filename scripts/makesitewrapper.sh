@@ -90,7 +90,7 @@ siteinfo () {
     _makesite_verify_sites_home || return 1
     _makesite_verify_site $1 || return 1
     _makesite_showinfo $1
-    cat $1/.project.ini
+    cat $1/makesite.ini
 }
 
 # Activate site virtualenv
