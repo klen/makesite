@@ -1,3 +1,8 @@
+## 2011-02-07 0.4.0
+
+* Fix base run service script
+
+
 ## 2011-02-02 0.3.9
 
 * Fix makesite-web template

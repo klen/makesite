@@ -2,13 +2,15 @@
 
 VIRTUALENVDIR={{ virtualenvdir }}
 VIRTUALENVDIR_ACTIVATE=$VIRTUALENVDIR/bin/activate
+PROJECT_SOURCEDIR={{ project_sourcedir }}
 COMMAND=$@
 
-PATH="{{ project_sourcedir }}:$PATH"
+PATH="$PROJECT_SOURCEDIR:$PATH"
 
 if [ -f $VIRTUALENVDIR_ACTIVATE ]; then
     PATH="$VIRTUALENVDIR/bin:$PATH"
 fi
 
 export PATH
+cd $PROJECT_SOURCEDIR
 $COMMAND
