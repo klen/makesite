@@ -35,10 +35,8 @@ for root, dirs, files in os.walk(PROJECT_ROOT, followlinks=True):
         TEMPLATE_DIRS += (os.path.join(root, 'templates'),)
 
 TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )),
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

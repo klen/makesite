@@ -1,5 +1,7 @@
 " Settings for dev zones. "
 from settings.project import *
+from settings.core import TEMPLATE_LOADERS
+
 
 # Caches
 CACHES['default']['KEY_PREFIX'] = '_'.join((PROJECT_NAME, 'DEV'))
@@ -12,9 +14,3 @@ if DEBUG:
     MIDDLEWARE_CLASSES += ( 'debug_toolbar.middleware.DebugToolbarMiddleware', )
     INSTALLED_APPS += ( 'debug_toolbar', )
     DEBUG_TOOLBAR_CONFIG = dict( INTERCEPT_REDIRECTS = False)
-
-# Disable templates cache
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
