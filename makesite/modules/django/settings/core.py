@@ -1,12 +1,14 @@
+" Common settings for all project. "
 import os, logging
-from settings import PROJECT_ROOT, DEVZONE_ROOT, parse_db, parse_cache
+
+from settings import PROJECT_ROOT, DEVZONE_ROOT, parse_cache
 
 
 # Databases
-DATABASES = parse_db() or {
+DATABASES = {
         'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': 'db.sqlite',
+                'NAME': 'django_master.sqlite',
                 'USER': '',
                 'PASSWORD': '',
                 'TEST_CHARSET': 'utf8',

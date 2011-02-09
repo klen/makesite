@@ -1,9 +1,8 @@
+" Settings for production. "
 from settings import PROJECT_NAME
 from settings.core import *
 
-
-# PROJECT SETTINGS
-# -----------------
+# Applications
 INSTALLED_APPS += (
 
     # Community apps
@@ -14,5 +13,8 @@ INSTALLED_APPS += (
 
 )
 
+# Caches
 CACHES['default']['KEY_PREFIX'] = '_'.join((PROJECT_NAME, 'PRJ'))
+
+# Sessions
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"

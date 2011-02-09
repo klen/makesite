@@ -1,3 +1,8 @@
+## 2011-02-09 0.4.1
+
+* Drop parse .db for django module
+
+
 ## 2011-02-07 0.4.0
 
 * Fix base run service script

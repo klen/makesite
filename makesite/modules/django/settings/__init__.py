@@ -1,10 +1,10 @@
+" Get base dirs and parse makesite.ini if exists. "
 import os.path
 
 
-PROJECT_ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__), '../'))
-DEVZONE_ROOT = os.path.realpath(os.path.join(PROJECT_ROOT, '../'))
-DB_FILE = os.path.join(PROJECT_ROOT, '.db')
-CONFIG_FILE = os.path.join(DEVZONE_ROOT, '.project.ini')
+PROJECT_ROOT = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+DEVZONE_ROOT = os.path.dirname(PROJECT_ROOT)
+CONFIG_FILE = os.path.join(DEVZONE_ROOT, 'makesite.ini')
 
 
 # Load configs from project ini file (sitegen generated)
@@ -20,30 +20,6 @@ else:
 
 PROJECT_NAME = "%s.%s" % (V.get('project', 'undefined'), V.get('branch', 'master'))
 __TEMPLATES = V.get('template', '').split()
-
-
-def parse_db():
-    """ Load databases from .db file.
-    """
-    if not os.path.exists(DB_FILE):
-        return None
-
-    databases = dict()
-    for line in open( DB_FILE ).readlines():
-        if line.startswith('#') or not len(line.strip()):
-            continue
-        name, backend, connect_data = line.split()
-        user_data, db_data = connect_data.split('@')
-        user, password = user_data.split(':')
-        host, db_name = db_data.split('/')
-        databases[ name ] = dict(
-                ENGINE = backend,
-                NAME = db_name,
-                HOST = host,
-                USER = user,
-                PASSWORD = password,
-        )
-    return databases
 
 
 def parse_cache():
