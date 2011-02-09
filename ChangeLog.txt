@@ -1,6 +1,7 @@
-## 2011-02-09 0.4.1
+## 2011-02-09 0.4.2
 
 * Drop parse .db for django module
+* Add dev, project mode option
 
 
 ## 2011-02-07 0.4.0

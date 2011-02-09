@@ -4,7 +4,7 @@ SITE_USER={{ site_user }}
 SITE_GROUP={{ site_group }}
 PROJECT_SOURCEDIR={{ project_sourcedir }}
 BASERUN={{ deploy_dir }}/service/base_run.sh
-DJANGO_SETTINGS={{ django_settings }}
+DJANGO_SETTINGS=settings.{{ mode or 'dev' }}
 
 sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_SOURCEDIR
 

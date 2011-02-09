@@ -4,7 +4,7 @@ import os
 from django.core.handlers.wsgi import WSGIHandler
 
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings.dev'
+os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get('DJANGO_SETTINGS_MODULE', 'settings.dev')
 application = WSGIHandler()
 
 if 'dev' in os.environ['DJANGO_SETTINGS_MODULE']:

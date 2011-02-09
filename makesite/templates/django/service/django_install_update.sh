@@ -2,7 +2,7 @@
 
 SITE_USER={{ site_user }}
 BASERUN={{ deploy_dir }}/service/base_run.sh
-DJANGO_SETTINGS={{ django_settings }}
+DJANGO_SETTINGS=settings.{{ mode or 'dev' }}
 
 if [ -f $BASERUN ]; then
     echo "  * Run django migration."
