@@ -1,11 +1,14 @@
 #!/bin/sh
 
+# Variables
 SITE_USER={{ site_user }}
 BRANCH={{ branch }}
 PROJECT={{ project }}
 BASERUN={{ project_servicedir }}/base_run.sh
 TEST_FILE={{ project_sourcedir }}/.tests
 
+
+# Test project
 if [ "$BRANCH" = "master" ] || [ "$BRANCH" = "test" ]; then
     if [ -f $BASE_RUN ] && [ -f $TEST_FILE ]; then
         command=`cat $TEST_FILE`

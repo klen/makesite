@@ -2,7 +2,7 @@
 
 CRON_OUTPUTFILE = '{{ cron_outputfile }}'
 CRON_PROJECTFILE = '{{ cron_projectfile }}'
-CRON_RUNSCRIPT = '{{ user }} sh {{ deploy_dir }}/service/base_run.sh'
+CRON_RUNSCRIPT = '{{ site_user }} sh {{ deploy_dir }}/service/base_run.sh'
 
 
 def parse_crontab( content ):

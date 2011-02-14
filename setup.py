@@ -8,7 +8,7 @@ from makesite import VERSION, PROJECT, LICENSE
 
 PACKAGE_DATA = [ '*.ini' ]
 
-for folder in ['templates', 'modules']:
+for folder in ['base', 'templates', 'modules']:
     for root, dirs, files in os.walk(os.path.join(PROJECT, folder)):
         for filename in files:
             PACKAGE_DATA.append("%s/%s" % ( root[len(PROJECT)+1:], filename ))

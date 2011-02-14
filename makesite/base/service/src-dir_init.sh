@@ -1,16 +1,22 @@
 #!/bin/sh
 
+# Variables
 SITE_USER={{ site_user }}
 SITE_GROUP={{ site_group }}
 DEPLOY_DIR={{ deploy_dir }}
 PROJECT_STATICDIR={{ project_staticdir }}
 PROJECT_SOURCEDIR={{ project_sourcedir }}
-SRC_DIR={{ sourcedir }}
-SRC_STATIC_DIR={{ deploy_dir }}/source/static
+SRC={{ src }}
+SRC_STATIC_DIR=$PROJECT_SOURCEDIR/static
 
-echo "  * Clone $SRC_DIR to $PROJECT_SOURCEDIR."
-sudo cp -r $SRC_DIR $PROJECT_SOURCEDIR
 
+# Copy source directory to project source directory
+echo "  * Clone $SRC to $PROJECT_SOURCEDIR."
+sudo cp -r $SRC $PROJECT_SOURCEDIR
+
+if [ ! -d $PROJECT_STATICDIR ]; then
+    sudo mkdir -p $PROJECT_STATICDIR
+fi
 # Copy static in static dir
 if [ -d $SRC_STATIC_DIR ]; then
     sudo cp -r $SRC_STATIC_DIR/* $PROJECT_STATICDIR
