@@ -1,31 +1,19 @@
-..   -*- mode: rst -*-
-
-Makesite
-########
-
-Makesite is collection scripts for make and control site structure.
-
-Please read the docs_ for more info.
-
-.. contents::
-
-Requirements
--------------
-
-- python >= 2.5
-- pip >= 0.8
+Usage
+=====
 
 
-Installation
-------------
+Install
+-------
 
-**Makesite** should be installed using pip: ::
+**Makesite** should be installed using pip_ or easy_install: ::
 
     pip install makesite
 
+    easy_install makesite
+
 
 Setup
-------
+-----
 
 The variable SITES_HOME tell makesite where to place your sites.
 Add this lines to your shell startup file .bashrc, .profile, etc) ::
@@ -38,8 +26,9 @@ Add this lines to your shell startup file .bashrc, .profile, etc) ::
 Also it add you more makesite comands: cdsite, envsite, worksite, lssites and autocomplete in bash
 
 
-Using
------
+Help
+----
+
 Run makesite for help message. ::
 
     $ makesite
@@ -67,41 +56,30 @@ Run makesite for help message. ::
                             git+http://git_adress, /test/myproject).
 
 
-Examples
+Commands
 --------
 
-Deploy standart django template from makesite to project "beta": ::
-    
-    makesite -m django beta
+* **makesite** - base makesite command used for deploy projects
+
+* **installsite** - command run install scripts from deployed project, makesite auto run this command in deploy
+  Can be used for repeat install if it break in deploy.
+
+* **updatesite** - command run update scripts from deployed project in templates order. 
+  Used for update projects.
+
+* **removeproject** - command run removed scripts from deployed project in templates order.
+  Used for remove project.
+
+* **lssites** - show list deployed projects
+
+* **cdsite** - change directory to projects dir
+  Used for quick change directory because working bash autocomplete on deployed projects
+
+* **siteinfo** - show site deploy config information
+
+* **envsite** - activate project virtualenv
+
+* **worksite** - cdsite and envsite in one command. Change dir to project dir and activate virtualenv
 
 
-Deploy branch 'test' from project 'alpha': ::
-
-    makesite -b test alpha
-
-Deploy branch 'master' from project 'alpha' from source git@test.dev/test.git: ::
-
-    makesite alpha -s git+git@test.dev/test.git
-
-Update branch 'test' from project 'alpha': ::
-
-    updatesite /sites/alpha/test
-
-View deployed projects: ::
-
-    lssites
-    statsites
-
-And etc, etc, etc
-
-
-Features
---------
-
-Makesite have support for **nginx**, **supervisor**, **uwsgi**, **git**, **django**, **tornado**, **compass**, **memcached**, **cron**, **virtualenv**, **pip**, **zetalibrary**, **celeryd** and more
-It allow you easy create or deploy django projects and control it.
-
-Feedback are welcome!
-
-
-.. _docs: http://packages.python.org/makesite/
+.. _pip: http://pip.openplans.org/

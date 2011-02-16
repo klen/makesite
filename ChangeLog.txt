@@ -1,3 +1,8 @@
+## 2011-02-14 0.5.2
+
+* Create documentation
+
+
 ## 2011-02-14 0.5.1
 
 * Add tornado template
