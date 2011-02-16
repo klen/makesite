@@ -39,4 +39,4 @@ test:
 
 doc:
 	python setup.py build_sphinx --source-dir=docs/ --build-dir=docs/_build --all-files
-	python setup.py upload_sphinx --upload-dir=docs/build/html
+	python setup.py upload_sphinx --upload-dir=docs/_build/html
