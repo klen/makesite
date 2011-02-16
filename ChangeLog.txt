@@ -1,194 +1,157 @@
-## 2011-02-14 0.5.2
+CHANGES
+=======
 
+## 2011-02-14 0.5.2
+-------------------
 * Create documentation
 
-
 ## 2011-02-14 0.5.1
-
+-------------------
 * Add tornado template
 * Change django, uwsgi template
 
-
 ## 2011-02-14 0.5.0
-
+-------------------
 * New makesite deploy logic
 
-
 ## 2011-02-09 0.4.6
-
+-------------------
 * Drop parse .db for django module
 * Add dev, project mode option
 * Enable cached templates for django module
 
-
 ## 2011-02-07 0.4.0
-
+-------------------
 * Fix base run service script
 
-
 ## 2011-02-02 0.3.9
-
+-------------------
 * Fix makesite-web template
 * Fix siteinfo command
 * Add ckeck path exists in project deploy
 
-
 ## 2011-01-31 0.3.4
-
+-------------------
 * Add dummy module, optimize django module
 * Improve bash autocomplete
 
-
 ## 2011-01-27 0.3.2
-
+-------------------
 * New makesite-web template
 
-
 ## 2011-01-27 0.3.0
-
+-------------------
 * Fix templates
 
-
 ## 2011-01-26 0.2.93
-
+--------------------
 * Another fix celeryd (debya.msk@gmail.com)
 
-
 ## 2011-01-24 0.2.92
-
+--------------------
 * Add worksite command
 * envsite now check directory
 
-
 ## 2011-01-23 0.2.91
-
+--------------------
 * Fix virtualenv template (denya.msk@gmail.com)
 
-
 ## 2011-01-21 0.2.9
-
+-------------------
 * Add celeryd template and fix template scripts (denya.msk@gmail.com)
 
-
 ## 2011-01-19 0.2.7
-
+-------------------
 * Fix 404 and 500 templates in django module
 
-
 ## 2010-12-27 0.2.5
-
+-------------------
 * Fix compass and src-dir templates
 
-
 ## 2010-12-26 0.2.3
-
+-------------------
 * Add django module
 
-
 ## 2010-12-16 0.2.2
-
+-------------------
 * Cosmetic updates in makesite-web
 * Public in pypi
 * Rename project from sitegen to makesite
 * Fix makesite-web and wsgi module
 
 ## 2010-12-16 0.1.7
-
+-------------------
 * Add modules support
 * Add sitegen-web module
 
-
 ## 2010-12-14 0.1.6
-
+-------------------
 * Add autoinstall git, virtualenv and etc
 
-
 ## 2010-11-22 0.1.5
-
+-------------------
 * Add testsite
 
-
 ## 2010-11-18 0.1.4
-
+-------------------
 * Add django, cron, postgres template
 
-
 ## 2010-11-16 0.1.3
-
+-------------------
 * Rename sitegenupdate to updatesite
-
 * Change bash complete
-
 * Add removesite, drop options -d
-
 * Drop tempita
 
-
 ## 2010-11-16 0.1.2
-
+-------------------
 * Add sitegenupdate
 
-
 ## 2010-11-13 0.1.1
-
+-------------------
 * Add update templates
 
-
 ## 2010-11-13 0.1
-
+-----------------
 * Change template engine from tempita to pyratemp
 
-
 ## 2010-11-13 0.09
-
+------------------
 * Drop -l options
-
 * Add sitegen wrapper ( lssites, cdsite, envsite )
 
-
 ## 2010-11-13 0.08
-
+------------------
 * Add $SITEGEN_SITES_PATH parsing
-
 * Sitegen now run from current user ( without sudo )
 
-
 ## 2010-11-12 0.07
-
+------------------
 * Add option --path - required options (path to projects dir)
-
 * Now ini file also parsed from project_dir/sitegen.ini
 
-
 ## 2010-11-12 0.06
-
+------------------
 * Add tempita template engine
 
-
 ## 2010-11-12 0.05
-
+------------------
 * Add restart template
 
-
 ## 2010-11-11 0.04
-
+------------------
 * Add pip template
 
-
 ## 2010-11-11 0.03
-
+------------------
 * Add listing project
-
 * Add git template
 
-
 ## 2010-11-11 0.02
-
+------------------
 * Remove project dir if it empty
-
 * Add virtualenv support to uwsgi template
 
-
 ## 2010-11-10 0.01
-
+------------------
 * First public version.

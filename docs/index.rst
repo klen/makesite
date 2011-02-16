@@ -46,6 +46,13 @@ Contents:
    examples
    templates
 
+Make sure you`ve read the following document if you are upgrading from previous versions of makesite:
+
+.. toctree::
+   :maxdepth: 1
+
+   changes
+
 .. note::
 
     makesite is still at early stages of development and API may
