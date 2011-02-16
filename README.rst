@@ -33,6 +33,8 @@ Add this lines to your shell startup file .bashrc, .profile, etc) ::
         source /usr/local/bin/makesitewrapper.sh
     fi
 
+Also it add you more makesite comands: cdsite, envsite, worksite, lssites and autocomplete in bash
+
 
 Using
 -----
@@ -89,3 +91,12 @@ View deployed projects: ::
     statsites
 
 And etc, etc, etc
+
+
+Features
+--------
+
+Makesite have support for **nginx**, **supervisor**, **uwsgi**, **git**, **django**, **tornado**, **compass**, **memcached**, **cron**, **virtualenv**, **pip**, **zetalibrary**, **celeryd** and more
+It allow you easy create or deploy django projects and control it.
+
+Feedback are welcome!
