@@ -1,12 +1,10 @@
 #!/bin/sh
 
-BRANCH={{ branch }}
-PROJECT={{ project }}
-SUPERVISOR_PROGRAMM_NAME=$PROJECT.$BRANCH
+# Variables
+SUPERVISOR_PROGRAMM_NAME={{ project }}.{{ branch }}
 SUPERVISOR_CONFPATH={{ supervisor_confpath }}
 
-which supervisorctl 1>/dev/null || { echo "ERROR: * I require supervisorctl but it's not installed."; exit 0; }
-
+# Restart supervisor programm
 if [ -f $SUPERVISOR_CONFPATH ]; then
     echo "  * Restart supervisor service: $SUPERVISOR_PROGRAMM_NAME."
     sudo supervisorctl restart $SUPERVISOR_PROGRAMM_NAME

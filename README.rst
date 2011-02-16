@@ -60,7 +60,7 @@ Run makesite for help message. ::
     -m MODULE, --module=MODULE
                             Deploy module
     -s SRC, --src=SRC     Path to source (filesystem or repository address ex:
-                            git+http://git_adress).
+                            git+http://git_adress, /test/myproject).
 
 
 Examples

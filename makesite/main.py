@@ -90,7 +90,6 @@ def load_config(project, options):
         sitesdir = options.path,
         deploy_dir = os.path.join( os.path.abspath( options.path ), project, options.branch ),
         info = options.info,
-        template = options.template,
     ))
 
     # Load base configs
@@ -102,6 +101,9 @@ def load_config(project, options):
         src = os.path.join(options.module)
         if not os.path.exists(src):
             src = os.path.join(MODULES_DIR, options.module)
+
+    if options.template:
+        result['Main']['template'] = options.template
 
     result['Main']['src'] = src
     return result

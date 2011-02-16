@@ -1,3 +1,9 @@
+## 2011-02-14 0.5.1
+
+* Add tornado template
+* Change django, uwsgi template
+
+
 ## 2011-02-14 0.5.0
 
 * New makesite deploy logic

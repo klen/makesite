@@ -97,7 +97,7 @@ siteinfo () {
 envsite () {
     project="$1"
     if [ -z $project ]; then
-        project=$PWD
+        project=`echo $PWD | sed 's|/source$||'`
     fi
     activate=$project/.virtualenv/bin/activate
 

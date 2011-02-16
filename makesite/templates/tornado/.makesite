@@ -1,0 +1,1 @@
+virtualenv cron memcached supervisor nginx
