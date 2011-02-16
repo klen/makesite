@@ -9,18 +9,6 @@ PROJECT_SOURCEDIR={{ project_sourcedir }}
 GIT_PROJECT_TEMP_DIR="/tmp/$BRANCH.$PROJECT-$SITE_USER"
 
 
-# Check git installed.
-which git 1>/dev/null || {
-    echo "  * Git not found! Attempting to install..."
-    if [ -f /etc/lsb-release ] ; then
-        sudo apt-get install git
-    elif [ -f /etc/fedora-release ] ; then
-        sudo yum install git
-    elif [ -f /etc/debian_version ] ; then
-        sudo apt-get install git
-    fi
-}
-
 echo "  * Copy $PROJECT_SOURCEDIR to $GIT_PROJECT_TEMP_DIR."
 rm -rf $GIT_PROJECT_TEMP_DIR
 cp -r $PROJECT_SOURCEDIR $GIT_PROJECT_TEMP_DIR
