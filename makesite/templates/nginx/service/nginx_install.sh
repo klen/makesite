@@ -8,11 +8,13 @@ NGINX_CONFPATH={{ nginx_confpath }}
 which nginx 1>/dev/null || {
         echo "  * NGINX not found! Attempting to install..."
         if [ -f /etc/lsb-release ] ; then
-                sudo apt-get install nginx
+            sudo apt-add-repository ppa:nginx/stable
+            sudo apt-get update
+            sudo apt-get install nginx -y
         elif [ -f /etc/fedora-release ] ; then
-                sudo yum install nginx
+            sudo yum install nginx
         elif [ -f /etc/debian_version ] ; then
-                sudo apt-get install nginx
+            sudo apt-get install nginx -y
         fi
 }
 

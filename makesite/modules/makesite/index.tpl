@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="Format-Detection" content="telephone=yes" />
         <meta name="Viewport" content="width=device-width" />
-        <title>Makesite web</title>
+        <title>Makesite</title>
         <link rel="home" href="/" />
         <link rel="stylesheet" type="text/css" href="/static/_main.css" />
     </head>
@@ -12,7 +12,7 @@
     <body>
 
         <div class="header">
-            <h1 class="header_title">Makesite Sites Index</h1>
+            <h1 class="header_title">Sites Index</h1>
         </div>
         <div class="sites">
             <h1 class="sites_title">Summary</h1>
@@ -49,7 +49,7 @@
             </ul>
         </div>
         <div class="footer">
-            <p class="footer_info">Makesite web template</p>
+            <p class="footer_info">Makesite web module</p>
         </div>
         <script language="javascript" type="text/javascript" src="/static/_main.js"></script>
     </body>

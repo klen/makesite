@@ -9,7 +9,7 @@ CRON_PARSESCRIPT={{ deploy_dir }}/service/cron_parse.py
 which cron 1>/dev/null || {
     echo "  * Cron not found! Attempting to install..."
     if [ -f /etc/lsb-release ] ; then
-        sudo apt-get install cron
+        sudo apt-get install cron -y
     elif [ -f /etc/fedora-release ] ; then
         sudo yum install cron
     elif [ -f /etc/debian_version ] ; then

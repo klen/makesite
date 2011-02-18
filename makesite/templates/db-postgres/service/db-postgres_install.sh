@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Variables
 PGUSER={{ pguser }}
 PGPASSWORD={{ pgpassword }}
 PGHOST={{ pghost }}

@@ -1,9 +1,11 @@
 #!/bin/sh
 
+# Variables
 MEMCACHED_HOST={{ memcached_host }}
 MEMCACHED_PORT={{ memcached_port }}
 
 if [ -z "$MEMCACHED_HOST" ] || [ -z "$MEMCACHED_PORT" ]; then
+    # pass
     exit 0
 fi
 

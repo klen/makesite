@@ -1,9 +1,11 @@
 #!/bin/sh
 
+# Variables
 PROJECT_STATICDIR={{ project_staticdir }}
 SITE_USER={{ site_user }}
 SITE_GROUP={{ site_group }}
 
+# Check compass
 which compass 1>/dev/null || { echo "ERROR: * I require compass but it's not installed."; exit 0; }
 
 olddir=""

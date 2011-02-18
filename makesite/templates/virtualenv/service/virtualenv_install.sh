@@ -5,6 +5,7 @@ SITE_GROUP={{ site_group }}
 VIRTUALENVDIR={{ virtualenvdir }}
 PIP_PROJECTFILE={{ pip_projectfile }}
 PYTHON_PREFIX={{ python_prefix }}
+VIRTUALENV_DEBUG={{ virtualenv_debug }}
 
 # Check easy_install
 which easy_install 1>/dev/null || {
@@ -42,11 +43,12 @@ _psycopg_to_ve () {
 }
 
 _pylint_to_ve () {
-
-    python -c "import pylint" 2>/dev/null || {
-        echo "  * Python pylint not found! Attempting to install..."
-        sudo pip install pylint
-    }
+    if [ ! -z "$VIRTUALENV_DEBUG" ]; then
+        python -c "import pylint" 2>/dev/null || {
+            echo "  * Python pylint not found! Attempting to install..."
+            sudo pip install pylint
+        }
+    fi
 
     pylint=`python -c "import pylint as mod;print mod.__path__[0]"`
     logilab=`python -c "import logilab as mod;print mod.__path__[0]"`
@@ -58,11 +60,12 @@ _pylint_to_ve () {
 }
 
 _ipython_to_ve () {
-
-    python -c "import ipdb" 2>/dev/null || {
-        echo "  * Python ipdb not found! Attempting to install..."
-        sudo pip install ipdb
-    }
+    if [ ! -z "$VIRTUALENV_DEBUG" ]; then
+        python -c "import ipdb" 2>/dev/null || {
+            echo "  * Python ipdb not found! Attempting to install..."
+            sudo pip install ipdb
+        }
+    fi
 
     ipython=`python -c "import IPython as mod;print mod.__path__[0]"`
     ipdb=`python -c "import ipdb as mod;print mod.__path__[0]"`
@@ -76,18 +79,11 @@ _ipython_to_ve () {
 }
 
 _memcache_to_ve () {
-
-    python -c "import memcache" 2>/dev/null || {
-        echo "  * Python memcache not found! Attempting to install..."
-        sudo pip install python-memcached
-    }
-
     memcache=`python -c "import memcache as mod;print mod.__file__"`
     if [ -f $memcache ]; then
         echo "  * Create links to memcache in virtualenv."
         sudo ln -sf $memcache $VIRTUALENVDIR/lib/$PYTHON_PREFIX
     fi    
-    
 }
 
 echo '  * Create virtualenv:'$VIRTUALENVDIR

@@ -29,6 +29,11 @@ One project can be deployed on several servers. Projects are isolated and
 deployments are repeatable. Project can be removed or updated in auto mode.
 Makesite useful for version control system hooks or automatic make dev zones.
 
+    .. warning ::
+       Makesite needed root or sudo access on deploy project
+       But dont run sudo makesite because he is dont find your $SITES_PATH settings.
+
+
 Requirements
 -------------
 
@@ -43,8 +48,11 @@ Contents:
    :maxdepth: 2
 
    usage
+   guide
    examples
+   options
    templates
+   modules
 
 Make sure you`ve read the following document if you are upgrading from previous versions of makesite:
 
@@ -57,6 +65,7 @@ Make sure you`ve read the following document if you are upgrading from previous 
 
     makesite is still at early stages of development and API may
     change in future.
+
 
 Bug tracker
 ===========
