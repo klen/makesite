@@ -1,9 +1,9 @@
 CHANGES
 =======
 
-## 2011-02-18 0.5.3
+## 2011-02-18 0.5.4
 -------------------
-* Fix templates
+* Auto install memcached if HOST is localhost and this not install
 
 ## 2011-02-14 0.5.2
 -------------------

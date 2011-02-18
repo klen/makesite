@@ -9,6 +9,8 @@ PROJECT_SOURCEDIR={{ project_sourcedir }}
 SRC={{ src }}
 SRC_STATIC_DIR=$PROJECT_SOURCEDIR/static
 
+# Remove project dir
+sudo rm -rf $PROJECT_SOURCEDIR
 
 # Copy source directory to project source directory
 echo "  * Clone $SRC to $PROJECT_SOURCEDIR."
