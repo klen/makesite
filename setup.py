@@ -46,7 +46,7 @@ META_DATA = dict(
     ],
 
     packages=find_packages(),
-    scripts=map( lambda x: 'scripts/' + x, os.listdir( 'scripts' )),
+    scripts=map( lambda x: 'bin/' + x, os.listdir( 'bin' )),
     package_data = { '': PACKAGE_DATA, },
 
     entry_points={
