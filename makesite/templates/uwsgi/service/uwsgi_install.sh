@@ -10,5 +10,6 @@ which uwsgi 1>/dev/null || {
         sudo apt-get install python-setuptools -y
     fi
     sudo pip install http://projects.unbit.it/downloads/uwsgi-latest.tar.gz
-    sudo /etc/init.d/supervisor restart
+    sudo /etc/init.d/supervisor stop
+    sudo /etc/init.d/supervisor start
 }

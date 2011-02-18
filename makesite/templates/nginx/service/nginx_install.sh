@@ -9,6 +9,8 @@ which nginx 1>/dev/null || {
         echo "  * NGINX not found! Attempting to install..."
         # Ubuntu
         if [ -f /etc/lsb-release ] ; then
+            sudo add-apt-repository ppa:nginx/stable
+            sudo apt-get update
             sudo apt-get install nginx-full -y
 
         # Debian
