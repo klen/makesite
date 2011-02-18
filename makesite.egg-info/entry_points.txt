@@ -1,0 +1,3 @@
+[console_scripts]
+makesite = makesite.main:main
+

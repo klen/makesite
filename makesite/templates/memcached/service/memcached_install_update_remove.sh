@@ -10,7 +10,7 @@ if [ -z "$MEMCACHED_HOST" ] || [ -z "$MEMCACHED_PORT" ]; then
 fi
 
 # Install memcached on localhost
-if [ "$MEMCACHED_HOST" -eq "localhost" ]; then
+if [ $MEMCACHED_HOST = 'localhost' ]; then
     which memcached 1>/dev/null || {
             echo "  * Memcache not found! Attempting to install..."
             # Ubuntu

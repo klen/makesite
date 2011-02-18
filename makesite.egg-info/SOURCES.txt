@@ -1,0 +1,16 @@
+README
+setup.py
+bin/installsite
+bin/makesiteparse
+bin/makesitewrapper.sh
+bin/removesite
+bin/testsite
+bin/updatesite
+makesite/__init__.py
+makesite/main.py
+makesite/template.py
+makesite.egg-info/PKG-INFO
+makesite.egg-info/SOURCES.txt
+makesite.egg-info/dependency_links.txt
+makesite.egg-info/entry_points.txt
+makesite.egg-info/top_level.txt
