@@ -13,7 +13,7 @@ install: remove _install clean
 
 register: _register clean
 
-upload: clean _upload install _commit doc
+upload: _upload install _commit doc
 
 _upload:
 	python setup.py sdist upload
