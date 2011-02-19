@@ -5,7 +5,9 @@ Usage
 Install
 -------
 
-**Makesite** should be installed using pip_ or easy_install: ::
+:data:`makesite` should be installed using pip_ or setuptools_:
+
+.. code-block:: bash
 
     pip install makesite
 
@@ -15,37 +17,47 @@ Install
 Setup
 -----
 
-The variable SITES_HOME tell makesite where to place your sites.
-Add this lines to your shell startup file .bashrc, .profile, etc) ::
+.. envvar:: SITES_HOME
+
+The variable :envvar:`SITES_HOME` tell makesite where to place your sites.
+Add this lines to your shell startup file ``.bashrc``, ``.profile``, etc)
+
+.. code-block:: bash
 
     if [ -f /usr/local/bin/makesitewrapper.sh ]; then
-        export SITES_HOME=PATH_TO_YOUR_SITES_HOME
+        export SITES_HOME=<PATH_TO_YOUR_SITES_HOME>
         source /usr/local/bin/makesitewrapper.sh
     fi
 
-Also it adds to you more makesite comands: cdsite, envsite, worksite, lssites and autocomplete in bash
+Also it adds to you more makesite commands_ and autocomplete in bash
 
-You may want to create base config file in SITES_PATH, with your project settings:
-ex.: **/sites/makesite.ini**: ::
+You may want to create base config file ``makesite.ini`` in :envvar:`SITES_HOME`, with your project settings:
+ex.: ``/sites/makesite.ini``:
 
-    [Main]
-    domain={{ branch + '.' if not branch == 'master' else ''}}{{ project }}.klen.xxx
-    src=git+gitolite@git.dev.server:{{ project }}.git
-    pguser=postgres
-    pghost=pg.dev.server
-    ; password for create db and users for projects
-    pgpassword=blablabla
-    memcached_host=localhost
-    ; server mode, example for switch django settings
-    mode=dev
+.. code-block:: ini
 
-This will allow you to identify any common settings for projects.
+   [Main]
+   domain={{ branch + '.' if not branch == 'master' else ''}}{{ project }}.klen.xxx
+   src=git+gitolite@git.dev.server:{{ project }}.git
+   pguser=postgres
+   pghost=pg.dev.server
+   ; password for create db and users for projects
+   pgpassword=blablabla
+   memcached_host=localhost
+   ; server mode, example for switch django settings
+   mode=dev
+
+This will allow you to identify any :doc:`common settings <configuration>` for projects.
 
 
 Help
 ----
 
-Run makesite for help message. ::
+.. data:: makesite
+
+    Base command used for deploy projects.
+
+Run it for help message. ::
 
     $ makesite
     Usage: makesite -p PATH PROJECTNAME [-b BRANCH] [-t TEMPLATE] [-c CONFIG] [-s SOURCE_PATH] [-m MODULENAME or MODULEPATH] [-i]
@@ -75,38 +87,57 @@ Run makesite for help message. ::
 Commands
 --------
 
-* **makesite** - base makesite command used for deploy projects
+.. data:: installsite
 
-* **installsite** - command run install scripts from deployed project, makesite auto run this command in deploy
-  Can be used for repeat install if it break in deploy. ::
+   Run install scripts from deployed project, makesite auto run this command in deploy.
+   Can be used for repeat install if it break in deploy. ::
 
         $ installsite 
         Usage: installsite PROJECT_BRANCH_PATH
-        'installsite' part of makesite scripts. Activate install hooks for target project. Run tests for master branch wich option --autotest.
+        'installsite' part of makesite scripts.
+        Activate install hooks for target project. Run tests for master branch wich option --autotest.
 
 
-* **updatesite** - command run update scripts from deployed project in templates order. 
-  Used for update projects. ::
-    $ updatesite 
-    Usage: updatesite PROJECT_BRANCH_PATH
-    'updatesite' part of makesite scripts. Activate update hooks for target project. Run tests for master branch wich option --autotest.
+.. data:: updatesite
 
-* **removesite** - command run removed scripts from deployed project in templates order.
-  Used for remove project. ::
-    $ removesite 
-    Usage: removesite PROJECT_BRANCH_PATH
-    'removesite' part of makesite scripts. Activate remove hooks for target project and remove project dir.
+   Run update scripts from deployed project in templates order. 
+   Used for update projects. ::
 
-* **lssites** - show list deployed projects
+        $ updatesite 
+        Usage: updatesite PROJECT_BRANCH_PATH
+        'updatesite' part of makesite scripts.
+        Activate update hooks for target project. Run tests for master branch wich option --autotest.
 
-* **cdsite** - change directory to projects dir
-  Used for quick change directory because working bash autocomplete on deployed projects
+.. data:: removesite
 
-* **siteinfo** - show site deploy config information
+   Run removed scripts from deployed project in templates order.
+   Used for remove project. ::
 
-* **envsite** - activate project virtualenv
+        $ removesite 
+        Usage: removesite PROJECT_BRANCH_PATH
+        'removesite' part of makesite scripts. Activate remove hooks for target project and remove project dir.
 
-* **worksite** - cdsite and envsite in one command. Change dir to project dir and activate virtualenv
+.. data:: lssites
+
+   Show list deployed projects.
+
+.. data:: cdsite
+
+   Change directory to projects dir.
+   Used for quick change directory because working bash autocomplete on deployed projects
+
+.. data:: siteinfo
+
+   Show site deploy config information
+
+.. data:: envsite
+
+   Activate project virtualenv
+
+.. data:: worksite
+
+   :data:`cdsite` and :data:`envsite` in one command. Change dir to project dir and activate virtualenv
 
 
 .. _pip: http://pip.openplans.org/
+.. _setuptools: http://pypi.python.org/pypi/setuptools 

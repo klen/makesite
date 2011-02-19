@@ -13,17 +13,16 @@ It automates the configuration of your server. Makesite does not do except copy 
 Project deploy process
 ----------------------
 
-#. Parse options from command line and config files;
+When deploying ``makesite`` make operation in next order.
 
-#. Copy base_ template to deploy dir.
+#. Parse options from :doc:`command line and config files <configuration>`;
 
-#. Load source;
+#. Copy :term:`base` template to ``deploy dir``.
+
+#. Load project source;
 
 #. Parse makesite options from source if exists;
 
-#. Copy all project templates in deploy dir;
+#. Copy all project templates in ``deploy dir``;
 
 #. Run templates service install files.
-
-
-.. _base source: https://github.com/klen/makesite/tree/master/makesite/base

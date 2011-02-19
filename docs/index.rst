@@ -7,11 +7,11 @@
 Makesite documentation
 ======================
 
-Makesite is the system for deploying and managing sites.
+**Makesite** is the system for deploying and managing sites.
 
 
 Features
----------------
+--------
 
 * support wsgi projects, `django`_, `tornado`_ and etc;
 * projects may be isolated with `virtualenv`_;
@@ -25,19 +25,20 @@ Features
 * adds to bash a some useful commands:
   cdsite, lssites, updatesite, removesite, envsite, worksite with bash autocomplete
 
-Several projects can be deployed on the same VPS using makesite.
+Several projects can be deployed on the same VPS using ``makesite``.
 One project can be deployed on several servers. Projects are isolated and
 deployments are repeatable. Project can be removed or updated in auto mode.
 Makesite is useful for version control system hooks or fast automatically creating dev zones.
 I use it for production deployment, too.
 
     .. warning ::
-       Makesite needed root or sudo access on deploy project
-       But do not run it under sudo because he did not find your $SITES_PATH settings.
+       Makesite needed root or sudo access on deploy project.
+       But do not run it under sudo because he did not find your :envvar:`SITES_HOME` settings.
+       He asks access in process.
 
     .. warning ::
        Some templates makesite install missing software automaticaly ( nginx, supervisor ).
-       Look to the templates before running the project.
+       Look to the templates before deploy.
 
 
 Requirements
@@ -59,14 +60,14 @@ Meeting
    examples
 
 
-Digging in:
+Digging in
 -----------
 
 .. toctree::
    :maxdepth: 2
 
    usage
-   options
+   configuration
    templates
    modules
    customization

@@ -87,7 +87,7 @@ def load_config(project, options):
         project = project,
         python_prefix = PYTHON_PREFIX,
         branch = options.branch,
-        sitesdir = options.path,
+        sites_home = options.path,
         deploy_dir = os.path.join( os.path.abspath( options.path ), project, options.branch ),
         info = options.info,
     ))

@@ -5,222 +5,205 @@ Templates
 Files in template, parse with makesite options. Service files in template will be launched.
 
 
-.. contents::
+Template syntax
+---------------
+
+In template files you can use simple syntax. ::
+
+    listen      {{ port }};
+    server_name {{ domain }};
+    access_log  {{ deploy_dir }}/logs/nginx_access.log;
+    error_log   {{ deploy_dir }}/logs/nginx_error.log;
+
+Variable context from config and command line options. Each file from template will be processed.
 
 
-Standart templates
-==================
-
-base
+List
 ----
 
-base_ template. Auto added to all makesite projects. Load project source and create base structure. `base source`_
+:term:`base`, :term:`src-dir`, :term:`src-git`, :term:`db-postgres`, :term:`django`,
+:term:`tornado`, :term:`memcached`, :term:`cron`, :term:`nginx`, :term:`supervisor`,  
+:term:`uwsgi`, :term:`zeta`, :term:`compass`
 
-#. **INSTALL**, **UPDATE**
 
-   Change deploy dir owner and group to makesite option <site_user>:<site_group>, default is www-data
+.. glossary::
 
-   Make service files is executable.
+    base
+        Auto added to all makesite projects. Load project source and create base structure. `base source`_
 
+        #. **INSTALL**, **UPDATE**
 
-src-dir
--------
+           Change deploy folder owner and group to makesite option <site_user>:<site_group>, default is www-data
 
-src-dir_ template for update code in project from source. This template will be auto added in project if deploy source it is local path. `src-dir source`_
+           Make service files is executable.
 
-#. **UPDATE**
 
-   Copy project source from source dir to deploy source dir
+    src-dir
+        Load code in project from path.
 
-   Copy static dir from deploy source static dir to deploy static dir
+        This template will be auto added in project if deploy source it is local path. `src-dir source`_
 
+        #. **UPDATE**
 
-src-git
--------
+           Copy project source from source dir to deploy source dir
 
-src-git_ template for update code in project from git_ source. This template will be auto added in project if deploy source it is git path. `src-git source`_
+           Copy static dir from deploy source static dir to deploy static dir
 
-#. **UPDATE**
 
-   Update git project source dir.
+    src-git
+        Load code in project from git_ source.
 
+        This template will be auto added in project if deploy source it is git path. `src-git source`_
 
-db-postgres
------------
+        #. **UPDATE**
 
-db-postgres_ template for auto create user and db for project if it not exist. `db-postgres source`_
+           Update git project source dir.
 
-    .. note ::
 
-        Require <pguser>, <pghost>, <pgpassword> variables in configs with admin rights
+    db-postgres
+        Auto create user and db for project if it not exist. `db-postgres source`_
+        .. note ::
 
-#. **INSTALL**
+            Require <pguser>, <pghost>, <pgpassword> variables in configs with admin rights
 
-   Create postgres user <dbuser> if not exists, default is <project> with password <dbpassword> default is <project>
+        #. **INSTALL**
 
-   Create postgres db <dbname> default <project>_master
+           Create postgres user <dbuser> if not exists, default is <project> with password <dbpassword> default is <project>
 
+           Create postgres db <dbname> default <project>_master.
 
-django
-------
 
-django_ template for deploy and update django projects. `django source`_
+    django
+        Deploy and update django projects. `django source`_
 
-    .. note ::
-        Now it working in last django version from trunk `collectstatic`
-        Required manage.py in project root.
+        .. note ::
+           Now it working in last django version from trunk `collectstatic`
+           Required manage.py in project root.
 
-**INCLUDED** memcached_, virtualenv_, cron_
+        **INCLUDED** :term:`memcached`, :term:`virtualenv`, :term:`cron`
 
-#. **INSTALL**
+        #. **INSTALL**
 
-   Run manage.py syncdb
+           Run manage.py syncdb
 
-#. **UPDATE**
+        #. **UPDATE**
 
-   Run manage.py migrate
-   Run manage.py collectstatic
+           Run manage.py migrate
+           Run manage.py collectstatic
 
 
-tornado
--------
+    tornado
+        Deploy and update tornado projects. Contains nginx and supervisor configs. `tornado source`_
 
-Template fir deploy and update tornado projects. Contains nginx and supervisor configs. `tornado source`_
+        .. note ::
+           Required app.py in project root with tornado application
+           app.py must parse --port option
 
-    .. note ::
-        Required app.py in project root with tornado application
-        app.py must parse --port option
+        **INCLUDED** :term:`virtualenv`, :term:`cron`, :term:`memcached`, :term:`supervisor`, :term:`nginx`
 
-**INCLUDED** virtualenv_, cron_, memcached_, supervisor_, nginx_
 
+    memcached
+        Install python-memcached and flush memcached cache on updates. `memcached source`_
 
-memcached
----------
+        .. note ::
+           Default memcached_host=localhost, memcached_port=11211
 
-memcached_ template for install python-memcached and flush memcached cache on updates. `memcached source`_
+        #. **INSTALL**, **UPDATE**
 
-    .. note ::
-        Default memcached_host=localhost, memcached_port=11211
+           Install python-memcached if not exist and flush memcached cache
 
-#. **INSTALL**, **UPDATE**
 
-   Install python-memcached if not exist and flush memcached cache
+    virtualenv
+        Create virtual env for project and update pip requirements.
 
+        .. note ::
+           Default file for pip requirements `requirements.txt` in project source root
 
-virtualenv
-----------
+        #. **INSTALL**
 
-Template for create virtual env for project and update pip requirements.
+           Install virtualenv in it not exists.
+           Create virtual env and update pip requirements
 
-    .. note ::
-        Default file for pip requirements `requirements.txt` in project source root
+        #. **UPDATE**
 
-#. **INSTALL**
-   Install virtualenv in it not exists.
-   Create virtual env and update pip requirements
+           Update pip requirements if it needed
 
-#. **UPDATE**
-   Update pip requirements if it needed
 
+    cron
+        Add project cron tasks in crond. `cron source`_ 
 
-cron
-----
+        .. note ::
+           Default <cron_projectfile> is crontab in project root. File in cron format.
+           Commands from this file will be runned from <site_user> relative project root
+           and with enabled project virtualenv
 
-Template for add project cron tasks in crond. `cron source`_ 
+        #. **INSTALL**, **UPDATE**
 
-    .. note ::
-        Default <cron_projectfile> is crontab in project root. File in cron format.
-        Commands from this file will be runned from <site_user> relative project root
-        and with enabled project virtualenv
+           Parse project crontab file and add it to cron.
 
-#. **INSTALL**, **UPDATE**
+        #. **REMOVE**
 
-   Parse project crontab file and add it to cron.
+           Remove project cron tasks from cron.
 
-#. **REMOVE**
 
-   Remove project cron tasks from cron.
+    nginx
+        nginx_ support
 
+        .. note ::
+           Default nginx configs path <nginx_confpath>: /etc/nginx/sites-enabled/{{ project }}.{{ branch }}.conf 
 
-nginx
------
+        #. **INSTALL**
 
-nginx_ template for nginx support.
+           Install nginx if not exist
+           Create link <nginx_confpath> to deploy nginx.conf ( its make other templates ex django or tornado )
+           Restart nginx
 
-    .. note ::
+        #. **REMOVE**
 
-        Default nginx configs path <nginx_confpath>: /etc/nginx/sites-enabled/{{ project }}.{{ branch }}.conf 
+           Remove link <nginx_confpath>
+           Restart nginx
 
-#. **INSTALL**
 
-   Install nginx if not exist
+    supervisor
+        supervisor_ support.
 
-   Create link <nginx_confpath> to deploy nginx.conf ( its make other templates ex django or tornado )
+        .. note ::
+           Default supervisor configs path <supervisor_confpath>: /etc/supervisor/conf.d/{{ project }}.{{ branch }}.conf
 
-   Restart nginx
 
-#. **REMOVE**
+        #. **INSTALL**
 
-   Remove link <nginx_confpath>
+            Install supervisor if not exists
+            Create link to <supervisor_confpath> its make another templates ex: django, tornado
+            Reread supervisor configs
 
-   Restart nginx
+        #. **UPDATE**
 
+            Restart supervisor project task
 
-supervisor
-----------
+        #. **REMOVE**
 
-supervisor_ template for supervisor support.
+            Remove link <supervisor_confpath>
+            Reread supervisor configs
 
-   .. note ::
 
-       Default supervisor configs path <supervisor_confpath>: /etc/supervisor/conf.d/{{ project }}.{{ branch }}.conf
+    uwsgi
+        uwsgi_ support. Contains nginx and supervisor configs. `uwsgi source`_
 
+        .. note ::
+           uwsgi template waiting file ``wsgi.py`` in project source root with defined wsgi application
 
-#. **INSTALL**
 
-   Install supervisor if not exists
+    zeta
+        zeta_ support. Packing project static files. `zeta source`_
 
-   Create link to <supervisor_confpath> its make another templates ex: django, tornado
+        #. **INSTALL**, **UPDATE**
 
-   Reread supervisor configs
+           Packing js, css, scss files from deploy static dir.
 
-#. **UPDATE**
 
-   Restart supervisor project task
-
-#. **REMOVE**
-
-   Remove link <supervisor_confpath>
-
-   Reread supervisor configs
-
-
-uwsgi
------
-
-uwsgi_ for uwsgi support. Contains nginx and supervisor configs. `uwsgi source`_
-
-    .. note ::
-        uwsgi template waiting for wsgi.py in project source root with defined wsgi application
-
-
-zeta
-----
-
-Template for packing project static files. `zeta source`_
-
-#. **INSTALL**, **UPDATE**
-   Packing js, css, scss files from deploy static dir.
-
-
-compass
--------
-
-Tempalate for compass support. `compass source`_
-
-
-
-**INCLUDED** nginx_ and supervisor_ templates.
+    compass
+        compass_ support. `compass source`_
 
 
 .. _base source: https://github.com/klen/makesite/tree/master/makesite/base
@@ -238,4 +221,9 @@ Tempalate for compass support. `compass source`_
 .. _cron source: https://github.com/klen/makesite/tree/master/makesite/templates/cron
 .. _compass source: https://github.com/klen/makesite/tree/master/makesite/templates/compass
 
+.. _nginx: http://www.nginx.org/
+.. _supervisor: http://supervisord.org/
 .. _git: http://git-scm.com/
+.. _uwsgi: http://projects.unbit.it/uwsgi/
+.. _zeta: https://github.com/klen/zeta-library
+.. _compass: http://compass-style.org/
