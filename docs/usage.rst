@@ -23,7 +23,23 @@ Add this lines to your shell startup file .bashrc, .profile, etc) ::
         source /usr/local/bin/makesitewrapper.sh
     fi
 
-Also it add you more makesite comands: cdsite, envsite, worksite, lssites and autocomplete in bash
+Also it adds to you more makesite comands: cdsite, envsite, worksite, lssites and autocomplete in bash
+
+You may want to create base config file in SITES_PATH, with your project settings:
+ex.: **/sites/makesite.ini**: ::
+
+    [Main]
+    domain={{ branch + '.' if not branch == 'master' else ''}}{{ project }}.klen.xxx
+    src=git+gitolite@git.dev.server:{{ project }}.git
+    pguser=postgres
+    pghost=pg.dev.server
+    ; password for create db and users for projects
+    pgpassword=blablabla
+    memcached_host=localhost
+    ; server mode, example for switch django settings
+    mode=dev
+
+This will allow you to identify any common settings for projects.
 
 
 Help
@@ -62,13 +78,24 @@ Commands
 * **makesite** - base makesite command used for deploy projects
 
 * **installsite** - command run install scripts from deployed project, makesite auto run this command in deploy
-  Can be used for repeat install if it break in deploy.
+  Can be used for repeat install if it break in deploy. ::
+
+        $ installsite 
+        Usage: installsite PROJECT_BRANCH_PATH
+        'installsite' part of makesite scripts. Activate install hooks for target project. Run tests for master branch wich option --autotest.
+
 
 * **updatesite** - command run update scripts from deployed project in templates order. 
-  Used for update projects.
+  Used for update projects. ::
+    $ updatesite 
+    Usage: updatesite PROJECT_BRANCH_PATH
+    'updatesite' part of makesite scripts. Activate update hooks for target project. Run tests for master branch wich option --autotest.
 
-* **removeproject** - command run removed scripts from deployed project in templates order.
-  Used for remove project.
+* **removesite** - command run removed scripts from deployed project in templates order.
+  Used for remove project. ::
+    $ removesite 
+    Usage: removesite PROJECT_BRANCH_PATH
+    'removesite' part of makesite scripts. Activate remove hooks for target project and remove project dir.
 
 * **lssites** - show list deployed projects
 

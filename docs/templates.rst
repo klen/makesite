@@ -5,20 +5,6 @@ Templates
 Files in template, parse with makesite options. Service files in template will be launched.
 
 
-Makesite project deploy process
--------------------------------
-
-#. Parse option from command line and config files;
-
-#. Copy base_ template to deploy dir. Load source;
-
-#. Parse makesite options from source if exists;
-
-#. Copy all project templates in deploy dir;
-
-#. Run templates service install files.
-
-
 .. contents::
 
 

@@ -3,56 +3,73 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to makesite documentation!
-====================================
+======================
+Makesite documentation
+======================
 
-Makesite is collection scripts for make and control site structure.
+Makesite is the system for deploying and managing sites.
 
 
-Design overview
+Features
 ---------------
 
-* support wsgi projects, `django`_, `tornado`_ and etc
+* support wsgi projects, `django`_, `tornado`_ and etc;
 * projects may be isolated with `virtualenv`_;
 * requirements are managed using `pip`_;
-* server interactions are automated and repeatable
-* easy configure
-* cron, memcached, celery, compass support
-* git or local path sources
-* have server for browse deployed project and their setting
-* contains base django, wsgi projects
-* adds some useful bash commands: cdsite, lssites, updatesite, removesite, envsite and etc with bash autocomplete
-
+* server interactions are automated and repeatable;
+* easy configured and expanded;
+* cron, memcached, celery, compass, zeta support;
+* git or local path sources;
+* contains base standart django, wsgi projects for fast start;
+* includes a server for a list of projects and installations;
+* adds to bash a some useful commands:
+  cdsite, lssites, updatesite, removesite, envsite, worksite with bash autocomplete
 
 Several projects can be deployed on the same VPS using makesite.
 One project can be deployed on several servers. Projects are isolated and
 deployments are repeatable. Project can be removed or updated in auto mode.
-Makesite useful for version control system hooks or automatic make dev zones.
+Makesite is useful for version control system hooks or fast automatically creating dev zones.
+I use it for production deployment, too.
 
     .. warning ::
        Makesite needed root or sudo access on deploy project
-       But dont run sudo makesite because he is dont find your $SITES_PATH settings.
+       But do not run it under sudo because he did not find your $SITES_PATH settings.
+
+    .. warning ::
+       Some templates makesite install missing software automaticaly ( nginx, supervisor ).
+       Look to the templates before running the project.
 
 
 Requirements
 -------------
 
+- Ubuntu and Debian based systems.
+  But it can run other nix systems.
 - python >= 2.5
 - pip >= 0.8
 
 
-Contents:
----------
+Meeting
+-------
+
+.. toctree::
+   :maxdepth: 1
+
+   introduction
+   examples
+
+
+Digging in:
+-----------
 
 .. toctree::
    :maxdepth: 2
 
    usage
-   guide
-   examples
    options
    templates
    modules
+   customization
 
 Make sure you`ve read the following document if you are upgrading from previous versions of makesite:
 
@@ -102,6 +119,7 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+**Feedback are welcome!**
 
 .. _nginx: http://www.nginx.org/
 .. _supervisor: http://supervisord.org/
