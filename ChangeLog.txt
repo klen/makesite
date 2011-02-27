@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-## 2011-02-18 0.5.93
+## 2011-02-18 0.5.94
 --------------------
 * Auto install memcached if HOST is localhost and this not install
 * Fix makesite module

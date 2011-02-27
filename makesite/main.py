@@ -105,7 +105,7 @@ def load_config(project, options):
     if options.template:
         result['Main']['template'] = options.template
 
-    result['Main']['src'] = src
+    result['Main']['src'] = os.path.abspath(src)
     return result
 
 
