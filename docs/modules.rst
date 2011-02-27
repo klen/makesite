@@ -12,19 +12,23 @@ Standart django project. Session saved in memcache. Use sqlite. ::
     makesite -m django <project_name>
 
 
-Dummy
------
-
-Dummy project sceleton. ::
-
-    makesite -m dummy <project_name>
-
 Wsgi
 ----
 
 WSGI project sceleton. ::
 
     makesite -m wsgi <project_name>
+
+
+Static
+------
+
+Static site project sceleton. ::
+
+    makesite -m static <project_name>
+
+Simple serve from nginx source directory.
+
 
 Makesite
 --------

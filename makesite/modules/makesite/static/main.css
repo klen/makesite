@@ -1,7 +1,7 @@
 @import url(b/options.scss);
-@import url(zeta://z/z-reset/z-reset.css);
-@import url(zeta://z/z-base/z-base.css);
-@import url(zeta://z/z-typography/z-typography.css);
+@import url(zeta://zeta/z-reset/z-reset.css);
+@import url(zeta://zeta/z-base/z-base.css);
+@import url(zeta://zeta/z-typography/z-typography.css);
 
 @import url(b/header.scss);
 @import url(b/footer.scss);
