@@ -11,8 +11,9 @@ SRC_STATIC_DIR=$PROJECT_SOURCEDIR/static
 
 
 # Copy source directory to project source directory
-echo "  * Clone $SRC to $PROJECT_SOURCEDIR."
+echo "  * Copy $SRC to $PROJECT_SOURCEDIR."
 sudo cp -r $SRC $PROJECT_SOURCEDIR
+sudo chmod a+rx $PROJECT_SOURCEDIR
 
 if [ ! -d $PROJECT_STATICDIR ]; then
     sudo mkdir -p $PROJECT_STATICDIR

@@ -113,7 +113,6 @@ def load_config(project, options):
 def load_source(options):
     """ Deploy base template and load source.
     """
-    deploy_template(options['Templates']['base'], options['Main'], 'base')
 
     if options['Main']['src']:
         template = 'src-dir'
@@ -121,6 +120,7 @@ def load_source(options):
             options['Main']['src'] = options['Main']['src'][4:]
             template = 'src-git'
 
+        deploy_template(options['Templates']['base'], options['Main'], 'base')
         try:
             subprocess.check_call('sh %s/%s_init.sh' % (options['Main']['project_servicedir'], template), shell=True)
         except subprocess.CalledProcessError:
@@ -130,6 +130,8 @@ def load_source(options):
 
         parse_config(os.path.join( options['Main']['project_sourcedir'], INI_FILENAME ), options)
         return [ 'base', template ]
+
+    deploy_template(options['Templates']['base'], options['Main'], 'base')
     return [ 'base' ]
 
 

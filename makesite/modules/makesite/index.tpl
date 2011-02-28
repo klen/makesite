@@ -28,7 +28,7 @@
             %for site in sites:
                 % counter += 1
                 <li class="sites_item" id="{{ site['branch'] }}_{{ site['project'] }}">
-                    <a class="sites_item_link" href="http://{{ site['domain'] }}:{{ site['port'] }}">{{ site['branch'] }}.{{ site['project'] }}</a>
+                    <a class="sites_item_link" href="http://{{ site['domain'] }}:{{ site['port'] }}">{{ site['project'] }}.{{ site['branch'] }}</a>
                     %if site.get('revision'):
                         <span class="sites_item_revision">{{ site['revision'] }}</span>
                     %end

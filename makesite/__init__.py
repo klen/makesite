@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-VERSION_INFO = (0, 6, 0)
+VERSION_INFO = (0, 6, 1)
 
 __project__ = PROJECT = __name__
 __version__ = VERSION = '.'.join( str(i) for i in VERSION_INFO )
