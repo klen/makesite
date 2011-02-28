@@ -49,7 +49,7 @@
             </ul>
         </div>
         <div class="footer">
-            <p class="footer_info">Makesite web module</p>
+            <a class="footer_info" href="http://packages.python.org/makesite/">Makesite documentation</a>
         </div>
         <script language="javascript" type="text/javascript" src="/static/_main.js"></script>
     </body>

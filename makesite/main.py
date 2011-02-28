@@ -22,8 +22,8 @@ def deploy(project, options):
     """
     # This not work in virtual env
     if os.environ.has_key('VIRTUAL_ENV'):
-        print "Please deactivate virtualenv '%s' first." % os.environ['VIRTUAL_ENV']
-        sys.exit()
+        print >> sys.stderr, "Please deactivate virtualenv '%s' first." % os.environ['VIRTUAL_ENV']
+        sys.exit(1)
 
     # Compile project options
     options = load_config(project, options)
@@ -35,8 +35,8 @@ def deploy(project, options):
 
     # Check path exists
     if os.path.exists(options['Main']['deploy_dir']):
-        print "\nPath %s exists. Stop deploy." % options['Main']['deploy_dir']
-        sys.exit()
+        print >> sys.stderr, "\nPath %s exists. Stop deploy." % options['Main']['deploy_dir']
+        sys.exit(1)
 
     # Create dir and makesite templates file
     create_dir( options['Main'][ 'deploy_dir' ] )
@@ -98,9 +98,10 @@ def load_config(project, options):
 
     src = options.src or result['Main'].get('src', None)
     if options.module:
-        src = os.path.join(options.module)
+        src = os.path.join(MODULES_DIR, options.module)
         if not os.path.exists(src):
-            src = os.path.join(MODULES_DIR, options.module)
+            print >> sys.stderr, "Not found module: %s" % options.module
+            sys.exit()
 
     if options.template:
         result['Main']['template'] = options.template
@@ -122,8 +123,8 @@ def load_source(options):
         subprocess.check_call('sh %s/%s_init.sh' % (options['Main']['project_servicedir'], template), shell=True)
     except subprocess.CalledProcessError:
         subprocess.check_call('sudo rm -rf %s' % options['Main']['deploy_dir'], shell=True)
-        print 'Error deploy src: %s' % options['Main']['src']
-        sys.exit()
+        print >> sys.stderr, "Error deploy src: %s" % options['Main']['src']
+        sys.exit(1)
 
     parse_config(os.path.join( options['Main']['project_sourcedir'], INI_FILENAME ), options)
     return [ 'base', template ]
@@ -152,8 +153,8 @@ def parse_templates( templates, options ):
     for template in templates:
         path = options[template] if options.has_key(template) else os.path.join( BASE_TEMPLATES_DIR, template )
         if not os.path.exists( path ):
-            print  "Template '%s' not found in base and custom templates." % template
-            sys.exit()
+            print >> sys.stderr, "Template '%s' not found in base and custom templates." % template
+            sys.exit(1)
 
         try:
             f = open( os.path.join( path, TEMPLATES_FILE ), 'r' )
@@ -193,8 +194,8 @@ def create_dir(path):
         subprocess.check_call('sudo mkdir -p %s' % path, shell=True)
         print "Create dir %s." % path
     except subprocess.CalledProcessError:
-        print "makesite need sudo access."
-        sys.exit()
+        print >> sys.stderr, "makesite need sudo access."
+        sys.exit(1)
 
 
 def create_file( path, s ):
