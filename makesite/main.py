@@ -105,7 +105,7 @@ def load_config(project, options):
     if options.template:
         result['Main']['template'] = options.template
 
-    result['Main']['src'] = os.path.abspath(src)
+    result['Main']['src'] = os.path.abspath(src) if not '+' in src else src
     return result
 
 
