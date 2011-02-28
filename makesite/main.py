@@ -106,28 +106,31 @@ def load_config(project, options):
     if options.template:
         result['Main']['template'] = options.template
 
-    result['Main']['src'] = os.path.abspath(src) if not '+' in src else src
+    result['Main']['src'] = os.path.abspath(src) if src and not '+' in src else src
     return result
 
 
 def load_source(options):
     """ Deploy base template and load source.
     """
-    template = 'src-dir'
-    if options['Main']['src'].startswith('git+'):
-        options['Main']['src'] = options['Main']['src'][4:]
-        template = 'src-git'
-
     deploy_template(options['Templates']['base'], options['Main'], 'base')
-    try:
-        subprocess.check_call('sh %s/%s_init.sh' % (options['Main']['project_servicedir'], template), shell=True)
-    except subprocess.CalledProcessError:
-        subprocess.check_call('sudo rm -rf %s' % options['Main']['deploy_dir'], shell=True)
-        print >> sys.stderr, "Error deploy src: %s" % options['Main']['src']
-        sys.exit(1)
 
-    parse_config(os.path.join( options['Main']['project_sourcedir'], INI_FILENAME ), options)
-    return [ 'base', template ]
+    if options['Main']['src']:
+        template = 'src-dir'
+        if options['Main']['src'].startswith('git+'):
+            options['Main']['src'] = options['Main']['src'][4:]
+            template = 'src-git'
+
+        try:
+            subprocess.check_call('sh %s/%s_init.sh' % (options['Main']['project_servicedir'], template), shell=True)
+        except subprocess.CalledProcessError:
+            subprocess.check_call('sudo rm -rf %s' % options['Main']['deploy_dir'], shell=True)
+            print >> sys.stderr, "Error deploy src: %s" % options['Main']['src']
+            sys.exit(1)
+
+        parse_config(os.path.join( options['Main']['project_sourcedir'], INI_FILENAME ), options)
+        return [ 'base', template ]
+    return [ 'base' ]
 
 
 def parse_config(path, result):

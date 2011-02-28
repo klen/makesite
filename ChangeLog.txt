@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2011-02-27 0.6.0
+-------------------
+* Add html template
+
 ## 2011-02-18 0.5.96
 --------------------
 * Auto install memcached if HOST is localhost and this not install

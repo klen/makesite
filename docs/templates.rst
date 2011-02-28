@@ -23,7 +23,7 @@ List
 
 :term:`base`, :term:`src-dir`, :term:`src-git`, :term:`db-postgres`, :term:`django`,
 :term:`tornado`, :term:`memcached`, :term:`cron`, :term:`nginx`, :term:`supervisor`,  
-:term:`uwsgi`, :term:`zeta`, :term:`compass`
+:term:`uwsgi`, :term:`zeta`, :term:`compass`, :term:`html`
 
 
 .. glossary::
@@ -204,6 +204,9 @@ List
 
     compass
         compass_ support. `compass source`_
+
+    html
+        static html site. Contains nginx config. Serve files from project staticdir.
 
 
 .. _base source: https://github.com/klen/makesite/tree/master/makesite/base
