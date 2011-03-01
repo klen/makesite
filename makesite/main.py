@@ -16,7 +16,6 @@ HOMECONFIG = os.path.join( os.getenv('HOME'), INI_FILENAME )
 
 PYTHON_PREFIX = 'python' + '.'.join( str(x) for x in sys.version_info[:2] )
 
-
 def deploy(project, options):
     """ Deploy project.
     """

@@ -42,42 +42,6 @@ _psycopg_to_ve () {
     fi    
 }
 
-_pylint_to_ve () {
-    if [ ! -z "$VIRTUALENV_DEBUG" ]; then
-        python -c "import pylint" 2>/dev/null || {
-            echo "  * Python pylint not found! Attempting to install..."
-            sudo pip install pylint
-        }
-    fi
-
-    pylint=`python -c "import pylint as mod;print mod.__path__[0]"`
-    logilab=`python -c "import logilab as mod;print mod.__path__[0]"`
-    if [ -d $pylint ] && [ -d $logilab ]; then
-        echo "  * Create links to pylint and logilab in virtualenv."
-        sudo ln -sf $pylint $VIRTUALENVDIR/lib/$PYTHON_PREFIX
-        sudo ln -sf $logilab $VIRTUALENVDIR/lib/$PYTHON_PREFIX
-    fi    
-}
-
-_ipython_to_ve () {
-    if [ ! -z "$VIRTUALENV_DEBUG" ]; then
-        python -c "import ipdb" 2>/dev/null || {
-            echo "  * Python ipdb not found! Attempting to install..."
-            sudo pip install ipdb
-        }
-    fi
-
-    ipython=`python -c "import IPython as mod;print mod.__path__[0]"`
-    ipdb=`python -c "import ipdb as mod;print mod.__path__[0]"`
-    if [ -d $ipdb ] && [ -d $ipython ]; then
-        echo "  * Create links to ipdb and ipython in virtualenv."
-        sudo ln -sf $ipdb $VIRTUALENVDIR/lib/$PYTHON_PREFIX
-        sudo ln -sf $ipython $VIRTUALENVDIR/lib/$PYTHON_PREFIX
-        sudo sh -c "echo '#!/bin/sh\npython -c \"from IPython.ipapi import launch_new_instance; launch_new_instance()\"' > $VIRTUALENVDIR/bin/ipython"
-        sudo chmod +x $VIRTUALENVDIR/bin/ipython
-    fi    
-}
-
 _memcache_to_ve () {
     memcache=`python -c "import memcache as mod;print mod.__file__"`
     if [ -f $memcache ]; then
@@ -89,8 +53,6 @@ _memcache_to_ve () {
 echo '  * Create virtualenv:'$VIRTUALENVDIR
 sudo virtualenv --no-site-packages $VIRTUALENVDIR
 _psycopg_to_ve
-_pylint_to_ve
-_ipython_to_ve
 _memcache_to_ve
 
 if [ -f $PIP_PROJECTFILE ]; then
