@@ -3,7 +3,15 @@
 # Variables
 SITE_USER={{ site_user }}
 BASERUN={{ deploy_dir }}/service/base_run.sh
-DJANGO_SETTINGS=settings.{{ mode or 'dev' }}
+PROJECT_SOURCEDIR={{ project_sourcedir }}
+MODE={{ mode }}
+
+# Check settings
+if [ -d $PROJECT_SOURCEDIR/settings ]; then
+    DJANGO_SETTINGS=settings.$MODE
+else
+    DJANGO_SETTINGS=settings
+fi
 
 # Migration and collect static
 if [ -f $BASERUN ]; then
