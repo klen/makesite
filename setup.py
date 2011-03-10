@@ -60,6 +60,8 @@ META_DATA = dict(
             'makesite = makesite.main:main',
         ]
     },
+
+    install_requires = install_requires,
 )
 
 
