@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-VERSION_INFO = (0, 6, 4)
+version_info = (0, 6, 5)
 
+__version__ = version = '.'.join(map(str, version_info))
 __project__ = PROJECT = __name__
-__version__ = VERSION = '.'.join( str(i) for i in VERSION_INFO )
 __author__ = AUTHOR = "Kirill Klenov <horneds@gmail.com>"
 __license__ = LICENSE = "GNU LGPL"
 

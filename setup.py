@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 import os
+from sys import version_info
 
 from setuptools import setup, find_packages
 
-from makesite import VERSION, PROJECT, LICENSE
+from makesite import version, PROJECT, LICENSE
 
 
 PACKAGE_DATA = [ '*.ini' ]
@@ -21,10 +22,15 @@ def read( fname ):
         return ''
 
 
+install_requires = []
+if version_info < (2, 7):
+    install_requires.append('argparse')
+
+
 META_DATA = dict(
     name=PROJECT,
-    version=VERSION,
-    license=LICENSE,
+    version=version,
+    LICENSE=LICENSE,
     description=read( 'DESCRIPTION' ),
     long_description=read( 'README.rst' ),
     platforms=('Any'),

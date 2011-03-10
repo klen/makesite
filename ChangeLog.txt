@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2011-03-10 0.6.5
+-------------------
+* Migrate to argparse
+
 ## 2011-03-09 0.6.4
 -------------------
 * Fix django settings define in uwsgi and django configs

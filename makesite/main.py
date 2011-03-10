@@ -1,7 +1,9 @@
 #!/usr/bin/env python
-import ConfigParser, optparse, os, sys, subprocess
+import ConfigParser, os, sys, subprocess
 
-from makesite import VERSION, INI_FILENAME, TEMPLATES_FILE
+import argparse
+
+from makesite import version, INI_FILENAME, TEMPLATES_FILE
 from makesite.template import Template
 
 
@@ -16,7 +18,7 @@ HOMECONFIG = os.path.join( os.getenv('HOME'), INI_FILENAME )
 
 PYTHON_PREFIX = 'python' + '.'.join( str(x) for x in sys.version_info[:2] )
 
-def deploy(project, options):
+def deploy(options):
     """ Deploy project.
     """
     # This not work in virtual env
@@ -25,7 +27,7 @@ def deploy(project, options):
         sys.exit(1)
 
     # Compile project options
-    options = load_config(project, options)
+    options = load_config(options)
 
     # Exit if requested only info
     if options['Main']['info']:
@@ -74,7 +76,7 @@ def format_options(main_options):
     return ' \n'.join(["{0:<20} = {1}".format(key, main_options[key]) for key in keys])
 
 
-def load_config(project, options):
+def load_config(options):
     """ Load config files.
     """
     # Deploy projects dir
@@ -83,11 +85,11 @@ def load_config(project, options):
     # Load config in this order
     result = dict(Main = dict(
         basedir = BASEDIR,
-        project = project,
+        project = options.project,
         python_prefix = PYTHON_PREFIX,
         branch = options.branch,
         sites_home = options.path,
-        deploy_dir = os.path.join( os.path.abspath( options.path ), project, options.branch ),
+        deploy_dir = os.path.join( os.path.abspath( options.path ), options.project, options.branch ),
         info = options.info,
     ))
 
@@ -217,22 +219,23 @@ def main():
     """ Parse arguments and do work.
     """
     path = os.environ[ PATH_VARNAME ] if os.environ.has_key( PATH_VARNAME ) else None
-    p = optparse.OptionParser(
-            usage="%prog -p PATH PROJECTNAME [-b BRANCH] [-t TEMPLATE] [-c CONFIG] [-s SOURCE_PATH] [-m MODULENAME or MODULEPATH] [-i]",
-            version='%prog ' + VERSION,
-            description= "'Makesite' is scripts collection for create base project dirs and config files. \n See also next utilities: installsite, updatesite, removesite, cdsite, worksite, lssites, statsites.")
-    p.add_option('-i', '--info', dest='info', action="store_true", default=False, help='Show compiled project params and exit.')
-    p.add_option('-p', '--path', dest='path', default=path, help='Path to base deploy projects dir. Required if not set SITES_HOME environment.')
-    p.add_option('-b', '--branch', dest='branch', help='Project branch.', default='master')
-    p.add_option('-t', '--template', dest='template', help='Config templates.')
-    p.add_option('-c', '--config', dest='config', help='Config file.')
-    p.add_option('-m', '--module', dest="module", help="Deploy module")
-    p.add_option('-s', '--src', dest='src', help='Path to source (filesystem or repository address ex: git+http://git_adress).')
+    parser = argparse.ArgumentParser(
+        description = "'Makesite' is scripts collection for create base project dirs and config files.",
+        epilog = "See also next utilities: installsite, updatesite, removesite, cdsite, worksite, lssites, statsites."
+    )
+    parser.add_argument('project', help="Project name")
+    if not path:
+        parser.add_argument('-p', '--path', dest='path', required=True, help='Path to base deploy projects dir. Required if not set SITES_HOME environment.')
+    parser.add_argument('-i', '--info', dest='info', action="store_true", default=False, help='Show compiled project params and exit.')
+    parser.add_argument('-b', '--branch', dest='branch', help='Project branch.', default='master')
+    parser.add_argument('-t', '--template', dest='template', help='Config templates.')
+    parser.add_argument('-c', '--config', dest='config', help='Config file.')
+    parser.add_argument('-m', '--module', dest="module", help="Deploy module")
+    parser.add_argument('-s', '--src', dest='src', help='Path to source (filesystem or repository address ex: git+http://git_adress).')
+    parser.add_argument('-v', '--version', action='version', version=version, help='Show makesite version')
 
-    options, args = p.parse_args()
+    args = parser.parse_args()
+    if path:
+        args.path = path
 
-    if not options.path or not args:
-        p.print_help(sys.stdout)
-
-    else:
-        deploy( args[0], options )
+    deploy(args)

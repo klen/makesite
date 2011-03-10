@@ -41,7 +41,8 @@ Requirements
 - Ubuntu and Debian based systems.
   But it can run other nix systems.
 - python >= 2.5
-- pip >= 0.8
+- argparse (if python version < 2.7)
+
 
 
 Meeting
