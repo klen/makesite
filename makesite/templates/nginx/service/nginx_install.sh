@@ -5,7 +5,7 @@ DEPLOY_DIR={{ deploy_dir }}
 NGINX_CONFPATH={{ nginx_confpath }}
 
 # Check nginx and install if not exist
-which nginx 1>/dev/null || {
+sudo which nginx 1>/dev/null || {
         echo "  * NGINX not found! Attempting to install..."
         # Ubuntu
         if [ -f /etc/lsb-release ] ; then

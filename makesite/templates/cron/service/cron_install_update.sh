@@ -6,7 +6,7 @@ CRON_PARSESCRIPT={{ deploy_dir }}/service/cron_parse.py
 
 
 # Check cron installed.
-which cron 1>/dev/null || {
+sudo which cron 1>/dev/null || {
     echo "  * Cron not found! Attempting to install..."
     if [ -f /etc/lsb-release ] ; then
         sudo apt-get install cron -y
