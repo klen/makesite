@@ -1,6 +1,9 @@
 CHANGES
 =======
 
+## 2011-03-16 0.6.7
+* Fix celeryd config (Also run the celerybeat periodic task scheduler)
+
 ## 2011-03-16 0.6.6
 -------------------
 * Fix virtualenv update script (chown was broken)
