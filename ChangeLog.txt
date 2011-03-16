@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2011-03-16 0.6.6
+-------------------
+* Fix virtualenv update script (chown was broken)
+
 ## 2011-03-10 0.6.51
 -------------------
 * Migrate to argparse

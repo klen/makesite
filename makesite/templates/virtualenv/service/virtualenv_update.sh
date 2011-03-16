@@ -1,5 +1,6 @@
 #!/bin/sh
-
+SITE_USER={{ site_user }}
+SITE_GROUP={{ site_group }}
 VIRTUALENVDIR={{ virtualenvdir  }}
 PIP_PROJECTFILE={{ pip_projectfile }}
 
@@ -17,4 +18,4 @@ if [ -f $PIP_PROJECTFILE ]; then
 fi
 
 # Restore rights
-sudo chown -R $USER:$GROUP $VIRTUALENVDIR
+sudo chown -R $SITE_USER:$SITE_GROUP $VIRTUALENVDIR
