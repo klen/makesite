@@ -6,5 +6,4 @@ This have support for **nginx**, **supervisor**, **uwsgi**, **git**, **django**,
 
 Please read the docs_ for more info.
 
-
 .. _docs: http://packages.python.org/makesite/
