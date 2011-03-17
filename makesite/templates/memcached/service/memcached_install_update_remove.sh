@@ -11,7 +11,7 @@ fi
 
 # Install memcached on localhost
 if [ $MEMCACHED_HOST = 'localhost' ]; then
-    which memcached 1>/dev/null || {
+    sudo which memcached 1>/dev/null || {
             echo "  * Memcache not found! Attempting to install..."
             # Ubuntu
             if [ -f /etc/lsb-release ] ; then
