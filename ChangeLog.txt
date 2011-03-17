@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2011-03-16 0.6.71
+--------------------
+* More debian compatability
+
 ## 2011-03-16 0.6.7
 * Fix celeryd config (Also run the celerybeat periodic task scheduler)
 
@@ -9,7 +13,7 @@ CHANGES
 * Fix virtualenv update script (chown was broken)
 
 ## 2011-03-10 0.6.51
--------------------
+--------------------
 * Migrate to argparse
 
 ## 2011-03-09 0.6.4
