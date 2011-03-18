@@ -105,8 +105,10 @@ List
     memcached
         Install python-memcached and flush memcached cache on updates. `memcached source`_
 
-        .. note ::
-           Default memcached_host=localhost, memcached_port=11211
+        **default options** ::
+
+            memcached_host=localhost
+            memcached_port=11211
 
         #. **INSTALL**, **UPDATE**
 
@@ -116,8 +118,10 @@ List
     virtualenv
         Create virtual env for project and update pip requirements.
 
-        .. note ::
-           Default file for pip requirements `requirements.txt` in project source root
+        **default options** ::
+            virtualenvdir={{ deploy_dir }}/.virtualenv
+            pip_projectfile={{ deploy_dir }}/source/requirements.txt
+
 
         #. **INSTALL**
 
@@ -137,6 +141,12 @@ List
            Commands from this file will be runned from <site_user> relative project root
            and with enabled project virtualenv
 
+        **default options** ::
+
+            cron_projectfile={{ project_sourcedir }}/crontab
+            cron_outputfile=/etc/cron.d/{{ project }}-{{ branch }}
+
+
         #. **INSTALL**, **UPDATE**
 
            Parse project crontab file and add it to cron.
@@ -149,8 +159,9 @@ List
     nginx
         nginx_ support
 
-        .. note ::
-           Default nginx configs path <nginx_confpath>: /etc/nginx/sites-enabled/{{ project }}.{{ branch }}.conf 
+        **default options** ::
+
+            nginx_confpath=/etc/nginx/sites-enabled/{{ project }}.{{ branch }}.conf
 
         #. **INSTALL**
 
@@ -167,8 +178,8 @@ List
     supervisor
         supervisor_ support.
 
-        .. note ::
-           Default supervisor configs path <supervisor_confpath>: /etc/supervisor/conf.d/{{ project }}.{{ branch }}.conf
+        **default options** ::
+            supervisor_confpath=/etc/supervisor/conf.d/{{ project }}.{{ branch }}.conf
 
 
         #. **INSTALL**
