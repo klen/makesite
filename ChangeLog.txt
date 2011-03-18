@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2011-03-18 0.6.8
+-------------------
+* Move template options to templates
+
 ## 2011-03-16 0.6.71
 --------------------
 * More debian compatability
