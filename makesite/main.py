@@ -33,6 +33,7 @@ def deploy(options):
     if options['Main']['info']:
         print format_options(options['Main'])
         sys.exit()
+    del options['Main']['info']
 
     # Check path exists
     if os.path.exists(options['Main']['deploy_dir']):
@@ -62,7 +63,7 @@ def deploy(options):
     # Deploy templates
     for template, path in templates:
         if template != 'base':
-            deploy_template(path, options['Main'], template)
+            deploy_template(path, options, template)
 
     # Run install site
     subprocess.check_call('makesiteparse %(deploy_dir)s install' % options['Main'], shell=True)
@@ -84,13 +85,12 @@ def load_config(options):
 
     # Load config in this order
     result = dict(Main = dict(
-        basedir = BASEDIR,
         project = options.project,
         python_prefix = PYTHON_PREFIX,
         branch = options.branch,
-        sites_home = options.path,
         deploy_dir = os.path.join( os.path.abspath( options.path ), options.project, options.branch ),
         info = options.info,
+        sites_home = options.path,
     ))
 
     # Load base configs
@@ -115,13 +115,14 @@ def load_source(options):
     """ Deploy base template and load source.
     """
 
+    deploy_template(os.path.join(BASE_TEMPLATES_DIR, 'base'), options, 'base')
+
     if options['Main']['src']:
         template = 'src-dir'
         if options['Main']['src'].startswith('git+'):
             options['Main']['src'] = options['Main']['src'][4:]
             template = 'src-git'
 
-        deploy_template(options['Templates']['base'], options['Main'], 'base')
         try:
             subprocess.check_call('sh %s/%s_init.sh' % (options['Main']['project_servicedir'], template), shell=True)
         except subprocess.CalledProcessError:
@@ -132,7 +133,6 @@ def load_source(options):
         parse_config(os.path.join( options['Main']['project_sourcedir'], INI_FILENAME ), options)
         return [ 'base', template ]
 
-    deploy_template(options['Templates']['base'], options['Main'], 'base')
     return [ 'base' ]
 
 
@@ -181,24 +181,24 @@ def parse_templates( templates, options ):
     return result
 
 
-def deploy_template(path, main_options, template):
+def deploy_template(path, options, template):
     """ Deploy template.
     """
     print "Deploy template '%s'." % template
-    main_options = parse_config(os.path.join(path, INI_FILENAME), main_options)
+    options = parse_config(os.path.join(path, INI_FILENAME), options, replace=False)
 
     for item in os.walk(path):
         root = item[0]
         files = item[2]
-        curdir = os.path.join(main_options['deploy_dir'], root[len( path ) + 1:])
-        main_options[ 'curdir' ] = curdir
+        curdir = os.path.join(options['Main']['deploy_dir'], root[len( path ) + 1:])
+        options['Main']['curdir'] = curdir
         create_dir( curdir )
         for filename in files:
             if filename in (TEMPLATES_FILE, INI_FILENAME):
                 continue
 
             t = Template(filename=os.path.join( root, filename ))
-            create_file(os.path.join( curdir, filename ), t(**main_options))
+            create_file(os.path.join( curdir, filename ), t(**options['Main']))
 
     sys.stdout.write('\n')
 
