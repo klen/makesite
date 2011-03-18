@@ -185,7 +185,7 @@ def deploy_template(path, main_options, template):
     """ Deploy template.
     """
     print "Deploy template '%s'." % template
-    main_options = parse_config(os.path.join(path, INI_FILENAME))
+    main_options = parse_config(os.path.join(path, INI_FILENAME), main_options)
 
     for item in os.walk(path):
         root = item[0]
