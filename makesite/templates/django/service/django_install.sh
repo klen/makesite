@@ -5,7 +5,12 @@ SITE_USER={{ site_user }}
 SITE_GROUP={{ site_group }}
 PROJECT_SOURCEDIR={{ project_sourcedir }}
 BASERUN={{ project_servicedir }}/virtualenv_run.sh
+MEDIA_DIR={{ media_dir }}
 MODE={{ mode }}
+
+# Create media dir
+echo "  * Create media directory:" $MEDIA_DIR
+sudo mkdir -p $MEDIA_DIR
 
 # Check settings
 if [ -d $PROJECT_SOURCEDIR/settings ]; then
@@ -16,6 +21,7 @@ fi
 
 # Create manage.py executable
 if [ ! -x $PROJECT_SOURCEDIR/manage.py ]; then
+    echo "  * Make manage.py executable."
     sudo chmod +x $PROJECT_SOURCEDIR/manage.py
 fi
 
