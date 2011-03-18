@@ -136,19 +136,26 @@ def load_source(options):
     return [ 'base' ]
 
 
-def parse_config(path, result):
+def parse_config(path, result, replace=True):
     """ Parse config file.
     """
     parser = ConfigParser.RawConfigParser()
     parser.read(path)
+
     for section in parser.sections():
         if not result.has_key( section ):
             result[ section ] = dict()
+
         data = dict(parser.items( section ))
+
         # Parse options template
         for k, v in data.items():
-            data[k] = Template.sub(v, **result['Main'])
-        result[ section ].update(data)
+            if result[section].has_key(k) and not replace:
+                continue
+
+            result[section][k] = Template.sub(v, **result['Main'])
+
+    return result
 
 
 def parse_templates( templates, options ):
@@ -178,6 +185,8 @@ def deploy_template(path, main_options, template):
     """ Deploy template.
     """
     print "Deploy template '%s'." % template
+    main_options = parse_config(os.path.join(path, INI_FILENAME))
+
     for item in os.walk(path):
         root = item[0]
         files = item[2]
@@ -185,8 +194,9 @@ def deploy_template(path, main_options, template):
         main_options[ 'curdir' ] = curdir
         create_dir( curdir )
         for filename in files:
-            if filename == TEMPLATES_FILE:
+            if filename in (TEMPLATES_FILE, INI_FILENAME):
                 continue
+
             t = Template(filename=os.path.join( root, filename ))
             create_file(os.path.join( curdir, filename ), t(**main_options))
 

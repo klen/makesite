@@ -3,7 +3,7 @@
 # Variables
 PROGRAMM_NAME={{ project }}.{{ branch }}.celeryd
 DEPLOY_DIR={{ deploy_dir }}
-SUPERVISOR_CONFPATH={{ supervisor_confpath }}.celeryd.conf
+SUPERVISOR_CELERY_CONFPATH={{ supervisor_celery_confpath }}
 
 # Check supervisor installed
 which supervisord 1>/dev/null || {
@@ -17,8 +17,8 @@ which supervisord 1>/dev/null || {
         fi
 }
 
-echo '  * Create link to supervisor conf:'$SUPERVISOR_CONFPATH
-sudo ln -sf $DEPLOY_DIR/deploy/supervisor.celeryd.conf $SUPERVISOR_CONFPATH
+echo '  * Create link to supervisor conf:'$SUPERVISOR_CELERY_CONFPATH
+sudo ln -sf $DEPLOY_DIR/deploy/supervisor.celeryd.conf $SUPERVISOR_CELERY_CONFPATH
 
 if [ -f /etc/init.d/supervisor ]; then
     echo '  * Update supervisord for celeryd'

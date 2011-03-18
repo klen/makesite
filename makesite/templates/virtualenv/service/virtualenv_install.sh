@@ -5,7 +5,6 @@ SITE_GROUP={{ site_group }}
 VIRTUALENVDIR={{ virtualenvdir }}
 PIP_PROJECTFILE={{ pip_projectfile }}
 PYTHON_PREFIX={{ python_prefix }}
-VIRTUALENV_DEBUG={{ virtualenv_debug }}
 
 # Check easy_install
 which easy_install 1>/dev/null || {
@@ -52,6 +51,7 @@ _memcache_to_ve () {
 
 echo '  * Create virtualenv:'$VIRTUALENVDIR
 sudo virtualenv --no-site-packages $VIRTUALENVDIR
+
 _psycopg_to_ve
 _memcache_to_ve
 
