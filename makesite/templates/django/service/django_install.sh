@@ -4,7 +4,7 @@
 SITE_USER={{ site_user }}
 SITE_GROUP={{ site_group }}
 PROJECT_SOURCEDIR={{ project_sourcedir }}
-BASERUN={{ deploy_dir }}/service/base_run.sh
+BASERUN={{ project_servicedir }}/virtualenv_run.sh
 MODE={{ mode }}
 
 # Check settings

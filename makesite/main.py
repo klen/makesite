@@ -53,17 +53,17 @@ def deploy(options):
 
     # Show project options
     print  "\nDeploy branch '%(branch)s' in project '%(project)s'\n" % options['Main']
-    print format_options(options['Main'])
-    print
 
     # Create makesite project files
     create_file(os.path.join( options['Main'][ 'deploy_dir' ], TEMPLATES_FILE ), ' '.join([t[0] for t in templates]))
-    create_file(os.path.join(options['Main']['deploy_dir'], INI_FILENAME), "[Main]\n%s" % format_options(options['Main']))
 
     # Deploy templates
     for template, path in templates:
         if template != 'base':
             deploy_template(path, options, template)
+
+    # Save used options
+    create_file(os.path.join(options['Main']['deploy_dir'], INI_FILENAME), "[Main]\n%s" % format_options(options['Main']))
 
     # Run install site
     subprocess.check_call('makesiteparse %(deploy_dir)s install' % options['Main'], shell=True)
@@ -115,7 +115,6 @@ def load_source(options):
     """ Deploy base template and load source.
     """
 
-    deploy_template(os.path.join(BASE_TEMPLATES_DIR, 'base'), options, 'base')
 
     if options['Main']['src']:
         template = 'src-dir'
@@ -123,6 +122,7 @@ def load_source(options):
             options['Main']['src'] = options['Main']['src'][4:]
             template = 'src-git'
 
+        deploy_template(os.path.join(BASE_TEMPLATES_DIR, 'base'), options, 'base')
         try:
             subprocess.check_call('sh %s/%s_init.sh' % (options['Main']['project_servicedir'], template), shell=True)
         except subprocess.CalledProcessError:
@@ -133,6 +133,7 @@ def load_source(options):
         parse_config(os.path.join( options['Main']['project_sourcedir'], INI_FILENAME ), options)
         return [ 'base', template ]
 
+    deploy_template(os.path.join(BASE_TEMPLATES_DIR, 'base'), options, 'base')
     return [ 'base' ]
 
 

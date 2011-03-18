@@ -2,7 +2,7 @@
 
 # Variables
 SITE_USER={{ site_user }}
-BASERUN={{ deploy_dir }}/service/base_run.sh
+BASERUN={{ project_servicedir }}/virtualenv_run.sh
 PROJECT_SOURCEDIR={{ project_sourcedir }}
 MODE={{ mode }}
 
