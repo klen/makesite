@@ -2,7 +2,7 @@
 wsgiref==0.1.2
 
 # Django base
-svn+http://code.djangoproject.com/svn/django/trunk@15481#egg=Django
+django
 South==0.7.3
 
 # Debug

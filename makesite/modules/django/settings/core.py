@@ -66,6 +66,7 @@ MIDDLEWARE_CLASSES = (
 
 # Base apps settings
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
+AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
 
 # Localization
 USE_I18N = True

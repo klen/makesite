@@ -2,6 +2,7 @@ SETTINGS=dev
 STATIC_DIR=../static
 SOURCE_DIR=../source
 SERVICE_DIR=../service
+VIRTUALENV_DIR=../.virtualenv
 
 run:
 	# Run local django dev server
@@ -38,6 +39,7 @@ ve_update:
 chown:
 	sudo chown -R $(USER):$(USER) $(STATIC_DIR)
 	sudo chown -R $(USER):$(USER) $(SOURCE_DIR)
+	sudo chown -R $(USER):$(USER) $(VIRTUALENV_DIR)
 
 collect:
 	./manage.py collectstatic --noinput --settings=settings.$(SETTINGS)

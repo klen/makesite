@@ -45,8 +45,8 @@ Requirements
 
 
 
-Meeting
--------
+Getting acquainted
+------------------
 
 .. toctree::
    :maxdepth: 1
