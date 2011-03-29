@@ -21,6 +21,10 @@ Git source path for project defined in the config file: ``/sites/makesite.ini`` 
 
     makesite -b test alpha
 
+Append template zeta to existed project alpha::
+
+    makesite alpha -a -t test
+
 Deploy branch **master** from project **dummy** from source ``git@test.dev/test.git``: ::
 
     makesite dummy -s git+git@test.dev/test.git

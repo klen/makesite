@@ -57,31 +57,37 @@ Help
 
     Base command used for deploy projects.
 
-Run it for help message. ::
+Run ``makesite --help`` for help message. ::
 
-    $ makesite
-    Usage: makesite -p PATH PROJECTNAME [-b BRANCH] [-t TEMPLATE] [-c CONFIG] [-s SOURCE_PATH] [-m MODULENAME or MODULEPATH] [-i]
+    $ makesite --help
+    usage: makesite [-h] [-i] [-b BRANCH] [-t TEMPLATE] [-a] [-c CONFIG]
+                    [-m MODULE] [-s SRC] [-v]
+                    project
 
     'Makesite' is scripts collection for create base project dirs and config
-    files.   See also next utilities: installsite, updatesite, removesite, cdsite,
-    worksite, lssites, statsites.
+    files.
 
-    Options:
-    --version             show program's version number and exit
+    positional arguments:
+    project               Project name
+
+    optional arguments:
     -h, --help            show this help message and exit
     -i, --info            Show compiled project params and exit.
-    -p PATH, --path=PATH  Path to base deploy projects dir. Required if not set
-                            SITES_HOME environment.
-    -b BRANCH, --branch=BRANCH
+    -b BRANCH, --branch BRANCH
                             Project branch.
-    -t TEMPLATE, --template=TEMPLATE
+    -t TEMPLATE, --template TEMPLATE
                             Config templates.
-    -c CONFIG, --config=CONFIG
+    -a, --append          Append template to exists project.
+    -c CONFIG, --config CONFIG
                             Config file.
-    -m MODULE, --module=MODULE
+    -m MODULE, --module MODULE
                             Deploy module
-    -s SRC, --src=SRC     Path to source (filesystem or repository address ex:
-                            git+http://git_adress, /test/myproject).
+    -s SRC, --src SRC     Path to source (filesystem or repository address ex:
+                            git+http://git_adress).
+    -v, --version         Show makesite version
+
+    See also next utilities: installsite, updatesite, removesite, cdsite,
+    worksite, lssites, statsites.
 
 
 Commands

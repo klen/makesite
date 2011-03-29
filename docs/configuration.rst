@@ -50,6 +50,10 @@ Command line
     One or more template names separated by commas.
     Saved in **template** variable.
 
+.. option:: -a, --append
+
+    Tell makesite append template from :option:`-t` to existed project.
+
 .. option:: -c <path_to_config>, --config=<path_to_config>
 
     Path to custom config file.
