@@ -197,12 +197,11 @@ def deploy_template(path, options, template):
     print "Deploy template '%s'." % template
     options = parse_config(os.path.join(path, INI_FILENAME), options, replace=False)
 
-    for item in os.walk(path):
-        root = item[0]
-        files = item[2]
-        curdir = os.path.join(options['Main']['deploy_dir'], root[len(path) + 1:])
+    for root, dirs, files in os.walk(path):
+        dirs = root[len(path) + 1:]
+        curdir = os.path.join(options['Main']['deploy_dir'], dirs)
         options['Main']['curdir'] = curdir
-        create_dir( curdir )
+        create_dir(curdir)
 
         for filename in files:
 
@@ -210,8 +209,13 @@ def deploy_template(path, options, template):
             if filename in (TEMPLATES_FILE, INI_FILENAME):
                 continue
 
-            t = Template(filename=os.path.join( root, filename ))
-            create_file(os.path.join( curdir, filename ), t(**options['Main']))
+            # Files from bin folders copied as-is
+            if dirs == 'bin':
+                src = open(os.path.join( root, filename), 'rb').read()
+            else:
+                t = Template(filename=os.path.join( root, filename ))
+                src = t(**options['Main'])
+            create_file(os.path.join(curdir, filename), src)
 
     sys.stdout.write('\n')
 
@@ -232,7 +236,7 @@ def create_file( path, s ):
     """
     try:
         pid = os.getpid()
-        open('/tmp/makesite_%s.tmp' % pid, 'w').write(s)
+        open('/tmp/makesite_%s.tmp' % pid, 'wb').write(s)
         subprocess.check_call('sudo mv /tmp/makesite_%s.tmp %s' % (pid, path), shell=True)
         print "Create file '%s'" % path
     except subprocess.CalledProcessError:
