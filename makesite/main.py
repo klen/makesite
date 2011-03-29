@@ -198,7 +198,7 @@ def deploy_template(path, options, template):
     options = parse_config(os.path.join(path, INI_FILENAME), options, replace=False)
 
     for root, dirs, files in os.walk(path):
-        dirs = root[len(path) + 1:]
+        dirs = root[len(path) + 1:].split(os.sep)[0]
         curdir = os.path.join(options['Main']['deploy_dir'], dirs)
         options['Main']['curdir'] = curdir
         create_dir(curdir)
@@ -212,9 +212,10 @@ def deploy_template(path, options, template):
             # Files from bin folders copied as-is
             if dirs == 'bin':
                 src = open(os.path.join( root, filename), 'rb').read()
+
             else:
-                t = Template(filename=os.path.join( root, filename ))
-                src = t(**options['Main'])
+                src = Template(filename=os.path.join(root, filename))(**options['Main'])
+
             create_file(os.path.join(curdir, filename), src)
 
     sys.stdout.write('\n')

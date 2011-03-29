@@ -1,8 +1,8 @@
 CHANGES
 =======
 
-## 2011-03-29 0.7.1
--------------------
+## 2011-03-29 0.7.11
+--------------------
 * Add `append` option to makesite
 * Add support for 'bin' folder in templates (files from this folder are copied
 as-is), template rendering transformations are not applied)
