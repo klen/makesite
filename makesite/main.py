@@ -198,8 +198,9 @@ def deploy_template(path, options, template):
     options = parse_config(os.path.join(path, INI_FILENAME), options, replace=False)
 
     for root, dirs, files in os.walk(path):
-        dirs = root[len(path) + 1:].split(os.sep)[0]
+        dirs = root[len(path) + 1:]
         curdir = os.path.join(options['Main']['deploy_dir'], dirs)
+        top_dir = dirs.split(os.sep)[0]
         options['Main']['curdir'] = curdir
         create_dir(curdir)
 
@@ -210,13 +211,15 @@ def deploy_template(path, options, template):
                 continue
 
             # Files from bin folders copied as-is
-            if dirs == 'bin':
-                src = open(os.path.join( root, filename), 'rb').read()
+            if top_dir == 'bin':
+                subprocess.check_call('sudo cp %s %s' % (
+                    os.path.join(root, filename),
+                    os.path.join(curdir, filename)
+                ), shell=True)
 
             else:
                 src = Template(filename=os.path.join(root, filename))(**options['Main'])
-
-            create_file(os.path.join(curdir, filename), src)
+                create_file(os.path.join(curdir, filename), src)
 
     sys.stdout.write('\n')
 
