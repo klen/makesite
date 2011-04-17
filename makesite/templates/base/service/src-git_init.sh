@@ -15,8 +15,10 @@ which git 1>/dev/null || {
     echo "  * Git not found! Attempting to install..."
     if [ -f /etc/lsb-release ] ; then
         sudo apt-get install git
+
     elif [ -f /etc/fedora-release ] ; then
         sudo yum install git
+
     elif [ -f /etc/debian_version ] ; then
         sudo apt-get install git
     fi

@@ -33,6 +33,9 @@ def resolve_expression_node(instance, node):
 
 def update(instance, **kwargs):
     "Atomically update instance, setting field/value pairs from kwargs"
+    # clean instance before update
+    instance.full_clean()
+
     # fields that use auto_now=True should be updated corrected, too!
     for field in instance._meta.fields:
         if hasattr(field, 'auto_now') and field.auto_now and field.name not in kwargs:
