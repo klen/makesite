@@ -1,10 +1,11 @@
 CHANGES
 =======
 
-## 2011-05-30 0.7.14
+## 2011-05-30 0.7.16
 --------------------
 * Configurable nginx template
 * Configurable supervisor template
+* Change uwsgi params
 
 ## 2011-03-30 0.7.13
 --------------------
