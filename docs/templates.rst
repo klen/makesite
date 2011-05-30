@@ -180,7 +180,9 @@ List
         supervisor_ support.
 
         **default options** ::
-            supervisor_confpath=/etc/supervisor/conf.d/{{ project }}.{{ branch }}.conf
+            supervisor_target_confpath=/etc/supervisor/conf.d/{{ project }}.{{ branch }}.conf
+            supervisor_source_confpath=<deploy_dir>/deploy/supervisor.conf
+            supervisor_taskname=<project>.<branch>
 
 
         #. **INSTALL**

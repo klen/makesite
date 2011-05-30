@@ -4,6 +4,7 @@ CHANGES
 ## 2011-05-30 0.7.14
 --------------------
 * Configurable nginx template
+* Configurable supervisor template
 
 ## 2011-03-30 0.7.13
 --------------------
