@@ -1,11 +1,7 @@
-from django.test.client import Client
-from django.utils import unittest
+from django.test import TestCase
 
 
-class BaseTestCase(unittest.TestCase):
-
-    def setUp(self):
-        self.client = Client()
+class BaseTestCase(TestCase):
 
     def test_response(self):
         response = self.client.get('')
