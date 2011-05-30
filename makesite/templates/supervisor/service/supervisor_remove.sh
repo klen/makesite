@@ -1,20 +1,15 @@
 #!/bin/sh
 
 # Variables
-SUPERVISOR_CONFPATH={{ supervisor_confpath }}
-PROGRAMM_NAME={{ project }}.{{ branch }}
+SUPERVISOR_TARGET_CONFPATH={{ supervisor_target_confpath }}
+SUPERVISOR_TASKNAME={{ supervisor taskname }}
 
-# Remove link on nginx config
-if [ -f $SUPERVISOR_CONFPATH ]; then
-    echo '  * Remove link to nginx conf:'$SUPERVISOR_CONFPATH
-    sudo rm -rf $SUPERVISOR_CONFPATH
-else
-    echo '  * Not found template nginx config file: '$SUPERVISOR_CONFPATH
-fi
+# Remove link on supervisor config
+sudo rm $SUPERVISOR_TARGET_CONFPATH || echo '  * Not found template nginx config file: '$SUPERVISOR_TARGET_CONFPATH
 
 # Restart supervisor
 if [ -f /etc/init.d/supervisor ]; then
     echo '  * Update supervisord'
     sudo supervisorctl reread
-    sudo supervisorctl reload $PROGRAMM_NAME
+    sudo supervisorctl reload
 fi

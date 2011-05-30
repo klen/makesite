@@ -1,11 +1,10 @@
 #!/bin/sh
 
 # Variables
-SUPERVISOR_PROGRAMM_NAME={{ project }}.{{ branch }}
-SUPERVISOR_CONFPATH={{ supervisor_confpath }}
+SUPERVISOR_TASKNAME={{ supervisor_taskname }}
+SUPERVISOR_TARGET_CONFPATH={{ supervisor_target_confpath }}
 
 # Restart supervisor programm
-if [ -f $SUPERVISOR_CONFPATH ]; then
-    echo "  * Restart supervisor service: $SUPERVISOR_PROGRAMM_NAME."
-    sudo supervisorctl restart $SUPERVISOR_PROGRAMM_NAME
-fi
+echo "  * Restart supervisor service: $SUPERVISOR_TASKNAME."
+sudo supervisorctl reread
+sudo supervisorctl restart $SUPERVISOR_TASKNAME
