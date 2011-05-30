@@ -208,7 +208,7 @@ List
            uwsgi template waiting file ``wsgi.py`` in project source root with defined wsgi application
 
         **default options** ::
-            uwsgi_config_path=<deploy_dir>/deploy/uwsgi.xml
+            uwsgi_source_confpath=<deploy_dir>/deploy/uwsgi.xml
 
 
     zeta

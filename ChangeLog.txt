@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-## 2011-05-30 0.7.16
+## 2011-05-30 0.7.17
 --------------------
 * Configurable nginx template
 * Configurable supervisor template
