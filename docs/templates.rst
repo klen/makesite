@@ -161,7 +161,8 @@ List
 
         **default options** ::
 
-            nginx_confpath=/etc/nginx/sites-enabled/{{ project }}.{{ branch }}.conf
+            nginx_target_confpath=/etc/nginx/sites-enabled/{{ project }}.{{ branch }}.conf
+            nginx_source_confpath=<deploy_dir>/deploy/nginx.conf
 
         #. **INSTALL**
 
