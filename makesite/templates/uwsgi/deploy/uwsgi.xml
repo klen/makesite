@@ -1,0 +1,32 @@
+<!-- UWSGI XML Configuration File -->
+<uwsgi>
+
+    <!-- Socket -->
+    <socket>{{ deploy_dir }}/uwsgi.sock</socket>
+
+    <!-- Path to virtualenv -->
+    <home>{{ deploy_dir }}/.virtualenv</home>
+
+    <!-- Append to python path -->
+    <pythonpath>{{ project sourcedir }}</pythonpath>
+
+    <!-- Python module with wsgi application -->
+    <module>wsgi</module>
+
+    <!-- Processes number -->
+    <processes>{{ 1 if mode == 'dev' else 10 }}</processes>
+
+    <!-- Maximum number of requests for each worker -->
+    <max-requests>5000</max-requests>
+
+    <!-- Request max buffer size -->
+    <buffer-size>32768</buffer-size>
+
+    <!-- Kill every request that will take more than 30 seconds to complete -->
+    <harakiri>30</harakiri>
+
+    <reload-mercy>8</reload-mercy>
+    <master />
+    <no-orphans />
+
+</uwsgi>
