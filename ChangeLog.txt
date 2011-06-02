@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2011-06-02 0.7.18
+--------------------
+* Remove auto cache setup from settigns.
+
 ## 2011-05-30 0.7.17
 --------------------
 * Configurable nginx template

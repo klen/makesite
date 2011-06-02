@@ -1,7 +1,7 @@
 " Common settings for all project. "
 import os, logging
 
-from settings import PROJECT_ROOT, DEVZONE_ROOT, parse_cache
+from settings import PROJECT_ROOT, DEVZONE_ROOT, PROJECT_NAME
 
 
 # Databases
@@ -16,7 +16,10 @@ DATABASES = {
         }
 
 # Caches
-CACHES = parse_cache()
+CACHES = {'default': {
+    'BACKEND':  'django.core.cache.backends.locmem.LocMemCache',
+    'KEY_PREFIX': '_'.join((PROJECT_NAME, 'CORE'))
+}}
 
 # Base urls config
 ROOT_URLCONF = 'main.urls'

@@ -19,19 +19,3 @@ else:
 
 
 PROJECT_NAME = "%s.%s" % (V.get('project', 'undefined'), V.get('branch', 'master'))
-__TEMPLATES = V.get('template', '').split()
-
-
-def parse_cache():
-    """ Parse cache from makesite templates.
-    """
-    caches = dict(default=dict(KEY_PREFIX = '_'.join((PROJECT_NAME, 'CORE'))))
-
-    if 'memcached' in __TEMPLATES:
-        caches['default']['BACKEND'] = 'django.core.cache.backends.memcached.MemcachedCache'
-        caches['default']['LOCATION'] = ':'.join((V.get('memcached_host', 'localhost'), V.get('memcached_port', '11211')))
-
-    else:
-        caches['default']['BACKEND'] = 'django.core.cache.backends.locmem.LocMemCache'
-
-    return caches
