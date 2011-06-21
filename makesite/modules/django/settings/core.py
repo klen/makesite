@@ -16,10 +16,12 @@ DATABASES = {
         }
 
 # Caches
-CACHES = {'default': {
-    'BACKEND':  'django.core.cache.backends.locmem.LocMemCache',
-    'KEY_PREFIX': '_'.join((PROJECT_NAME, 'CORE'))
-}}
+CACHES = {
+        'default': {
+                'BACKEND':  'django.core.cache.backends.locmem.LocMemCache',
+                'KEY_PREFIX': '_'.join((PROJECT_NAME, 'CORE'))
+            }
+        }
 
 # Base urls config
 ROOT_URLCONF = 'main.urls'

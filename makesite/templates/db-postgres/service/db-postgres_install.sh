@@ -4,6 +4,7 @@
 PGUSER={{ pguser }}
 PGPASSWORD={{ pgpassword }}
 PGHOST={{ pghost }}
+PGPORT={{ pgport }}
 PSQL="psql -At"
 DBNAME={{ dbname }}
 DBUSER={{ dbuser }}
@@ -19,6 +20,7 @@ fi
 export PGUSER=$PGUSER
 export PGPASSWORD=$PGPASSWORD
 export PGHOST=$PGHOST
+export PGPORT=$PGPORT
 
 SQL_CREATE_DB="create database $DBNAME with owner $DBUSER"
 SQL_CREATE_ROLE="create role $DBUSER with login password '$DBPASSWORD'"

@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2011-06-02 0.7.19
+--------------------
+* Add pgport to postgres template
+
 ## 2011-06-02 0.7.18
 --------------------
 * Remove auto cache setup from settigns.

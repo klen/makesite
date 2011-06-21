@@ -64,7 +64,7 @@ List
         Auto create user and db for project if it not exist. `db-postgres source`_
         .. note ::
 
-            Require <pguser>, <pghost>, <pgpassword> variables in configs with admin rights
+            Require <pguser>, <pghost>, <pgpassword>, <pgport> variables in configs with admin rights
 
         #. **INSTALL**
 
