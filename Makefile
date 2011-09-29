@@ -29,7 +29,7 @@ _register:
 	python setup.py register
 
 remove:
-	sudo pip uninstall $(MODULE)
+	sudo pip uninstall -y $(MODULE)
 
 _install:
 	sudo pip install -U .
