@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-version_info = (0, 7, 20)
+version_info = (0, 7, 21)
 
 __version__ = version = '.'.join(map(str, version_info))
 __project__ = PROJECT = __name__

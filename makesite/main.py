@@ -77,6 +77,7 @@ def deploy(options):
     create_file(os.path.join(options['Main']['deploy_dir'], INI_FILENAME), "[Main]\n%s" % format_options(options['Main']))
 
     # Run install site
+    call('chmod +x %(project_servicedir)s/*.sh' % options['Main'], sudo=True)
     call('makesiteparse %(deploy_dir)s install' % options['Main'])
 
 
