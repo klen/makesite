@@ -1,16 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 
+# Import BSFL
+source {{ project_servicedir }}/.bsfl
+
+# Variables
 SITE_USER={{ site_user }}
 SITE_GROUP={{ site_group }}
 PROJECT_STATICDIR={{ project_staticdir }}
 
-# Check zeta-library
-which zeta 1>/dev/null || {
-    echo -e "  * Python zetalibrary not found! Attempting to install..."
-    sudo pip install zetalibrary
-}
+# Change rights
+cmd_or_die "sudo chown -R $USER:$USER $PROJECT_STATICDIR"
 
-sudo zeta $PROJECT_STATICDIR
+# Check zeta-library
+check_program zeta
+
+# Pack static
+cmd_or_die "zeta $PROJECT_STATICDIR"
 
 # Restore rights
-sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_STATICDIR
+cmd_or_die "sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_STATICDIR"

@@ -1,7 +1,11 @@
 #!/usr/bin/env python
-import ConfigParser, os, sys, subprocess
-
+import ConfigParser
 import argparse
+import logging
+import os
+import shutil
+import subprocess
+import sys
 
 from makesite import version, INI_FILENAME, TEMPLATES_FILE
 from makesite.template import Template
@@ -46,7 +50,8 @@ def deploy(options):
         sys.exit(1)
 
     # Create dir and makesite templates file
-    create_dir( options['Main'][ 'deploy_dir' ] )
+    call('mkdir -p %s' % options['Main']['deploy_dir'], sudo=True)
+    call('chown %(user)s:%(user)s -R %(path)s' % dict(user=os.environ.get('USER'), path=options['Main']['deploy_dir']), sudo=True)
 
     # Load source
     base_templates = load_source(options)
@@ -63,15 +68,16 @@ def deploy(options):
     for template, path in templates:
         if template != 'base':
             deploy_template(path, options, template)
+    print
 
     # Create makesite project files
-    create_file(os.path.join( options['Main'][ 'deploy_dir' ], TEMPLATES_FILE ), ' '.join([t[0] for t in templates]))
+    create_file(os.path.join(options['Main'][ 'deploy_dir' ], TEMPLATES_FILE), ' '.join([t[0] for t in templates]))
 
     # Save used options
     create_file(os.path.join(options['Main']['deploy_dir'], INI_FILENAME), "[Main]\n%s" % format_options(options['Main']))
 
     # Run install site
-    subprocess.check_call('makesiteparse %(deploy_dir)s install' % options['Main'], shell=True)
+    call('makesiteparse %(deploy_dir)s install' % options['Main'])
 
 
 def format_options(main_options):
@@ -119,25 +125,22 @@ def load_config(options):
 def load_source(options):
     """ Deploy base template and load source.
     """
-
-
     if options['Main']['src']:
         template = 'src-dir'
         if options['Main']['src'].startswith('git+'):
             options['Main']['src'] = options['Main']['src'][4:]
             template = 'src-git'
 
+        # Deploy base-src template
         deploy_template(os.path.join(BASE_TEMPLATES_DIR, 'base'), options, 'base')
-        try:
-            subprocess.check_call('sh %s/%s_init.sh' % (options['Main']['project_servicedir'], template), shell=True)
-        except subprocess.CalledProcessError:
-            subprocess.check_call('sudo rm -rf %s' % options['Main']['deploy_dir'], shell=True)
-            print >> sys.stderr, "Error deploy src: %s" % options['Main']['src']
-            sys.exit(1)
 
-        parse_config(os.path.join( options['Main']['project_sourcedir'], INI_FILENAME ), options)
-        return [ 'base', template ]
+        call('bash %s/%s_init.sh' % (options['Main']['project_servicedir'], template))
 
+        # Parse config from source
+        parse_config(os.path.join(options['Main']['project_sourcedir'], INI_FILENAME), options)
+        return ['base', template]
+
+    # Deploy base template
     deploy_template(os.path.join(BASE_TEMPLATES_DIR, 'base'), options, 'base')
     return [ 'base' ]
 
@@ -179,12 +182,15 @@ def parse_templates(templates, options):
             print >> sys.stderr, "Template '%s' not found in base and custom templates." % template
             sys.exit(1)
 
-        try:
-            f = open( os.path.join(path, TEMPLATES_FILE ), 'r')
-            child = f.read().strip()
-            result += parse_templates(child.split(' '), options)
-        except IOError:
-            pass
+        filename = os.path.join(path, TEMPLATES_FILE)
+
+        if os.path.exists(filename):
+            try:
+                f = open(filename, 'r')
+                child = f.read().strip()
+                result += parse_templates(child.split(' '), options)
+            except IOError:
+                logging.warn("IO Error: %s", filename)
 
         result.append((template, path))
 
@@ -194,7 +200,7 @@ def parse_templates(templates, options):
 def deploy_template(path, options, template):
     """ Deploy template.
     """
-    print "Deploy template '%s'." % template
+    print "Create template structure '%s'." % template
     options = parse_config(os.path.join(path, INI_FILENAME), options, replace=False)
 
     for root, dirs, files in os.walk(path):
@@ -210,41 +216,44 @@ def deploy_template(path, options, template):
             if filename in (TEMPLATES_FILE, INI_FILENAME):
                 continue
 
-            # Files from bin folders copied as-is
-            if top_dir == 'bin':
-                subprocess.check_call('sudo cp %s %s' % (
-                    os.path.join(root, filename),
-                    os.path.join(curdir, filename)
-                ), shell=True)
+            source = os.path.join(root, filename)
+            destination = os.path.join(curdir, filename)
 
-            else:
-                src = Template(filename=os.path.join(root, filename))(**options['Main'])
-                create_file(os.path.join(curdir, filename), src)
+            # Copy file
+            shutil.copy2(source, destination)
 
-    sys.stdout.write('\n')
+            # Files from bin and static folders copied as-is
+            if top_dir in ('bin', 'static'):
+                continue
+
+            template = Template(filename=destination, context=options['Main'])
+            template.parse_file()
+
+
+def call(cmd, sudo=False):
+    if sudo:
+        cmd = "sudo %s" % cmd
+    try:
+        subprocess.check_call(cmd, shell=True)
+    except subprocess.CalledProcessError, e:
+        print >> sys.stderr, str(e)
+        sys.exit(1)
 
 
 def create_dir(path):
     """ Create directory.
     """
-    try:
-        subprocess.check_call('sudo mkdir -p %s' % path, shell=True)
-        print "Create dir %s." % path
-    except subprocess.CalledProcessError:
-        print >> sys.stderr, "makesite need sudo access."
-        sys.exit(1)
+    if not os.path.exists(path):
+        os.makedirs(path)
 
 
-def create_file( path, s ):
+def create_file(path, s):
     """ Create file.
     """
-    try:
-        pid = os.getpid()
-        open('/tmp/makesite_%s.tmp' % pid, 'wb').write(s)
-        subprocess.check_call('sudo mv /tmp/makesite_%s.tmp %s' % (pid, path), shell=True)
-        print "Create file '%s'" % path
-    except subprocess.CalledProcessError:
-        print 'Failed create file %s.' % path
+    f = open(path, 'w')
+    f.write(s)
+    f.close()
+    return f
 
 
 def append_template(options):

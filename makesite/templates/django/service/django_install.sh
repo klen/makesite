@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/bin/bash
+
+# Import BSFL
+PROJECT_SERVICEDIR={{ project_servicedir }}
+source $PROJECT_SERVICEDIR/.bsfl
 
 # Variables
 SITE_USER={{ site_user }}
@@ -7,10 +11,6 @@ PROJECT_SOURCEDIR={{ project_sourcedir }}
 BASERUN={{ project_servicedir }}/virtualenv_run.sh
 MEDIA_DIR={{ media_dir }}
 MODE={{ mode }}
-
-# Create media dir
-echo "  * Create media directory:" $MEDIA_DIR
-sudo mkdir -p $MEDIA_DIR
 
 # Check settings
 if [ -d $PROJECT_SOURCEDIR/settings ]; then
@@ -21,15 +21,12 @@ fi
 
 # Create manage.py executable
 if [ ! -x $PROJECT_SOURCEDIR/manage.py ]; then
-    echo "  * Make manage.py executable."
-    sudo chmod +x $PROJECT_SOURCEDIR/manage.py
+    msg_info "Make manage.py executable."
+    cmd_or_die "sudo chmod +x $PROJECT_SOURCEDIR/manage.py"
 fi
-
-# Restore rights
-sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_SOURCEDIR
 
 # Sync database
 if [ -f $BASERUN ]; then
-    echo "  * Run django syncdb."
-    sudo -u $SITE_USER sh $BASERUN manage.py syncdb --noinput --settings=$DJANGO_SETTINGS
+    msg_info "Run django syncdb"
+    cmd_or_die "$BASERUN manage.py syncdb --noinput --settings=$DJANGO_SETTINGS"
 fi

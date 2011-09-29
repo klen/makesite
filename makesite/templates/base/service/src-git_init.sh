@@ -1,43 +1,22 @@
-#!/bin/sh
+#!/bin/bash
+
+# Import BSFL
+PROJECT_SERVICEDIR={{ project_servicedir }}
+source $PROJECT_SERVICEDIR/.bsfl
 
 # Variables
 SRC={{ src }}
 BRANCH={{ branch }}
-PROJECT={{ project }}
 SITE_USER={{ site_user }}
 SITE_GROUP={{ site_group }}
+DEPLOY_DIR={{ deploy_dir }}
 PROJECT_SOURCEDIR={{ project_sourcedir }}
-GIT_PROJECT_TEMP_DIR=/tmp/$BRANCH.$PROJECT-$USER
 
+# Change rights
+cmd_or_die "sudo chown -R $USER:$USER $DEPLOY_DIR"
 
 # Check git installed.
-which git 1>/dev/null || {
-    echo "  * Git not found! Attempting to install..."
-    if [ -f /etc/lsb-release ] ; then
-        sudo apt-get install git
-
-    elif [ -f /etc/fedora-release ] ; then
-        sudo yum install git
-
-    elif [ -f /etc/debian_version ] ; then
-        sudo apt-get install git
-    fi
-}
+check_program git
 
 # Clone git repo
-echo "  * Clone $SRC to $GIT_PROJECT_TEMP_DIR."
-rm -rf $GIT_PROJECT_TEMP_DIR
-git clone $SRC $GIT_PROJECT_TEMP_DIR
-
-# Create project branch
-echo "  * Set branch $BRANCH."
-cd $GIT_PROJECT_TEMP_DIR
-git push origin origin:refs/heads/$BRANCH
-git fetch origin
-git checkout --track origin/$BRANCH
-
-echo "  * Move $GIT_PROJECT_TEMP_DIR to $PROJECT_SOURCEDIR"
-sudo mv $GIT_PROJECT_TEMP_DIR $PROJECT_SOURCEDIR
-
-# Restore rights
-sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_SOURCEDIR
+cmd "git clone $SRC $PROJECT_SOURCEDIR"

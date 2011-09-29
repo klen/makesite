@@ -1,10 +1,4 @@
-#!/bin/sh
-
-# makesite show error
-_makesite_error () {
-    echo "ERROR: "$1 1>&2
-    exit 1
-}
+#!/bin/bash
 
 # Check usage
 if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
@@ -32,23 +26,35 @@ SERVICE_DIR=$PROJECT_DIR/service
 SOURCE_DIR=$PROJECT_DIR/source
 
 if [ ! -z "$VIRTUAL_ENV" ]; then
-    _makesite_error "Please deactivate VIRTUALENV '$VIRTUAL_ENV' first."
+    echo "Please deactivate VIRTUALENV '$VIRTUAL_ENV' first." && exit 1
 fi
 
 if [ ! -f $TEMPLATE_FILE ]; then
-    _makesite_error "makesite not found templates in '$PROJECT_DIR'."
+    echo "makesite not found templates in '$PROJECT_DIR'." && exit 1
 fi
 
-echo "Run $ACTION for '$PROJECT_DIR'\n=========="
+# BSFL
+source $SERVICE_DIR/.bsfl
+
+msg "Run $ACTION for $PROJECT_DIR" "$RED"
+sudo rm -f $LOG_FILE
+msg_info "Logfile: $LOG_FILE"
+echo
+
 for t in `cat $TEMPLATE_FILE`; do
     for f in $SERVICE_DIR/${t}_*$ACTION*.sh; do
         if [ -f $f ]; then
-            echo "Run $f\n----------" && sh $f && echo
+            msg "Run $f" "$MAGENTA"
+            $f || {
+                msg_info "$ACTION crashed, see logfile: $LOG_FILE" "$RED"
+                exit 0
+            }
+            echo
         fi
     done
 done
 
 # Post install, update action
 if [ -f $SOURCE_DIR/.makesite_*$ACTION* ]; then
-    echo "Run $f\n----------" && sh $f && echo
+    msg "Run $f" && $f && echo
 fi

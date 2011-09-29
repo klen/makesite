@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/bin/bash
+
+# Import BSFL
+PROJECT_SERVICEDIR={{ project_servicedir }}
+source $PROJECT_SERVICEDIR/.bsfl
 
 # Variables
 SITE_USER={{ site_user }}
@@ -10,20 +14,17 @@ SRC={{ src }}
 SRC_STATIC_DIR=$PROJECT_SOURCEDIR/static
 
 # Remove project dir
-sudo rm -rf $PROJECT_SOURCEDIR
+cmd "sudo rm -rf $PROJECT_SOURCEDIR"
 
 # Copy source directory to project source directory
-echo "  * Clone $SRC to $PROJECT_SOURCEDIR."
-sudo cp -r $SRC $PROJECT_SOURCEDIR
+msg_info "Clone $SRC to $PROJECT_SOURCEDIR"
+cmd "sudo cp -r $SRC $PROJECT_SOURCEDIR"
 
-if [ ! -d $PROJECT_STATICDIR ]; then
-    sudo mkdir -p $PROJECT_STATICDIR
-fi
-# Copy static in static dir
+cmd "mkdir -p $PROJECT_STATICDIR"
 if [ -d $SRC_STATIC_DIR ]; then
-    sudo cp -r $SRC_STATIC_DIR/* $PROJECT_STATICDIR
+    cmd "sudo cp -r $SRC_STATIC_DIR/* $PROJECT_STATICDIR"
 fi
 
 # Restore rights
-sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_STATICDIR
-sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_SOURCEDIR
+cmd "sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_STATICDIR"
+cmd "sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_SOURCEDIR"

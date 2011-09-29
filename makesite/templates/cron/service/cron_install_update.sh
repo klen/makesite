@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/bin/bash
+
+# Import BSFL
+PROJECT_SERVICEDIR={{ project_servicedir }}
+source $PROJECT_SERVICEDIR/.bsfl
 
 # Variables
 CRON_PROJECTFILE={{ cron_projectfile }}
@@ -6,17 +10,8 @@ CRON_PARSESCRIPT={{ deploy_dir }}/service/cron_parse.py
 
 
 # Check cron installed.
-sudo which cron 1>/dev/null || {
-    echo "  * Cron not found! Attempting to install..."
-    if [ -f /etc/lsb-release ] ; then
-        sudo apt-get install cron -y
-    elif [ -f /etc/fedora-release ] ; then
-        sudo yum install cron
-    elif [ -f /etc/debian_version ] ; then
-        sudo apt-get install cron
-    fi
-}
+check_program cron
 
 if [ -f $CRON_PROJECTFILE ]; then
-    sudo python $CRON_PARSESCRIPT
+    cmd_or_die "sudo python $CRON_PARSESCRIPT"
 fi

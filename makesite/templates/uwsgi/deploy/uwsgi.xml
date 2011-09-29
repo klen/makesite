@@ -8,7 +8,7 @@
     <home>{{ deploy_dir }}/.virtualenv</home>
 
     <!-- Append to python path -->
-    <pythonpath>{{ project sourcedir }}</pythonpath>
+    <pythonpath>{{ project_sourcedir }}</pythonpath>
 
     <!-- Python module with wsgi application -->
     <module>wsgi</module>

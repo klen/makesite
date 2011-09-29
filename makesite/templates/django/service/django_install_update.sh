@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/bin/bash
+
+# Import BSFL
+PROJECT_SERVICEDIR={{ project_servicedir }}
+source $PROJECT_SERVICEDIR/.bsfl
 
 # Variables
 SITE_USER={{ site_user }}
@@ -15,9 +19,9 @@ fi
 
 # Migration and collect static
 if [ -f $BASERUN ]; then
-    echo "  * Run django migration."
-    sudo -u $SITE_USER sh $BASERUN manage.py migrate --noinput --settings=$DJANGO_SETTINGS
+    msg_info "Run django migration"
+    cmd_or_die "sudo -u $SITE_USER sh $BASERUN manage.py migrate --noinput --settings=$DJANGO_SETTINGS"
 
-    echo "  * Run django collect static files."
-    sudo -u $SITE_USER sh $BASERUN manage.py collectstatic --noinput --settings=$DJANGO_SETTINGS
+    msg_info "Run django collect static files"
+    cmd_or_die "sudo -u $SITE_USER sh $BASERUN manage.py collectstatic --noinput --settings=$DJANGO_SETTINGS"
 fi
