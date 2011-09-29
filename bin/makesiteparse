@@ -46,7 +46,8 @@ for t in `cat $TEMPLATE_FILE`; do
         if [ -f $f ]; then
             msg "Run $f" "$MAGENTA"
             $f || {
-                msg_info "$ACTION crashed, see logfile: $LOG_FILE" "$RED"
+                msg_info "$ACTION crashed, see logfile: $LOG_FILE"
+                msg_info "For clean: removesite $PROJECT_DIR"
                 exit 0
             }
             echo

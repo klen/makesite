@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2011-09-30 0.7.20
+--------------------
+* Drop auto installation from templates
+
 ## 2011-06-02 0.7.19
 --------------------
 * Add pgport to postgres template
