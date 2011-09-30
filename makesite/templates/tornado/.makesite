@@ -1,1 +1,1 @@
-virtualenv cron memcached supervisor nginx
+virtualenv memcached supervisor nginx
