@@ -13,10 +13,9 @@ PROJECT_SOURCEDIR={{ project_sourcedir }}
 
 # Create project branch
 if [[ ! "$BRANCH" = "master" ]] && [[ "$GIT_BRANCH_CREATE" = "yes" ]]; then
-    cmd "sudo chown $USER:$USER $PROJECT_SOURCEDIR"
-    cmd "cd $PROJECT_SOURCEDIR"
-    cmd "git push origin origin:refs/heads/$BRANCH"
-    cmd "git fetch origin"
-    cmd "git checkout --track origin/$BRANCH"
-    cmd "sudo chown $SITE_USER:$SITE_GROUP $PROJECT_SOURCEDIR"
+    cmd "sudo chown -R $USER:$USER $PROJECT_SOURCEDIR"
+    cmd "git --work-tree $PROJECT_SOURCEDIR --git-dir $PROJECT_SOURCEDIR/.git push origin origin:refs/heads/$BRANCH"
+    cmd "git --work-tree $PROJECT_SOURCEDIR --git-dir $PROJECT_SOURCEDIR/.git fetch origin"
+    cmd "git --work-tree $PROJECT_SOURCEDIR --git-dir $PROJECT_SOURCEDIR/.git checkout --track origin/$BRANCH"
+    cmd "sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_SOURCEDIR"
 fi
