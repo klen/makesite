@@ -34,11 +34,18 @@ if [ ! -f $TEMPLATE_FILE ]; then
 fi
 
 # BSFL
-source $SERVICE_DIR/.bsfl
+RED="tput -T xterm setaf 1"
+DEFAULT="tput -T xterm sgr0"
+LOG_FILE=/tmp/makesite.log
 
-msg "Run $ACTION for $PROJECT_DIR" "$RED"
+msg () {
+    MESSAGE="$1"
+    $RED && echo $MESSAGE && $DEFAULT
+}
+
+msg "Run $ACTION for $PROJECT_DIR"
+msg "Logfile: $LOG_FILE"
 sudo rm -f $LOG_FILE
-msg_info "Logfile: $LOG_FILE"
 echo
 
 for t in `cat $TEMPLATE_FILE`; do
@@ -46,8 +53,8 @@ for t in `cat $TEMPLATE_FILE`; do
         if [ -f $f ]; then
             msg "Run $f" "$MAGENTA"
             $f || {
-                msg_info "$ACTION crashed, see logfile: $LOG_FILE"
-                msg_info "For clean: removesite $PROJECT_DIR"
+                msg "$ACTION crashed, see logfile: $LOG_FILE"
+                msg "For clean: removesite $PROJECT_DIR"
                 exit 0
             }
             echo

@@ -12,5 +12,7 @@ SITE_GROUP={{ site_group }}
 PROJECT_SOURCEDIR={{ project_sourcedir }}
 
 cmd_or_die "sudo chown -R $USER:$USER $PROJECT_SOURCEDIR"
-cmd_or_die "cd $PROJECT_SOURCEDIR && git reset --hard HEAD && git clean -df && git pull"
+cmd_or_die "cd $PROJECT_SOURCEDIR && git reset --hard HEAD"
+cmd_or_die "cd $PROJECT_SOURCEDIR && git clean -df"
+cmd_or_die "cd $PROJECT_SOURCEDIR && git pull origin $BRANCH"
 cmd_or_die "sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_SOURCEDIR"
