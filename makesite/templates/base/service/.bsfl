@@ -421,7 +421,6 @@ raw_status () {
     echo -n "$STATUS"
     $DEFAULT
     echo "]"
-    log "Status = $STATUS"
 }
 
 #

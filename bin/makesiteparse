@@ -41,6 +41,7 @@ LOG_FILE=/tmp/makesite.log
 msg () {
     MESSAGE="$1"
     $RED && echo $MESSAGE && $DEFAULT
+    echo >> "$LOG_FILE"
     echo $MESSAGE >> "$LOG_FILE"
 }
 
