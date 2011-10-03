@@ -41,6 +41,7 @@ LOG_FILE=/tmp/makesite.log
 msg () {
     MESSAGE="$1"
     $RED && echo $MESSAGE && $DEFAULT
+    echo $MESSAGE >> "$LOG_FILE"
 }
 
 msg "Run $ACTION for $PROJECT_DIR"
@@ -51,7 +52,7 @@ echo
 for t in `cat $TEMPLATE_FILE`; do
     for f in $SERVICE_DIR/${t}_*$ACTION*.sh; do
         if [ -f $f ]; then
-            msg "Run $f" "$MAGENTA"
+            msg "Run $f"
             $f || {
                 msg "$ACTION crashed, see logfile: $LOG_FILE"
                 msg "For clean: removesite $PROJECT_DIR"

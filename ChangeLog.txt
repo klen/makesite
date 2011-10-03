@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-## 2011-09-30 0.7.28
+## 2011-09-30 0.7.29
 --------------------
 * Drop auto installation from templates
 

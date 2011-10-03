@@ -256,10 +256,8 @@ msg () {
         $COLOR
         echo "$MESSAGE" 
         $DEFAULT
-        log "$MESSAGE"
     else
         echo "-- no message received --"
-        log "$MESSAGE"
     fi
 }
 
@@ -536,6 +534,7 @@ cmd () {
     if [ "$ERROR" == "0" ]
     then
         msg_ok "$MSG"
+        log "$COMMAND"
         if [ "$DEBUG" == "1" ]
         then
             msg "$RESULT"
