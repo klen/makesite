@@ -34,14 +34,16 @@ if [ ! -f $TEMPLATE_FILE ]; then
 fi
 
 # BSFL
-RED="tput -T ${TERM:=xterm} setaf 1"
-DEFAULT="tput -T ${TERM:=xterm} sgr0"
+RED="tput -T ${TERM:="xterm"} setaf 1"
+DEFAULT="tput -T ${TERM:="xterm"} sgr0"
 LOG_FILE=${LOGFILE:="/tmp/log-$USER.log"}
 sudo rm -rf $LOG_FILE
 
 msg () {
     MESSAGE="$1"
-    $RED && echo $MESSAGE && $DEFAULT
+    $RED 
+    echo $MESSAGE 
+    $DEFAULT
     echo >> "$LOG_FILE"
     echo $MESSAGE >> "$LOG_FILE"
 }
