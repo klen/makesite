@@ -19,6 +19,8 @@ else
     DJANGO_SETTINGS=settings
 fi
 
+cmd_or_die "sudo chown -R $USER:$USER $PROJECT_SOURCEDIR"
+
 # Create manage.py executable
 if [ ! -x $PROJECT_SOURCEDIR/manage.py ]; then
     msg_info "Make manage.py executable."
@@ -30,3 +32,5 @@ if [ -f $BASERUN ]; then
     msg_info "Run django syncdb"
     cmd_or_die "$BASERUN manage.py syncdb --noinput --settings=$DJANGO_SETTINGS"
 fi
+
+cmd_or_die "sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_SOURCEDIR"
