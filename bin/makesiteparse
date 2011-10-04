@@ -34,9 +34,10 @@ if [ ! -f $TEMPLATE_FILE ]; then
 fi
 
 # BSFL
-RED="tput -T xterm setaf 1"
-DEFAULT="tput -T xterm sgr0"
-LOG_FILE=/tmp/makesite.log
+RED="tput -T ${TERM:=xterm} setaf 1"
+DEFAULT="tput -T ${TERM:=xterm} sgr0"
+LOG_FILE=${LOGFILE:="/tmp/log-$USER.log"}
+sudo rm -rf $LOG_FILE
 
 msg () {
     MESSAGE="$1"
