@@ -19,7 +19,10 @@ def read_config(folder):
     git_head = os.path.join(folder, 'source', '.git', 'HEAD')
     if os.path.exists(git_head):
         head = open(git_head).read().split()[1]
-        site['revision'] = open(os.path.join(folder, 'source', '.git', head)).read()
+        try:
+            site['revision'] = open(os.path.join(folder, 'source', '.git', head)).read()
+        except IOError:
+            pass
     return site
 
 
