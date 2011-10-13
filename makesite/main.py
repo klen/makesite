@@ -128,9 +128,9 @@ def load_source(options):
     """
     if options['Main']['src']:
         template = 'src-dir'
-        if options['Main']['src'].startswith('git+'):
-            options['Main']['src'] = options['Main']['src'][4:]
-            template = 'src-git'
+        if '+' in options['Main']['src']:
+            src_type, options['Main']['src'] = options['Main']['src'].split('+', 1)
+            template = 'src-%s' % src_type
 
         # Deploy base-src template
         deploy_template(os.path.join(BASE_TEMPLATES_DIR, 'base'), options, 'base')
