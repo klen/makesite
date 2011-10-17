@@ -31,10 +31,10 @@ update: static ve_update restart chown
 static: chown collect zeta
 
 restart:
-	sudo sh $(SERVICE_DIR)/supervisor_update.sh
+	$(SERVICE_DIR)/supervisor_update.sh
 
 ve_update:
-	sudo sh $(SERVICE_DIR)/virtualenv_update.sh
+	$(SERVICE_DIR)/virtualenv_update.sh
 
 chown:
 	sudo chown -R $(USER):$(USER) $(STATIC_DIR)
