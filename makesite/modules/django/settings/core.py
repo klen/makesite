@@ -27,7 +27,7 @@ CACHES = {
 ROOT_URLCONF = 'main.urls'
 
 # Media settigns
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'static')
+MEDIA_ROOT = os.path.join(DEVZONE_ROOT, 'media')
 STATIC_ROOT = os.path.join(DEVZONE_ROOT, 'static')
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
