@@ -25,7 +25,8 @@ class AbstractResponseMixin(object):
     """
     mimetype = "application/text"
 
-    def render_template(self, context):
+    @staticmethod
+    def render_template(context):
         "String representation of given context."
         return str(context)
 
@@ -57,3 +58,4 @@ class JSONResponseMixin(AbstractResponseMixin):
 class JSONView(JSONResponseMixin, TemplateView):
     """ Render view context in JSON.
     """
+    pass

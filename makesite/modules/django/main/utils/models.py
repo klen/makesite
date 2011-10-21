@@ -2,6 +2,7 @@ import operator
 
 from django.db.models.expressions import F, ExpressionNode
 
+
 EXPRESSION_NODE_CALLBACKS = {
     ExpressionNode.ADD: operator.add,
     ExpressionNode.SUB: operator.sub,
@@ -12,8 +13,10 @@ EXPRESSION_NODE_CALLBACKS = {
     ExpressionNode.OR: operator.or_,
     }
 
+
 class CannotResolve(Exception):
     pass
+
 
 def _resolve(instance, node):
     if isinstance(node, F):
@@ -21,6 +24,7 @@ def _resolve(instance, node):
     elif isinstance(node, ExpressionNode):
         return _resolve(instance, node)
     return node
+
 
 def resolve_expression_node(instance, node):
     op = EXPRESSION_NODE_CALLBACKS.get(node.connector, None)
@@ -31,8 +35,11 @@ def resolve_expression_node(instance, node):
         runner = op(runner, _resolve(instance, n))
     return runner
 
+
 def update(instance, **kwargs):
-    "Atomically update instance, setting field/value pairs from kwargs"
+    """ Atomically update instance, setting field/value pairs from kwargs.
+    """
+
     # clean instance before update
     instance.full_clean()
 
@@ -55,4 +62,3 @@ def update(instance, **kwargs):
     # If you use an ORM cache, make sure to invalidate the instance!
     #cache.set(djangocache.get_cache_key(instance=instance), None, 5)
     return rows_affected
-
