@@ -27,7 +27,7 @@ export PGPASSWORD=$PGPASSWORD
 export PGHOST=$PGHOST
 export PGPORT=$PGPORT
 
-SQL_CREATE_DB="create database $DBNAME with owner $DBUSER"
+SQL_CREATE_DB="create database $DBNAME with owner $DBUSER encoding 'UTF8'"
 SQL_CREATE_ROLE="create role $DBUSER with login password '$DBPASSWORD'"
 SQL_CHECK_DB="select count(1) from pg_catalog.pg_database where datname = '$DBNAME' "
 
