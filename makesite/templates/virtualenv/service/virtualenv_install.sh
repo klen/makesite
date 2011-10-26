@@ -14,10 +14,6 @@ PYTHON_PREFIX={{ python_prefix }}
 # Change rights
 cmd "sudo chown -R $USER:$USER $DEPLOY_DIR"
 
-# Check pip and virtualenv
-check_program pip
-check_program virtualenv
-
 msg_info "Create virtualenv: $VIRTUALENVDIR"
 cmd_or_die "virtualenv --no-site-packages $VIRTUALENVDIR"
 
