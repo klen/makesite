@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2011-10-27 0.8.6
+-------------------
+* Update uwsgi config
+
 ## 2011-10-21 0.8.5
 -------------------
 * Some upgrades django module.
