@@ -9,9 +9,6 @@ PROJECT_STATICDIR={{ project_staticdir }}
 SITE_USER={{ site_user }}
 SITE_GROUP={{ site_group }}
 
-# Check compass
-check_program compass
-
 cmd_or_die "sudo chown $USER:$USER $PROJECT_STATICDIR"
 
 olddir=""
