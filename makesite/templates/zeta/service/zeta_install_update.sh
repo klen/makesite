@@ -11,9 +11,6 @@ PROJECT_STATICDIR={{ project_staticdir }}
 # Change rights
 cmd_or_die "sudo chown -R $USER:$USER $PROJECT_STATICDIR"
 
-# Check zeta-library
-check_program zeta
-
 # Pack static
 cmd_or_die "zeta $PROJECT_STATICDIR"
 
