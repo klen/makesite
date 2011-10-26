@@ -13,10 +13,5 @@ if [ -z "$MEMCACHED_HOST" ] || [ -z "$MEMCACHED_PORT" ]; then
     exit 0
 fi
 
-# Install memcached on localhost
-if [ $MEMCACHED_HOST = 'localhost' ]; then
-    check_program memcached
-fi
-
 msg_info "Flush memcahed $MEMCACHED_HOST:$MEMCACHED_PORT"
 python -c "import memcache; memcache.Client(['$MEMCACHED_HOST:$MEMCACHED_PORT']).flush_all()"
