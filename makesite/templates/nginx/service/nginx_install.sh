@@ -8,9 +8,6 @@ source $PROJECT_SERVICEDIR/.bsfl
 NGINX_SOURCE_CONFPATH={{ nginx_source_confpath }}
 NGINX_TARGET_CONFPATH={{ nginx_target_confpath }}
 
-# Check nginx
-check_program nginx
-
 # Add site to nginx enabled sites
 msg_info "Create link to nginx conf: $NGINX_TARGET_CONFPATH"
 cmd_or_die "sudo ln -sf $NGINX_SOURCE_CONFPATH $NGINX_TARGET_CONFPATH"
