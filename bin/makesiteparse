@@ -49,7 +49,7 @@ msg () {
 }
 
 run_action () {
-    ACTION=$1
+    local ACTION=$1
     for t in `cat $TEMPLATE_FILE`; do
         for f in $SERVICE_DIR/${t}_*$ACTION*.sh; do
             if [ -f $f ]; then
