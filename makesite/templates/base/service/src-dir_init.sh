@@ -8,6 +8,7 @@ source $PROJECT_SERVICEDIR/.bsfl
 SRC={{ src }}
 DEPLOY_DIR={{ deploy_dir }}
 PROJECT_SOURCEDIR={{ project_sourcedir }}
+PROJECT_STATICDIR={{ project_staticdir }}
 SRC_STATIC_DIR=$PROJECT_SOURCEDIR/static
 
 # Change rights
