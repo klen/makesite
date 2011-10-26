@@ -14,8 +14,6 @@ DBNAME={{ dbname }}
 DBUSER={{ dbuser }}
 DBPASSWORD={{ dbpassword }}
 
-check_program psql
-
 if [ -z "$PGUSER" ] || [ -z $PGHOST ] || [ -z $PGPASSWORD ]; then
     # pass
     msg_warning "postgres some data not defined."
