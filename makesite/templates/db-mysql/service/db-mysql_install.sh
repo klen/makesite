@@ -15,8 +15,6 @@ CLIENT="mysql"
 USER={{ mysql_user }}
 PASSWORD={{ mysql_password }}
 
-check_program $CLIENT
-
 if [ -z "$USER" ] || [ -z $HOST ] || [ -z $PASSWORD ]; then
     # pass
     msg_warning "MySql some data not defined."
