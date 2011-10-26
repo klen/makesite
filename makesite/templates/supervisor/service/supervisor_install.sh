@@ -9,10 +9,6 @@ SUPERVISOR_TARGET_CONFPATH={{ supervisor_target_confpath }}
 SUPERVISOR_SOURCE_CONFPATH={{ supervisor_source_confpath }}
 SUPERVISOR_TASKNAME={{ supervisor_taskname }}
 
-# Check supervisor
-check_program supervisord
-check_program supervisorctl
-
 # Add project config to supervisor
 cmd_or_die "sudo ln -sf $SUPERVISOR_SOURCE_CONFPATH $SUPERVISOR_TARGET_CONFPATH"
 
