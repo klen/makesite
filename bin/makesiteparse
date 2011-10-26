@@ -48,24 +48,30 @@ msg () {
     echo $MESSAGE >> "$LOG_FILE"
 }
 
+run_action () {
+    ACTION = $1
+    for t in `cat $TEMPLATE_FILE`; do
+        for f in $SERVICE_DIR/${t}_*$ACTION*.sh; do
+            if [ -f $f ]; then
+                msg "Run $f"
+                $f || {
+                    msg "$ACTION crashed, see logfile: $LOG_FILE"
+                    msg "For clean: removesite $PROJECT_DIR"
+                    exit 0
+                }
+                echo
+            fi
+        done
+    done
+}
+
 msg "Run $ACTION for $PROJECT_DIR"
 msg "Logfile: $LOG_FILE"
 sudo rm -f $LOG_FILE
 echo
 
-for t in `cat $TEMPLATE_FILE`; do
-    for f in $SERVICE_DIR/${t}_*$ACTION*.sh; do
-        if [ -f $f ]; then
-            msg "Run $f"
-            $f || {
-                msg "$ACTION crashed, see logfile: $LOG_FILE"
-                msg "For clean: removesite $PROJECT_DIR"
-                exit 0
-            }
-            echo
-        fi
-    done
-done
+run_action check
+run_action $ACTION
 
 # Post install, update action
 if [ -f $SOURCE_DIR/.makesite_*$ACTION* ]; then
