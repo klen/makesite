@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2011-11-06 0.8.75
+--------------------
+* Add information about installed templates
+
 ## 2011-10-27 0.8.74
 --------------------
 * Update uwsgi config

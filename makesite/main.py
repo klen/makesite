@@ -12,7 +12,7 @@ from makesite.template import Template
 
 
 BASEDIR = os.path.realpath(os.path.dirname(__file__))
-BASE_TEMPLATES_DIR = os.path.join(BASEDIR, 'templates')
+BASE_TPL_DIR = os.path.join(BASEDIR, 'templates')
 MODULES_DIR = os.path.join(BASEDIR, 'modules')
 
 PATH_VARNAME = 'SITES_HOME'
@@ -133,7 +133,7 @@ def load_source(options):
             template = 'src-%s' % src_type
 
         # Deploy base-src template
-        deploy_template(os.path.join(BASE_TEMPLATES_DIR, 'base'), options, 'base')
+        deploy_template(os.path.join(BASE_TPL_DIR, 'base'), options, 'base')
 
         call('bash %s/%s_init.sh' % (options['Main']['project_servicedir'], template))
 
@@ -142,7 +142,7 @@ def load_source(options):
         return ['base', template]
 
     # Deploy base template
-    deploy_template(os.path.join(BASE_TEMPLATES_DIR, 'base'), options, 'base')
+    deploy_template(os.path.join(BASE_TPL_DIR, 'base'), options, 'base')
     return [ 'base' ]
 
 
@@ -178,7 +178,7 @@ def parse_templates(templates, options):
 
     for template in templates:
         path = options['Templates'][template] if options.has_key('Templates') and options['Templates'].has_key(template) \
-                else os.path.join(BASE_TEMPLATES_DIR, template)
+                else os.path.join(BASE_TPL_DIR, template)
         if not os.path.exists(path):
             print >> sys.stderr, "Template '%s' not found in base and custom templates." % template
             sys.exit(1)
@@ -283,11 +283,32 @@ def append_template(options):
     create_file(ini_path, "[Main]\n%s" % format_options(site_options['Main']))
 
 
+def list_base_templates():
+    """ Return default templates list.
+    """
+    templates = set(os.listdir(BASE_TPL_DIR))
+    for t in templates:
+        if not os.path.isdir(os.path.join(BASE_TPL_DIR, t)):
+            templates.remove(t)
+    return sorted(templates)
+
+
+class CustomParser(argparse.ArgumentParser):
+
+    def error(self, message):
+        self.print_usage(sys.stderr)
+        templates = list_base_templates()
+        print "\nInstalled templates:"
+        print " ".join(templates)
+        print
+        self.exit(2, '%s: error: %s\n' % (self.prog, message))
+
+
 def main():
     """ Parse arguments and do work.
     """
     path = os.environ[ PATH_VARNAME ] if os.environ.has_key( PATH_VARNAME ) else None
-    parser = argparse.ArgumentParser(
+    parser = CustomParser(
         description = "'Makesite' is scripts collection for create base project dirs and config files.",
         epilog = "See also next utilities: installsite, updatesite, removesite, cdsite, worksite, lssites, statsites."
     )
