@@ -13,7 +13,7 @@ from makesite.template import Template
 
 BASEDIR = os.path.realpath(os.path.dirname(__file__))
 BASE_TPL_DIR = os.path.join(BASEDIR, 'templates')
-MODULES_DIR = os.path.join(BASEDIR, 'modules')
+BASE_MDL_DIR = os.path.join(BASEDIR, 'modules')
 
 PATH_VARNAME = 'SITES_HOME'
 
@@ -111,7 +111,7 @@ def load_config(options):
 
     src = options.src or result['Main'].get('src', None)
     if options.module:
-        src = os.path.join(MODULES_DIR, options.module)
+        src = os.path.join(BASE_MDL_DIR, options.module)
         if not os.path.exists(src):
             print >> sys.stderr, "Not found module: %s" % options.module
             sys.exit()
@@ -283,23 +283,29 @@ def append_template(options):
     create_file(ini_path, "[Main]\n%s" % format_options(site_options['Main']))
 
 
-def list_base_templates():
+def list_dirs(path):
+    return sorted(
+        filter(
+            lambda x: os.path.isdir(os.path.join(path, x)),
+            os.listdir(path)
+        )
+    )
+
+
+def list_base_modules():
     """ Return default templates list.
     """
-    templates = set(os.listdir(BASE_TPL_DIR))
-    for t in templates:
-        if not os.path.isdir(os.path.join(BASE_TPL_DIR, t)):
-            templates.remove(t)
-    return sorted(templates)
+    return sorted(os.listdir(BASE_MDL_DIR))
 
 
 class CustomParser(argparse.ArgumentParser):
 
     def error(self, message):
         self.print_usage(sys.stderr)
-        templates = list_base_templates()
         print "\nInstalled templates:"
-        print " ".join(templates)
+        print " ".join(list_dirs(BASE_TPL_DIR))
+        print "\nInstalled modules:"
+        print " ".join(list_dirs(BASE_MDL_DIR))
         print
         self.exit(2, '%s: error: %s\n' % (self.prog, message))
 
