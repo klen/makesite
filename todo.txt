@@ -1,4 +1,8 @@
+First check in temp dir
+Check superuser in checkings and remove all fro sudo
+
 Cherokee
+Flask
 Check config option
 Add mysql, apache mod_wsgi templates
 Add remove custom templates
