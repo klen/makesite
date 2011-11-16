@@ -1,7 +1,7 @@
 from os import path, environ, getenv
 
 
-VERSION = '0.9.1'
+VERSION = '0.9.2'
 
 BASEDIR = path.abspath(path.dirname(__file__))
 TPL_DIR = path.join(BASEDIR, 'templates')
@@ -11,7 +11,7 @@ TPLNAME = '.makesite'
 CFGNAME = 'makesite.ini'
 
 BASECONFIG = path.join(BASEDIR, CFGNAME)
-HOMECONFIG = path.join(getenv('HOME'), CFGNAME)
+HOMECONFIG = path.join(getenv('HOME', '~'), CFGNAME)
 
 MAKESITE_HOME = environ.get('MAKESITE_HOME')
 
