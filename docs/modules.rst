@@ -9,7 +9,7 @@ Django
 
 Standart django project. Session saved in memcache. Use sqlite. ::
 
-    makesite -m django <project_name>
+    makesite install -m django <project_name>
 
 
 Wsgi
@@ -17,7 +17,7 @@ Wsgi
 
 WSGI project sceleton. ::
 
-    makesite -m wsgi <project_name>
+    makesite install -m wsgi <project_name>
 
 
 Static
@@ -25,7 +25,7 @@ Static
 
 Static site project sceleton. ::
 
-    makesite -m static <project_name>
+    makesite install -m static <project_name>
 
 Simple serve from nginx source directory.
 
@@ -35,4 +35,4 @@ Makesite
 
 Makesite web page with list of deployed on current server projects. ::
 
-    makesite -m makesite <project_name>
+    makesite install -m makesite <project_name>

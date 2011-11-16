@@ -27,12 +27,8 @@ I use it for production deployment, too.
 
     .. warning ::
        Makesite needed root or sudo access on deploy project.
-       But do not run it under sudo because he did not find your :envvar:`SITES_HOME` settings.
+       But do not run it under sudo because he did not find your :envvar:`MAKESITE_HOME` settings.
        He asks access in process.
-
-    .. warning ::
-       Some templates makesite install missing software automaticaly ( nginx, supervisor ).
-       Look to the templates before deploy.
 
 
 Requirements
