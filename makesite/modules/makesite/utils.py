@@ -1,14 +1,14 @@
 import ConfigParser
 import os
 
-from makesite import INI_FILENAME
+from makesite.settings import CFGNAME
 
 
 DEPLOYDIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '../'))
 
 
 def read_config(folder):
-    path = os.path.join(folder, INI_FILENAME)
+    path = os.path.join(folder, CFGNAME)
     parser = ConfigParser.RawConfigParser()
     parser.read(path)
     try:
@@ -22,7 +22,7 @@ def read_config(folder):
         try:
             site['revision'] = open(os.path.join(folder, 'source', '.git', head)).read()
         except IOError:
-            pass
+            return site
     return site
 
 
@@ -37,7 +37,7 @@ def get_sites():
                 brn = os.path.join(prj, brn_name)
                 if os.path.isdir(brn):
                     for f in os.listdir(brn):
-                        if f == INI_FILENAME:
+                        if f == CFGNAME:
                             sites.append(read_config(brn))
 
     sites.sort(key=lambda x: x['project'])
