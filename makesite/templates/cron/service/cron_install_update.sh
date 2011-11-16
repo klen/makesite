@@ -1,8 +1,6 @@
 #!/bin/bash
 
-# Import BSFL
-PROJECT_SERVICEDIR={{ project_servicedir }}
-source $PROJECT_SERVICEDIR/.bsfl
+. $(dirname $0)/utils.sh
 
 # Variables
 CRON_PROJECTFILE={{ cron_projectfile }}

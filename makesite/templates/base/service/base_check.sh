@@ -2,4 +2,5 @@
 
 . $(dirname $0)/utils.sh
 
-check_program psql
+# Check sudo
+check_program sudo

@@ -1,12 +1,8 @@
 #!/bin/bash
 
-# Import BSFL
-PROJECT_SERVICEDIR={{ project_servicedir }}
-source $PROJECT_SERVICEDIR/.bsfl
+. $(dirname $0)/utils.sh
 
 # Variables
-SITE_USER={{ site_user }}
-SITE_GROUP={{ site_group }}
 VIRTUALENVDIR={{ virtualenvdir  }}
 PIP_PROJECTFILE={{ pip_projectfile }}
 
@@ -16,9 +12,9 @@ OLD_REQ_SUM=$(cat $VIRTUALENVDIR/.reqsum)
 cmd_or_die "sudo chown -R $USER:$USER $VIRTUALENVDIR"
 
 if [ -f $PIP_PROJECTFILE ]; then
-    msg_info "Update virtualenv requirements: $PIP_PROJECTFILE"
+    echo "Update virtualenv requirements: $PIP_PROJECTFILE"
     if [ "$REQ_SUM" = "$OLD_REQ_SUM" ]; then
-        msg_info "Changes not found"
+        echo "Changes not found"
     else
         sudo pip -E $VIRTUALENVDIR install -r $PIP_PROJECTFILE
         cmd_or_die "rm -rf $VIRTUALENVDIR/.reqsum "

@@ -2,14 +2,13 @@
 
 # Variables
 VIRTUALENVDIR={{ virtualenvdir }}
-PROJECT_SOURCEDIR={{ project_sourcedir }}
+source_dir={{ source_dir }}
 
 COMMAND=$@
 
 # Modify path
-PATH="$VIRTUALENVDIR/bin:$PROJECT_SOURCEDIR:$PATH"
+PATH="$VIRTUALENVDIR/bin:$source_dir:$PATH"
 
 # Run custom command
 export PATH
-cd $PROJECT_SOURCEDIR
-$COMMAND
+cd $source_dir && $COMMAND

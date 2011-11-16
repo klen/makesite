@@ -1,23 +1,21 @@
 #!/bin/bash
 
-# Import BSFL
-PROJECT_SERVICEDIR={{ project_servicedir }}
-source $PROJECT_SERVICEDIR/.bsfl
+. $(dirname $0)/utils.sh
 
 # Variables
 DBUSER={{ db_user }}
 DBPASSWORD={{ db_password }}
 DBNAME={{ db_name }}
 
-HOST={{ db_host }}
-PORT={{ pgport }}
+HOST={{ mysql_host }}
+PORT={{ mysql_port }}
 CLIENT="mysql"
 USER={{ mysql_user }}
 PASSWORD={{ mysql_password }}
 
 if [ -z "$USER" ] || [ -z $HOST ] || [ -z $PASSWORD ]; then
     # pass
-    msg_warning "MySql some data not defined."
+    echo "MySql some data not defined."
     exit 0
 fi
 
