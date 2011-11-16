@@ -1,14 +1,14 @@
 import ConfigParser
-import os
+from os import path as op, listdir
 
 from makesite.settings import CFGNAME
 
 
-DEPLOYDIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '../'))
+DEPLOYDIR = op.dirname(op.dirname(__file__))
 
 
 def read_config(folder):
-    path = os.path.join(folder, CFGNAME)
+    path = op.join(folder, CFGNAME)
     parser = ConfigParser.RawConfigParser()
     parser.read(path)
     try:
@@ -16,11 +16,11 @@ def read_config(folder):
     except Exception:
         return dict(project=None)
 
-    git_head = os.path.join(folder, 'source', '.git', 'HEAD')
-    if os.path.exists(git_head):
+    git_head = op.join(folder, 'source', '.git', 'HEAD')
+    if op.exists(git_head):
         head = open(git_head).read().split()[1]
         try:
-            site['revision'] = open(os.path.join(folder, 'source', '.git', head)).read()
+            site['revision'] = open(op.join(folder, 'source', '.git', head)).read()
         except IOError:
             return site
     return site
@@ -30,15 +30,15 @@ def get_sites():
     config = read_config(DEPLOYDIR)
     sites = []
     root = config['makesite_home']
-    for prj_name in os.listdir(root):
-        prj = os.path.join(root, prj_name)
-        if os.path.isdir(prj):
-            for brn_name in os.listdir(prj):
-                brn = os.path.join(prj, brn_name)
-                if os.path.isdir(brn):
-                    for f in os.listdir(brn):
+    for prj_name in listdir(root):
+        prj = op.join(root, prj_name)
+        if op.isdir(prj):
+            for brn_name in listdir(prj):
+                brn = op.join(prj, brn_name)
+                if op.isdir(brn):
+                    for f in listdir(brn):
                         if f == CFGNAME:
                             sites.append(read_config(brn))
 
-    sites.sort(key=lambda x: x['project'])
+    sites.sort(key=lambda x: x.get('project'))
     return sites

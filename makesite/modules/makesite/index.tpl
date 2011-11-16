@@ -19,7 +19,7 @@
             <p>There are {{ len(sites) }} sites installed.</p>
             <p>
             %for site in sites:
-                <a href="#{{ site['branch'] }}_{{ site['project'] }}">{{ site['branch'] }}.{{ site['project'] }}</a>
+                <a href="#{{ site.get('branch') }}_{{ site.get('project') }}">{{ site.get('branch') }}.{{ site.get('project') }}</a>
             %end
             </p>
             <h1 class="sites_title">Sites</h1>
@@ -27,10 +27,10 @@
             % counter = 0
             %for site in sites:
                 % counter += 1
-                <li class="sites_item" id="{{ site['branch'] }}_{{ site['project'] }}">
-                    <a class="sites_item_link" href="http://{{ site['domain'] }}:{{ site['port'] }}">{{ site['project'] }}.{{ site['branch'] }}</a>
+                <li class="sites_item" id="{{ site.get('branch') }}_{{ site.get('project') }}">
+                    <a class="sites_item_link" href="http://{{ site.get('domain') }}:{{ site.get('port') }}">{{ site.get('project') }}.{{ site.get('branch') }}</a>
                     %if site.get('revision'):
-                        <span class="sites_item_revision">{{ site['revision'] }}</span>
+                        <span class="sites_item_revision">{{ site.get('revision') }}</span>
                     %end
                     <br/>
                     <a class="toggle sites_item_info zeta" href="#" onclick="return { rel: '.sites_item_options_{{ counter }}' }">information</a>
@@ -54,5 +54,3 @@
         <script language="javascript" type="text/javascript" src="/static/_main.js"></script>
     </body>
 </html>
-
-
