@@ -29,7 +29,7 @@ def read_config(folder):
 def get_sites():
     config = read_config(DEPLOYDIR)
     sites = []
-    root = config['sites_home']
+    root = config['makesite_home']
     for prj_name in os.listdir(root):
         prj = os.path.join(root, prj_name)
         if os.path.isdir(prj):
