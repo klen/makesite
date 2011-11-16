@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-## 2011-11-16 0.9.3
+## 2011-11-16 0.9.4
 -------------------
 * Big code refactoring
 no backward compatibility 
