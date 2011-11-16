@@ -17,28 +17,26 @@ Install
 Setup
 -----
 
-.. envvar:: SITES_HOME
+.. envvar:: MAKESITE_HOME
 
-The variable :envvar:`SITES_HOME` tell makesite where to place your sites.
-Add this lines to your shell startup file ``.bashrc``, ``.profile``, etc)
+The variable :envvar:`MAKESITE_HOME` tell makesite where to place your sites.
+
+Run ``makesite shell`` for generate shell configuration.
 
 .. code-block:: bash
 
-    if [ -f /usr/local/bin/makesitewrapper.sh ]; then
-        export SITES_HOME=<PATH_TO_YOUR_SITES_HOME>
-        source /usr/local/bin/makesitewrapper.sh
-    fi
+    $ makesite shell -p <path_to_deploy_dir> >> ~/.bashrc
 
 Also it adds to you more makesite commands_ and autocomplete in bash
 
-You may want to create base config file ``makesite.ini`` in :envvar:`SITES_HOME`, with your project settings:
+You may want to create base config file ``makesite.ini`` in :envvar:`MAKESITE_HOME`, with your project settings:
 ex.: ``/sites/makesite.ini``:
 
 .. code-block:: ini
 
    [Main]
-   domain={{ branch + '.' if not branch == 'master' else ''}}{{ project }}.klen.xxx
-   src=git+gitolite@git.dev.server:{{ project }}.git
+   domain=%(branch)s.%(project)s.dev.me
+   src=git+gitolite@git.dev.intaxi:%(project)s.git
    pguser=postgres
    pghost=pg.dev.server
    ; password for create db and users for projects
@@ -60,89 +58,81 @@ Help
 Run ``makesite --help`` for help message. ::
 
     $ makesite --help
-    usage: makesite [-h] [-i] [-b BRANCH] [-t TEMPLATE] [-a] [-c CONFIG]
-                    [-m MODULE] [-s SRC] [-v]
-                    project
+      usage: makesite [-h] [-v]
+                      {info,shell,install,update,module,ls,template,uninstall}
 
-    'Makesite' is scripts collection for create base project dirs and config
-    files.
+      Base dispather
+
+      positional arguments:
+      {info,shell,install,update,module,ls,template,uninstall}
+                              Choose action: info, shell, install, update, module,
+                              ls, template, uninstall
+
+      optional arguments:
+      -h, --help            show this help message and exit
+      -v, --version         Show makesite version
+
+Run ``makesite subcommand --help`` for subcommand help message. ::
+
+    $ makesite install --help
+    usage: makesite install [-h] [-v] [-p PATH] [-b BRANCH] [-m MODULE] [-r] [-i]
+                            [-s SRC] [-t TEMPLATE] [-c CONFIG]
+                            PROJECT
+
+    Install site from sources or module
 
     positional arguments:
-    project               Project name
+    PROJECT               Project name
 
     optional arguments:
     -h, --help            show this help message and exit
-    -i, --info            Show compiled project params and exit.
+    -v, --version         Show makesite version
+    -p PATH, --path PATH  Path to makesite sites instalation dir. You can set it
+                            in $MAKESITE_HOME env variable.
     -b BRANCH, --branch BRANCH
-                            Project branch.
+                            Name of branch.
+    -m MODULE, --module MODULE
+                            Name of module. Install module.
+    -r, --repeat          Repeat installation.
+    -i, --info            Show project install options and exit.
+    -s SRC, --src SRC     Source path for installation.
     -t TEMPLATE, --template TEMPLATE
-                            Config templates.
-    -a, --append          Append template to exists project.
+                            Force templates.
     -c CONFIG, --config CONFIG
                             Config file.
-    -m MODULE, --module MODULE
-                            Deploy module
-    -s SRC, --src SRC     Path to source (filesystem or repository address ex:
-                            git+http://git_adress).
-    -v, --version         Show makesite version
-
-    See also next utilities: installsite, updatesite, removesite, cdsite,
-    worksite, lssites, statsites.
 
 
 Commands
 --------
 
-.. data:: installsite
+.. data:: install
 
-   Run install scripts from deployed project, makesite auto run this command in deploy.
-   Can be used for repeat install if it break in deploy. ::
+    Copy project from source (filepath, git, hg, svn), deploy templates and run install
+    scripts. ::
 
-        $ installsite 
-        Usage: installsite PROJECT_BRANCH_PATH
-        'installsite' part of makesite scripts.
-        Activate install hooks for target project. Run tests for master branch wich option --autotest.
+        makesite install PROJECT [OPTIONS]
 
-
-.. data:: updatesite
+.. data:: update
 
    Run update scripts from deployed project in templates order. 
    Used for update projects. ::
 
-        $ updatesite 
-        Usage: updatesite PROJECT_BRANCH_PATH
-        'updatesite' part of makesite scripts.
-        Activate update hooks for target project. Run tests for master branch wich option --autotest.
+        $ makesite update PROJECT_PATH 
 
-.. data:: removesite
+.. data:: uninstall
 
    Run removed scripts from deployed project in templates order.
    Used for remove project. ::
 
-        $ removesite 
-        Usage: removesite PROJECT_BRANCH_PATH
-        'removesite' part of makesite scripts. Activate remove hooks for target project and remove project dir.
+        $ makesite uninstall PROJECT_PATH 
 
-.. data:: lssites
+.. data:: ls
 
    Show list deployed projects.
 
-.. data:: cdsite
-
-   Change directory to projects dir.
-   Used for quick change directory because working bash autocomplete on deployed projects
-
-.. data:: siteinfo
+.. data:: info
 
    Show site deploy config information
-
-.. data:: envsite
-
-   Activate project virtualenv
-
-.. data:: worksite
-
-   :data:`cdsite` and :data:`envsite` in one command. Change dir to project dir and activate virtualenv
 
 
 .. _pip: http://pip.openplans.org/

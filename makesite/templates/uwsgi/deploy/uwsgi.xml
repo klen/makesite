@@ -11,7 +11,7 @@
     <plugins>python</plugins>
 
     <!-- Append to python path -->
-    <pythonpath>{{ project_sourcedir }}</pythonpath>
+    <pythonpath>{{ source_dir }}</pythonpath>
 
     <!-- Python module with wsgi application -->
     <module>wsgi</module>

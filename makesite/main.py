@@ -1,339 +1,244 @@
-#!/usr/bin/env python
-import ConfigParser
-import argparse
-import logging
-import os
-import shutil
-import subprocess
 import sys
+from ConfigParser import ConfigParser
+from os import path as op, environ, listdir, getcwd
+from subprocess import CalledProcessError
+from shutil import copytree
 
-from makesite import version, INI_FILENAME, TEMPLATES_FILE
-from makesite.template import Template
-
-
-BASEDIR = os.path.realpath(os.path.dirname(__file__))
-BASE_TPL_DIR = os.path.join(BASEDIR, 'templates')
-BASE_MDL_DIR = os.path.join(BASEDIR, 'modules')
-
-PATH_VARNAME = 'SITES_HOME'
-
-BASECONFIG = os.path.join( BASEDIR, INI_FILENAME )
-HOMECONFIG = os.path.join( os.getenv('HOME'), INI_FILENAME )
-
-PYTHON_PREFIX = 'python' + '.'.join( str(x) for x in sys.version_info[:2] )
+from makesite import core, settings
+from makesite.engine import Engine
+from makesite.utils import action, actions
 
 
-def deploy(options):
-    """ Deploy project.
-    """
-    # This not work in virtual env
-    if os.environ.has_key('VIRTUAL_ENV'):
-        print >> sys.stderr, "Please deactivate virtualenv '%s' first." % os.environ['VIRTUAL_ENV']
-        sys.exit(1)
+@action((["PATH"], dict(help="Path to site instance.")))
+def info(args):
+    " Output information about site "
+    path = args.PATH.rstrip(op.sep)
+    output = core.get_info(path, full=True)
+    core.print_header("%s -- install information" % core.get_name(path))
+    print output
+    return True
 
-    if options.append:
-        append_template(options)
-        sys.exit()
 
-    # Compile project options
-    options = load_config(options)
+@action((["-p", "--path"],
+    dict(help="path to makesite sites instalation dir. you can set it in $makesite_home env variable.",
+        required=not bool(settings.MAKESITE_HOME),
+        default=settings.MAKESITE_HOME
+    )))
+def ls(args):
+    " Output all currently installed sites to stdout "
+    core.print_header("Installed sites:")
+    for site in core.get_sites(args.path):
+        print core.get_info(site)
+    return True
 
-    # Exit if requested only info
-    if options['Main']['info']:
-        print format_options(options['Main'])
-        sys.exit()
-    del options['Main']['info']
 
-    # Check path exists
-    if os.path.exists(options['Main']['deploy_dir']):
-        print >> sys.stderr, "\nPath %s exists. Stop deploy." % options['Main']['deploy_dir']
-        sys.exit(1)
+@action((["PATH"], dict(help="Project path")))
+def update(args):
+    " Update sites "
+    for script in core.get_scripts(args.PATH, prefix='update'):
+        try:
+            core.call(script)
+        except CalledProcessError:
+            raise
+    return True
 
-    # Create dir and makesite templates file
-    call('mkdir -p %s' % options['Main']['deploy_dir'], sudo=True)
-    call('chown %(user)s:%(user)s -R %(path)s' % dict(user=os.environ.get('USER'), path=options['Main']['deploy_dir']), sudo=True)
 
-    # Load source
-    base_templates = load_source(options)
+@action(
+    (["MODULE"], dict(help="Module name")),
+    (["DEST"], dict(help="Destination", default='new_project')),
+    )
+def module(args):
+    " Copy module source to current directory "
+    mod = op.join(settings.MOD_DIR, args.MODULE)
+    assert op.exists(mod), "Not found module: %s" % args.MODULE
+    if not args.DEST.startswith(op.sep):
+        args.DEST = op.join(getcwd(), args.DEST)
+    core.print_header("Copy module source")
+    copytree(mod, args.DEST)
+    print "Done: %s" % args.DEST
 
-    # Get templates
-    templates = base_templates + options['Main']['template'].split(',')
-    templates = parse_templates(templates, options)
-    options['Main']['template'] = ' '.join([t[0] for t in templates ])
 
-    # Show project options
-    print  "\nDeploy branch '%(branch)s' in project '%(project)s'\n" % options['Main']
+@action((["PATH"], dict(help="Project path")))
+def uninstall(args):
+    " Uninstall sites "
+    args.PATH = args.PATH.rstrip(op.sep)
 
-    # Deploy templates
-    for template, path in templates:
-        if template != 'base':
-            deploy_template(path, options, template)
+    for script in core.get_scripts(args.PATH, prefix='remove'):
+        core.call(script)
+
+    core.print_header('Remove site dir')
+    core.call('sudo rm -rf %s' % args.PATH)
+    if not listdir(op.dirname(args.PATH)):
+        core.call('sudo rm -rf %s' % op.dirname(args.PATH))
+
+
+@action(
+        (["ACTION"], dict(help="Choose add or remove operation", choices=("add", "remove"))),
+        (["TEMPLATE"], dict(help="Name of template")),
+        (["PATH"], dict(help="Project path")),)
+def template(args):
+    " Add or remove templates from site "
+    path = args.PATH.rstrip(op.sep)
+    templates = core.get_templates(path)
+    parser = ConfigParser()
+    tpl = op.join(settings.TPL_DIR, args.TEMPLATE)
+    parser.read([
+        op.join(op.dirname(path), settings.CFGNAME),
+        op.join(path, settings.CFGNAME),
+        op.join(tpl, settings.CFGNAME)])
+
+    if args.ACTION == "add":
+        assert not args.TEMPLATE in templates, "Template already added"
+        core.print_header("Add template: %s" % args.TEMPLATE)
+        templates.append(args.TEMPLATE)
+
+        for f in core.gen_template_files(tpl):
+            core.call('sudo cp %s %s' % (op.join(tpl, f), op.join(path, f)))
+
+        for f in core.gen_template_files(tpl):
+            if op.basename(op.dirname(f)) == 'service' and op.basename(f).startswith(args.TEMPLATE) and 'install' in op.basename(f):
+                core.call(op.join(path, f)  )
+
+    else:
+        assert args.TEMPLATE in templates, "Template not found in project"
+        core.print_header("Remove template: %s" % args.TEMPLATE)
+        templates = filter(lambda x: not x == args.TEMPLATE, templates)
+        tfiles = map(lambda x: op.join(path, x), core.gen_template_files(tpl))
+        for f in tfiles:
+            if op.basename(op.dirname(f)) == 'service' and op.basename(f).startswith(args.TEMPLATE) and 'remove' in op.basename(f):
+                core.call(f)
+        for f in tfiles:
+            core.call('sudo rm -f %s' % f)
+
+    core.call('sudo rm -r %s' % op.join(path, settings.TPLNAME))
+    core.call('sudo sh -c "echo -n \'%s\' > %s"' % (','.join(templates), op.join(path, settings.TPLNAME)))
+
+
+
+@action(
+    (["-p", "--path"], dict(
+        help="path to makesite sites instalation dir. you can set it in $makesite_home env variable.",
+        required=not bool(settings.MAKESITE_HOME),
+        default=settings.MAKESITE_HOME
+    )))
+def shell(args):
+    " A helper command to be used for shell integration "
+    print
+    print "# Makesite integration "
+    print "# ==================== "
+    print "export MAKESITE_HOME=%s" % args.path
+    print "source %s" % op.join(settings.BASEDIR, 'shell.sh')
     print
 
-    # Create makesite project files
-    create_file(os.path.join(options['Main'][ 'deploy_dir' ], TEMPLATES_FILE), ' '.join([t[0] for t in templates]))
 
-    # Save used options
-    create_file(os.path.join(options['Main']['deploy_dir'], INI_FILENAME), "[Main]\n%s" % format_options(options['Main']))
+@action(
+    (["PROJECT"], dict(help="Project name")),
+    (["-p", "--path"], dict(
+        help="Path to makesite sites instalation dir. You can set it in $MAKESITE_HOME env variable.",
+        required=not bool(settings.MAKESITE_HOME),
+        default=settings.MAKESITE_HOME
+    )),
+    (['-b', '--branch'], dict(help='Name of branch.', default='master')),
+    (['-m', '--module'], dict(help="Name of module. Install module.")),
+    (['-r', '--repeat'], dict(action="store_true", default=False, help='Repeat installation.')),
+    (['-i', '--info'], dict(action="store_true", default=False, help='Show project install options and exit.')),
+    (['-s', '--src'], dict(help="Source path for installation.")),
+    (['-t', '--template'], dict(help="Force templates.")),
+    (['-c', '--config'], dict(help='Config file.', default='')),
+)
+def install(args):
+    " Install site from sources or module "
 
-    # Run install site
-    call('chmod +x %(project_servicedir)s/*.sh' % options['Main'], sudo=True)
-    call('makesiteparse %(deploy_dir)s install' % options['Main'])
+    # Deactivate virtualenv
+    if environ.has_key('VIRTUAL_ENV'):
+        raise Exception("Please deactivate virtualenv '%s' first." % environ['VIRTUAL_ENV'])
 
+    # Install from base modules
+    if args.module:
+        args.src = op.join(settings.MOD_DIR, args.module)
+        assert op.exists(args.src), "Not found module: %s" % args.module
 
-def format_options(main_options):
-    """ Return string with sorted and formated options list.
-    """
-    keys = main_options.keys()
-    keys.sort()
-    return ' \n'.join(["{0:<20} = {1}".format(key, main_options[key]) for key in keys])
+    # Fix project name
+    args.PROJECT = args.PROJECT.replace('-', '_')
 
+    args.home = op.abspath(args.path)
+    args.deploy_dir = op.join(args.home, args.PROJECT, args.branch)
 
-def load_config(options):
-    """ Load config files.
-    """
-    # Deploy projects dir
-    projects_dir = os.path.join(os.path.abspath(options.path), INI_FILENAME)
+    # Check dir exists
+    if not args.info and not args.repeat and op.exists(args.deploy_dir):
+        raise Exception("\nPath %s exists. Stop deploy." % args.deploy_dir)
 
-    # Load config in this order
-    result = dict(Main = dict(
-        project = options.project,
-        python_prefix = PYTHON_PREFIX,
-        branch = options.branch,
-        deploy_dir = os.path.join( os.path.abspath( options.path ), options.project, options.branch ),
-        info = options.info,
-        sites_home = options.path,
-    ))
+    # Create engine
+    engine = Engine(args)
 
-    # Load base configs
-    for path in (BASECONFIG, HOMECONFIG, projects_dir, options.config or ''):
-        parse_config(path, result)
+    # Show info
+    if args.info:
+        core.print_header('Project context', sep='-')
+        print core.get_info(engine.tmp_deploy_dir, full=True)
+        return True
 
-    src = options.src or result['Main'].get('src', None)
-    if options.module:
-        src = os.path.join(BASE_MDL_DIR, options.module)
-        if not os.path.exists(src):
-            print >> sys.stderr, "Not found module: %s" % options.module
-            sys.exit()
+    # Deploy src
+    if not args.repeat:
+        core.print_header('Deploy site', sep='-')
+        core.call('sudo mkdir -p %s' % op.dirname(args.deploy_dir))
+        core.call('sudo cp -r %s %s' % (engine.tmp_deploy_dir, args.deploy_dir))
+        core.call('sudo chmod 0755 %s' % args.deploy_dir)
 
-    if options.template:
-        result['Main']['template'] = options.template
-
-    result['Main']['src'] = os.path.abspath(src) if src and not '+' in src else src
-    return result
-
-
-def load_source(options):
-    """ Deploy base template and load source.
-    """
-    if options['Main']['src']:
-        template = 'src-dir'
-        if '+' in options['Main']['src']:
-            src_type, options['Main']['src'] = options['Main']['src'].split('+', 1)
-            template = 'src-%s' % src_type
-
-        # Deploy base-src template
-        deploy_template(os.path.join(BASE_TPL_DIR, 'base'), options, 'base')
-
-        call('bash %s/%s_init.sh' % (options['Main']['project_servicedir'], template))
-
-        # Parse config from source
-        parse_config(os.path.join(options['Main']['project_sourcedir'], INI_FILENAME), options)
-        return ['base', template]
-
-    # Deploy base template
-    deploy_template(os.path.join(BASE_TPL_DIR, 'base'), options, 'base')
-    return [ 'base' ]
+    # Run install scripts
+    core.print_header('Install site', sep='-')
+    for script in core.get_scripts(args.deploy_dir, prefix='install'):
+        try:
+            core.call(script)
+        except CalledProcessError:
+            print "Installation failed"
+            print "Fix errors and repeat installation with (-r) or run 'makesite uninstall %s' for cancel." % args.deploy_dir
+            raise
 
 
-def parse_config(path, result=None, replace=True):
-    """ Parse config file.
-    """
-    parser = ConfigParser.RawConfigParser()
-    parser.read(path)
-
-    if not result:
-        result = dict()
-
-    for section in parser.sections():
-        if not result.has_key( section ):
-            result[ section ] = dict()
-
-        data = dict(parser.items( section ))
-
-        # Parse options template
-        for k, v in data.items():
-            if result[section].has_key(k) and not replace:
-                continue
-
-            result[section][k] = Template.sub(v, **result['Main'])
-
-    return result
-
-
-def parse_templates(templates, options):
-    """ Parse templates hierarchy.
-    """
-    result = list()
-
-    for template in templates:
-        path = options['Templates'][template] if options.has_key('Templates') and options['Templates'].has_key(template) \
-                else os.path.join(BASE_TPL_DIR, template)
-        if not os.path.exists(path):
-            print >> sys.stderr, "Template '%s' not found in base and custom templates." % template
-            sys.exit(1)
-
-        filename = os.path.join(path, TEMPLATES_FILE)
-
-        if os.path.exists(filename):
-            try:
-                f = open(filename, 'r')
-                child = f.read().strip()
-                result += parse_templates(child.split(' '), options)
-            except IOError:
-                logging.warn("IO Error: %s", filename)
-
-        result.append((template, path))
-
-    return result
-
-
-def deploy_template(path, options, template):
-    """ Deploy template.
-    """
-    print "Create template structure '%s'." % template
-    options = parse_config(os.path.join(path, INI_FILENAME), options, replace=False)
-
-    for root, dirs, files in os.walk(path):
-        dirs = root[len(path) + 1:]
-        curdir = os.path.join(options['Main']['deploy_dir'], dirs)
-        top_dir = dirs.split(os.sep)[0]
-        options['Main']['curdir'] = curdir
-        create_dir(curdir)
-
-        for filename in files:
-
-            # Skip makesite config files
-            if filename in (TEMPLATES_FILE, INI_FILENAME):
-                continue
-
-            source = os.path.join(root, filename)
-            destination = os.path.join(curdir, filename)
-
-            # Copy file
-            shutil.copy2(source, destination)
-
-            # Files from bin and static folders copied as-is
-            if top_dir in ('bin', 'static'):
-                continue
-
-            template = Template(filename=destination, context=options['Main'])
-            template.parse_file()
-
-
-def call(cmd, sudo=False):
-    if sudo:
-        cmd = "sudo %s" % cmd
+def autocomplete():
+    if 'MAKESITE_AUTO_COMPLETE' not in environ:
+        return
+    commands = filter(lambda cmd: cmd != 'main', actions.keys())
+    cwords = environ['COMP_WORDS'].split()[1:]
+    cword = int(environ['COMP_CWORD'])
     try:
-        subprocess.check_call(cmd, shell=True)
-    except subprocess.CalledProcessError, e:
-        print >> sys.stderr, str(e)
+        current = cwords[cword-1]
+    except IndexError:
+        current = ''
+
+    try:
+        sub_action = [cmd for cmd in commands if cmd in cwords][0]
+        if sub_action in ['info', 'uninstall', 'update', 'template']:
+            if settings.MAKESITE_HOME:
+                print ' '.join(site for site in core.get_sites(settings.MAKESITE_HOME) if site.startswith(current))
+        elif sub_action == 'install' and (cwords[-1] == '-m' or (current and cwords[-2] == '-m')):
+            print ' '.join(mod for mod in core.get_base_modules() if mod.startswith(current))
+        elif sub_action == 'install' and (cwords[-1] == '-t' or (current and cwords[-2] == '-t')):
+            print ' '.join(tpl for tpl in core.get_base_templates() if tpl.startswith(current))
+        elif sub_action == 'module':
+            print ' '.join(tpl for tpl in core.get_base_modules() if tpl.startswith(current))
+    except IndexError:
+        print (' '.join(a for a in commands if a.startswith(current)))
+    sys.exit(1)
+
+
+@action((["action"], dict(choices=actions.keys(), help="Choose action: %s" % ', '.join(actions.keys()))))
+def main(args):
+    " Base dispather "
+    try:
+        func = actions.get(args.action)
+        func(sys.argv[2:])
+    except Exception, e:
+        sys.stderr.write('\n' + str(e))
+        print "\nSee log: %s" % core.handler.stream.name
         sys.exit(1)
 
 
-def create_dir(path):
-    """ Create directory.
-    """
-    if not os.path.exists(path):
-        os.makedirs(path)
+def console():
+    " Enter point "
+    autocomplete()
+    main(sys.argv[1:2])
 
 
-def create_file(path, s):
-    """ Create file.
-    """
-    f = open(path, 'w')
-    f.write(s)
-    f.close()
-    return f
-
-
-def append_template(options):
-    """ Append template to existent project.
-    """
-    deploy_dir = os.path.join(os.path.abspath( options.path ), options.project, options.branch)
-    print  "\nAppend template '%(template)s' in project '%(project)s'\n" % vars(options)
-    if not os.path.exists(deploy_dir):
-        print >> sys.stderr, "\nPath %s not exists. Stop append." % deploy_dir
-        sys.exit(1)
-    ini_path = os.path.join(deploy_dir, INI_FILENAME)
-    template_path = os.path.join(deploy_dir, TEMPLATES_FILE)
-    site_options = parse_config(ini_path)
-    append_templates = parse_templates(options.template.split(','), site_options)
-
-    for template, path in append_templates:
-        if template in site_options['Main']['template']:
-            print >> sys.stderr, "\nTemplate %s already exists. Stop append." % template
-            sys.exit(1)
-        deploy_template(path, site_options, template)
-
-    site_options['Main']['template'] += ' ' + ' '.join(t[0] for t in append_templates)
-
-    # Update config files
-    create_file(template_path, site_options['Main']['template'])
-    create_file(ini_path, "[Main]\n%s" % format_options(site_options['Main']))
-
-
-def list_dirs(path):
-    return sorted(
-        filter(
-            lambda x: os.path.isdir(os.path.join(path, x)),
-            os.listdir(path)
-        )
-    )
-
-
-def list_base_modules():
-    """ Return default templates list.
-    """
-    return sorted(os.listdir(BASE_MDL_DIR))
-
-
-class CustomParser(argparse.ArgumentParser):
-
-    def error(self, message):
-        self.print_usage(sys.stderr)
-        print "\nInstalled templates:"
-        print " ".join(list_dirs(BASE_TPL_DIR))
-        print "\nInstalled modules:"
-        print " ".join(list_dirs(BASE_MDL_DIR))
-        print
-        self.exit(2, '%s: error: %s\n' % (self.prog, message))
-
-
-def main():
-    """ Parse arguments and do work.
-    """
-    path = os.environ[ PATH_VARNAME ] if os.environ.has_key( PATH_VARNAME ) else None
-    parser = CustomParser(
-        description = "'Makesite' is scripts collection for create base project dirs and config files.",
-        epilog = "See also next utilities: installsite, updatesite, removesite, cdsite, worksite, lssites, statsites."
-    )
-
-    parser.add_argument('project', help="Project name")
-
-    if not path:
-        parser.add_argument('-p', '--path', required=True, help='Path to base deploy projects dir. Required if not set SITES_HOME environment.')
-
-    parser.add_argument('-i', '--info', action="store_true", default=False, help='Show compiled project params and exit.')
-    parser.add_argument('-b', '--branch', help='Project branch.', default='master')
-    parser.add_argument('-t', '--template', help='Config templates.')
-    parser.add_argument('-a', '--append', action="store_true", default=False, help='Append template to exists project.')
-    parser.add_argument('-c', '--config', help='Config file.')
-    parser.add_argument('-m', '--module', help="Deploy module")
-    parser.add_argument('-s', '--src', help='Path to source (filesystem or repository address ex: git+http://git_adress).')
-    parser.add_argument('-v', '--version', action='version', version=version, help='Show makesite version')
-
-    # Show must go on
-    args = parser.parse_args()
-    args.path = path if path else args.path
-    deploy(args)
+if __name__ == '__main__':
+    console()

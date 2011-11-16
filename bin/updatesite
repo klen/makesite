@@ -1,7 +1,0 @@
-#!/bin/sh
-
-makesiteparse $1 update || exit 0
-
-if [ "$2" = "--autotest" ]; then
-    testsite $1 --auto
-fi

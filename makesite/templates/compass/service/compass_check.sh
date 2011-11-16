@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source {{ project_servicedir }}/.bsfl
+. $(dirname $0)/utils.sh
 
 # Check compass
 check_program compass

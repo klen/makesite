@@ -1,36 +1,30 @@
 #!/bin/bash
 
-# Import BSFL
-PROJECT_SERVICEDIR={{ project_servicedir }}
-source $PROJECT_SERVICEDIR/.bsfl
+. $(dirname $0)/utils.sh
 
 # Variables
-SITE_USER={{ site_user }}
-SITE_GROUP={{ site_group }}
-PROJECT_SOURCEDIR={{ project_sourcedir }}
-BASERUN={{ project_servicedir }}/virtualenv_run.sh
+BASERUN={{ service_dir }}/virtualenv_run.sh
 MEDIA_DIR={{ media_dir }}
-MODE={{ mode }}
 
 # Check settings
-if [ -d $PROJECT_SOURCEDIR/settings ]; then
+if [ -d $SOURCE_DIR/settings ]; then
     DJANGO_SETTINGS=settings.$MODE
 else
     DJANGO_SETTINGS=settings
 fi
 
-cmd_or_die "sudo chown -R $USER:$USER $PROJECT_SOURCEDIR"
+cmd_or_die "sudo chown -R $USER:$USER $SOURCE_DIR"
 
 # Create manage.py executable
-if [ ! -x $PROJECT_SOURCEDIR/manage.py ]; then
-    msg_info "Make manage.py executable."
-    cmd_or_die "sudo chmod +x $PROJECT_SOURCEDIR/manage.py"
+if [ ! -x $SOURCE_DIR/manage.py ]; then
+    echo "Make manage.py executable."
+    cmd_or_die "sudo chmod +x $SOURCE_DIR/manage.py"
 fi
 
 # Sync database
 if [ -f $BASERUN ]; then
-    msg_info "Run django syncdb"
+    echo "Run django syncdb"
     cmd_or_die "$BASERUN manage.py syncdb --noinput --settings=$DJANGO_SETTINGS"
 fi
 
-cmd_or_die "sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_SOURCEDIR"
+cmd_or_die "sudo chown -R $SITE_USER:$SITE_GROUP $SOURCE_DIR"

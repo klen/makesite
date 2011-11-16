@@ -1,5 +1,4 @@
 import re
-import logging
 
 
 class TemplateException(Exception):
@@ -45,9 +44,6 @@ class Template( object ):
             code = obj.group(1)
             try:
                 return str(eval( code, {}, ctx ))
-            except (NameError, SyntaxError):
-                logging.error('Template error: %s', code)
-                return ''
             except Exception, e:
                 raise TemplateException(str(e))
 

@@ -1,1 +1,1 @@
-supervisor nginx
+supervisor,nginx

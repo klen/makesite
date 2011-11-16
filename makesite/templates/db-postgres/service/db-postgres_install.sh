@@ -1,8 +1,6 @@
 #!/bin/bash
 
-# Import BSFL
-PROJECT_SERVICEDIR={{ project_servicedir }}
-source $PROJECT_SERVICEDIR/.bsfl
+. $(dirname $0)/utils.sh
 
 # Variables
 PGUSER={{ pguser }}
@@ -10,13 +8,13 @@ PGPASSWORD={{ pgpassword }}
 PGHOST={{ pghost }}
 PGPORT={{ pgport }}
 PSQL="psql -At"
-DBNAME={{ dbname }}
-DBUSER={{ dbuser }}
-DBPASSWORD={{ dbpassword }}
+DBNAME={{ db_name }}
+DBUSER={{ db_user }}
+DBPASSWORD={{ db_password }}
 
 if [ -z "$PGUSER" ] || [ -z $PGHOST ] || [ -z $PGPASSWORD ]; then
     # pass
-    msg_warning "postgres some data not defined."
+    echo "postgres some data not defined."
     exit 0
 fi
 
@@ -47,5 +45,5 @@ if [ $(_check_db_exist) -eq 0 ]; then
     _create_role
     _create_db
 else
-    msg_warning "Database '$DBNAME' exist"
+    echo "Database '$DBNAME' exist"
 fi

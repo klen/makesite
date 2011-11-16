@@ -1,1 +1,1 @@
-virtualenv memcached supervisor nginx
+virtualenv,memcached,supervisor,nginx

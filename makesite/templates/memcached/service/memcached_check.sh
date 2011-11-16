@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source {{ project_servicedir }}/.bsfl
+. $(dirname $0)/utils.sh
 
 MEMCACHED_HOST={{ memcached_host }}
 
@@ -8,3 +8,6 @@ MEMCACHED_HOST={{ memcached_host }}
 if [[ "$MEMCACHED_HOST" == "localhost" || "$MEMCACHED_HOST" == "127.0.0.1" ]]; then
     check_program memcached
 fi
+
+# Check netcat
+check_program netcat

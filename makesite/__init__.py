@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-version_info = (0, 8, 76)
+from .settings import VERSION
 
-__version__ = version = '.'.join(map(str, version_info))
+
+version_info = map(int, VERSION.split('.'))
+
+__version__ = version = VERSION
 __project__ = PROJECT = __name__
 __author__ = AUTHOR = "Kirill Klenov <horneds@gmail.com>"
 __license__ = LICENSE = "GNU LGPL"
-
-INI_FILENAME = "makesite.ini"
-TEMPLATES_FILE = '.makesite'

@@ -37,8 +37,8 @@ Command line
 
 .. option:: -p <sites_path>, --path=<sites_path>
 
-   Path to projects dir, required if not set $SITES_HOME.
-   Saved in **sites_home** variable.
+   Path to projects dir, required if not set $MAKESITE_HOME.
+   Saved in **makesite_home** variable.
 
 .. option:: -b <branch name>, --branch=<branch_name>
 
@@ -49,10 +49,6 @@ Command line
 
     One or more template names separated by commas.
     Saved in **template** variable.
-
-.. option:: -a, --append
-
-    Tell makesite append template from :option:`-t` to existed project.
 
 .. option:: -c <path_to_config>, --config=<path_to_config>
 
@@ -75,7 +71,7 @@ Configuration options
 
         In options you can use variables from command line and deploy_dir: ::
 
-            domain={{ branch + '.' if not branch == 'master' else ''}}{{ project }}.klen.xxx
+            domain=%(branch)s.%(project)s.klen.xxx
 
 .. option:: template
 

@@ -5,46 +5,45 @@ Examples
 
     .. note ::
 
-        In this examples user have :envvar:`SITES_HOME` = ``/sites``
+        In this examples user have :envvar:`MAKESITE_HOME` = ``/sites``
 
 
-Deploy standart django template from makesite to project **beta**: ::
+Deploy standart django module to project **beta**: ::
     
-    makesite -m django beta
+    makesite install beta -m django 
 
 Create tornado project sceleton, with auto create project postgres user and db: ::
 
-    makesite -t db-postgres,tornado tornado-project
+    makesite install tornado-project -t db-postgres,tornado 
 
 Deploy branch **test** from project **alpha**.
 Git source path for project defined in the config file: ``/sites/makesite.ini`` ::
 
-    makesite -b test alpha
+    makesite install alpha -b test
 
 Append template zeta to existed project alpha::
 
-    makesite alpha -a -t test
+    makesite template add zeta /sites/alpha/beta
 
 Deploy branch **master** from project **dummy** from source ``git@test.dev/test.git``: ::
 
-    makesite dummy -s git+git@test.dev/test.git
+    makesite install dummy -s git+git@test.dev/test.git
 
 Update branch **test** from project **alpha**: ::
 
-    updatesite /sites/alpha/test
+    makesite update /sites/alpha/test
 
 Remove site **remove_me**: ::
 
-    removesite /sites/remove_me/master
+    makesite uninstall /sites/remove_me/master
 
 View deployed projects: ::
 
-    lssites
-    statsites
+    makesite ls
 
 View all deployed project **alpha** settings: ::
 
-    siteinfo /sites/alpha/master
+    makesite info /sites/alpha/master
 
 Goto to project source dir and activate project virtualenv: ::
 

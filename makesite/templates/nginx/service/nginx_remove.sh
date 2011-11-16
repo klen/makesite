@@ -1,8 +1,6 @@
 #!/bin/bash
 
-# Import BSFL
-PROJECT_SERVICEDIR={{ project_servicedir }}
-source $PROJECT_SERVICEDIR/.bsfl
+. $(dirname $0)/utils.sh
 
 # Variables
 NGINX_TARGET_CONFPATH={{ nginx_target_confpath }}

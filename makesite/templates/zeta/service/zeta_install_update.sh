@@ -1,18 +1,12 @@
 #!/bin/bash
 
-# Import BSFL
-source {{ project_servicedir }}/.bsfl
-
-# Variables
-SITE_USER={{ site_user }}
-SITE_GROUP={{ site_group }}
-PROJECT_STATICDIR={{ project_staticdir }}
+. $(dirname $0)/utils.sh
 
 # Change rights
-cmd_or_die "sudo chown -R $USER:$USER $PROJECT_STATICDIR"
+cmd_or_die "sudo chown -R $USER:$USER $STATIC_DIR"
 
 # Pack static
-cmd_or_die "zeta $PROJECT_STATICDIR"
+cmd_or_die "zeta $STATIC_DIR"
 
 # Restore rights
-cmd_or_die "sudo chown -R $SITE_USER:$SITE_GROUP $PROJECT_STATICDIR"
+cmd_or_die "sudo chown -R $SITE_USER:$SITE_GROUP $STATIC_DIR"

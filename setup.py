@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# coding: utf-8
+
 import os
 from sys import version_info
 
@@ -7,7 +9,7 @@ from setuptools import setup, find_packages
 from makesite import version, PROJECT, LICENSE
 
 
-PACKAGE_DATA = [ '*.ini' ]
+PACKAGE_DATA = [ '*.ini', '*.sh' ]
 
 for folder in ['templates', 'modules']:
     for root, dirs, files in os.walk(os.path.join(PROJECT, folder)):
@@ -22,17 +24,17 @@ def read( fname ):
         return ''
 
 
-install_requires = []
+install_requires = tuple()
 if version_info < (2, 7):
-    install_requires.append('argparse')
+    install_requires.add('argparse')
 
 
 META_DATA = dict(
     name=PROJECT,
     version=version,
     LICENSE=LICENSE,
-    description=read( 'DESCRIPTION' ),
-    long_description=read( 'README.rst' ),
+    description=read('DESCRIPTION'),
+    long_description=read('README.rst'),
     platforms=('Any'),
 
     author='Kirill Klenov',
@@ -52,12 +54,11 @@ META_DATA = dict(
     ],
 
     packages=find_packages(),
-    scripts=map( lambda x: 'bin/' + x, os.listdir( 'bin' )),
     package_data = { '': PACKAGE_DATA, },
 
     entry_points={
         'console_scripts': [
-            'makesite = makesite.main:main',
+            'makesite = makesite.main:console',
         ]
     },
 
