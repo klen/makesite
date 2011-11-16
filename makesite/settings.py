@@ -1,7 +1,7 @@
 from os import path, environ, getenv
 
 
-VERSION = '0.9.0'
+VERSION = '0.9.1'
 
 BASEDIR = path.abspath(path.dirname(__file__))
 TPL_DIR = path.join(BASEDIR, 'templates')
