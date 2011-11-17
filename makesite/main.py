@@ -186,6 +186,7 @@ def install(args):
 
     # Run install scripts
     core.print_header('Install site', sep='-')
+    core.call('sudo chmod +x %s/*.sh' % engine['source_dir'])
     for script in core.get_scripts(args.deploy_dir, prefix='install'):
         try:
             core.call(script)
