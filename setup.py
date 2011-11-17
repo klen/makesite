@@ -24,9 +24,9 @@ def read( fname ):
         return ''
 
 
-install_requires = tuple()
+install_requires = []
 if version_info < (2, 7):
-    install_requires.add('argparse')
+    install_requires.append('argparse')
 
 
 META_DATA = dict(
