@@ -35,7 +35,7 @@ def check_project(path):
 
 
 def print_header(msg, sep='='):
-    logger.debug("\n%s\n%s" % (msg, ''.join(sep for _ in msg)))
+    logger.info("\n%s\n%s" % (msg, ''.join(sep for _ in msg)))
     print "\n%s\n%s" % (msg, ''.join(sep for _ in msg))
 
 
@@ -95,7 +95,7 @@ def get_path(path):
     if is_project(path):
         return path
     if MAKESITE_HOME:
-        path = "master.%s" % path if '.' in path else path
+        path = path if '.' in path else "master.%s" % path
         branch, project = path.split('.', 2)
         return op.join(MAKESITE_HOME, project, branch)
 
@@ -119,7 +119,7 @@ def which(program):
 
 
 def call(cmd, shell=True, **kwargs):
-    logger.debug("Cmd: %s" % cmd)
+    logger.info("Cmd: %s" % cmd)
     print "Cmd: %s" % cmd
     check_call(cmd, shell=shell, stdout=handler.stream, **kwargs)
 
