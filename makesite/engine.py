@@ -1,10 +1,11 @@
-from ConfigParser import NoOptionError
 from os import path as op, makedirs
 from shutil import copytree
 from tempfile import mkdtemp
 
+from initools.configparser import ConfigParser, NoOptionError
+
 from makesite import settings, core
-from makesite.utils import OrderedSet, MakesiteConfigParser
+from makesite.utils import OrderedSet
 
 
 class Engine(object):
@@ -17,7 +18,7 @@ class Engine(object):
         self.home = args.home
         self.deploy_dir = args.deploy_dir
 
-        self.parser = MakesiteConfigParser()
+        self.parser = ConfigParser()
         self.parser.add_section('Main')
         self.parser.set('Main', 'project', args.PROJECT)
         self.parser.set('Main', 'branch', args.branch)

@@ -126,7 +126,7 @@ def prepare_template(name, path, parser, destination=None):
     print "Prepare template: %s" % name
 
     destination = destination or mkdtemp()
-    parser.read(op.join(path, CFGNAME), replace=False)
+    parser.read(op.join(path, CFGNAME), extending=True)
     context = dict(parser.items('Main'))
 
     for f in gen_template_files(path):
