@@ -210,7 +210,11 @@ def autocomplete():
         sub_action = [cmd for cmd in commands if cmd in cwords][0]
         if sub_action in ['info', 'uninstall', 'update', 'template']:
             if settings.MAKESITE_HOME:
-                print ' '.join(site for site in core.get_sites(settings.MAKESITE_HOME) if site.startswith(current))
+                if not current or current.startswith('/'):
+                    print ' '.join(site for site in core.get_sites(settings.MAKESITE_HOME) if site.startswith(current))
+                else:
+                    names = map(core.get_name, core.get_sites(settings.MAKESITE_HOME))
+                    print ' '.join(name for name in names if name.startswith(current))
         elif sub_action == 'install' and (cwords[-1] == '-m' or (current and cwords[-2] == '-m')):
             print ' '.join(mod for mod in core.get_base_modules() if mod.startswith(current))
         elif sub_action == 'install' and (cwords[-1] == '-t' or (current and cwords[-2] == '-t')):
