@@ -36,6 +36,7 @@ class Engine(object):
     def tmp_deploy(self):
         self.tmp_deploy_dir = mkdtemp()
         self.src_deploy_dir = op.join(self.tmp_deploy_dir, 'source')
+        templates = ['base']
 
         src = self.args.src or self['src']
         core.print_header('Clone src: %s' % src, '-')
@@ -47,16 +48,17 @@ class Engine(object):
                 assert program, '%s not found.' % tp.title()
                 cmd = tpl % (program, src[len(tp) + 1:], self.src_deploy_dir)
                 core.call(cmd, shell=True)
+                templates += ['src-%s' % tp]
                 break
         else:
+            templates += ['src-dir']
             copytree(src, self.src_deploy_dir)
 
         self.parser.set('Main', 'src', src)
         self.parser.read(op.join(self.src_deploy_dir, settings.CFGNAME))
 
         self.parser.set('Templates', 'source_dir', op.join(self.src_deploy_dir))
-        self.templates = OrderedSet(self.get_templates(
-                ['base'] + (self.args.template or self['template']).split(',')))
+        self.templates = OrderedSet(self.get_templates(templates + (self.args.template or self['template']).split(',')))
 
         templates = ','.join(str(x[0]) for x in self.templates)
         self['template'] = templates
