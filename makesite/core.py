@@ -4,7 +4,7 @@ from shutil import copy2
 from subprocess import check_call
 from tempfile import mktemp, mkdtemp
 
-from makesite.settings import CFGNAME, TPLNAME, TPL_DIR, MOD_DIR
+from makesite.settings import CFGNAME, TPLNAME, TPL_DIR, MOD_DIR, MAKESITE_HOME
 from makesite.template import Template
 
 
@@ -88,6 +88,16 @@ def get_scripts(path, prefix=None):
             map(lambda x: op.join(service_dir, x),
                     filter(lambda x: x.startswith(template) and (not prefix or prefix in x), files)))
     return result
+
+
+def get_path(path):
+    path = path.rstrip(op.sep)
+    if is_project(path):
+        return path
+    if MAKESITE_HOME:
+        path = "master.%s" % path if '.' in path else path
+        branch, project = path.split('.', 2)
+        return op.join(MAKESITE_HOME, project, branch)
 
 
 def is_exe(path):

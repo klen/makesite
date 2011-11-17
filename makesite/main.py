@@ -35,7 +35,8 @@ def ls(args):
 @action((["PATH"], dict(help="Project path")))
 def update(args):
     " Update sites "
-    for script in core.get_scripts(args.PATH, prefix='update'):
+    path = core.get_path(args.PATH)
+    for script in core.get_scripts(path, prefix='update'):
         try:
             core.call(script)
         except CalledProcessError:
@@ -61,15 +62,13 @@ def module(args):
 @action((["PATH"], dict(help="Project path")))
 def uninstall(args):
     " Uninstall sites "
-    args.PATH = args.PATH.rstrip(op.sep)
-
-    for script in core.get_scripts(args.PATH, prefix='remove'):
+    path = core.get_path(args.PATH)
+    core.print_header('Uninstall project: %s' % path)
+    for script in core.get_scripts(path, prefix='remove'):
         core.call(script)
-
-    core.print_header('Remove site dir')
-    core.call('sudo rm -rf %s' % args.PATH)
-    if not listdir(op.dirname(args.PATH)):
-        core.call('sudo rm -rf %s' % op.dirname(args.PATH))
+    core.call('sudo rm -rf %s' % path)
+    if not listdir(op.dirname(path)):
+        core.call('sudo rm -rf %s' % op.dirname(path))
 
 
 @action(
