@@ -80,6 +80,7 @@ class Engine(object):
 
         if not self.args.info:
             core.print_header('Check requirements', sep='-')
+            core.call('sudo chmod +x %s/*.sh' % op.join(self.tmp_deploy_dir, 'service'))
             for script in core.get_scripts(self.tmp_deploy_dir, prefix='check'):
                 core.call(script, shell=True)
 

@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2011-11-23 0.9.16
+--------------------
+* Fix check requirements
+
 ## 2011-11-16 0.9.15
 --------------------
 * Big code refactoring
