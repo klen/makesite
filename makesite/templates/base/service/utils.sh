@@ -19,8 +19,11 @@ SRC={{ src }}
 
 check_program () {
     program=$1
+    shift
+    message=$@
     which $program 1>/dev/null || {
         echo "Error: Command '$program' not found!" 1>&2
+        echo "$message" 1>&2
         exit 127
     }
 }
