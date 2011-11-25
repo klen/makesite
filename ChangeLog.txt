@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2011-11-25 0.9.19
+--------------------
+* Echo check errors to stderr.
+
 ## 2011-11-23 0.9.18
 --------------------
 * Fix check requirements

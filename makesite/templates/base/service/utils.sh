@@ -20,8 +20,7 @@ SRC={{ src }}
 check_program () {
     program=$1
     which $program 1>/dev/null || {
-        echo "$(caller 0)"
-        echo "Command '$program' not found!"
+        echo "Error: Command '$program' not found!" 1>&2
         exit 127
     }
 }
