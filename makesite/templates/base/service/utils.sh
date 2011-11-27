@@ -29,13 +29,13 @@ check_program () {
 }
 
 cmd () {
-    CMD=$1
+    CMD=$@
     echo "Run: $CMD"
     eval "$CMD"
     return "$?"
 }
 
 cmd_or_die () {
-    CMD=$1
+    CMD=$@
     cmd "$CMD" || exit 1
 }

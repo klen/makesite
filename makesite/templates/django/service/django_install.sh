@@ -5,26 +5,17 @@
 # Variables
 BASERUN={{ service_dir }}/virtualenv_run.sh
 MEDIA_DIR={{ media_dir }}
+DJANGO_SETTINGS={{ django_settings }}
 
-# Check settings
-if [ -d $SOURCE_DIR/settings ]; then
-    DJANGO_SETTINGS=settings.$MODE
-else
-    DJANGO_SETTINGS=settings
-fi
+cmd_or_die "sudo chown -R $SITE_USER:$SITE_GROUP $DEPLOY_DIR"
 
-cmd_or_die "sudo chown -R $USER:$USER $SOURCE_DIR"
-
-# Create manage.py executable
-if [ ! -x $SOURCE_DIR/manage.py ]; then
+# Make manage.py executable
+[ ! -x $SOURCE_DIR/manage.py ] && {
     echo "Make manage.py executable."
     cmd_or_die "sudo chmod +x $SOURCE_DIR/manage.py"
-fi
+}
 
-# Sync database
-if [ -f $BASERUN ]; then
-    echo "Run django syncdb"
-    cmd_or_die "$BASERUN manage.py syncdb --noinput --settings=$DJANGO_SETTINGS"
-fi
-
-cmd_or_die "sudo chown -R $SITE_USER:$SITE_GROUP $SOURCE_DIR"
+# Django syncdb
+CMD="manage.py syncdb --noinput --settings=$DJANGO_SETTINGS 2>/dev/null"
+[ -f $BASERUN ] && CMD="$BASERUN $CMD"
+cmd "sudo -u $SITE_USER $CMD" && echo "Syncdb done"

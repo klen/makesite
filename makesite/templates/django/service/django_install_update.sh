@@ -4,19 +4,16 @@
 
 # Variables
 BASERUN={{ service_dir }}/virtualenv_run.sh
+DJANGO_SETTINGS={{ django_settings }}
 
-# Check settings
-if [ -d $SOURCE_DIR/settings ]; then
-    DJANGO_SETTINGS=settings.$MODE
-else
-    DJANGO_SETTINGS=settings
-fi
+cmd_or_die "sudo chown -R $SITE_USER:$SITE_GROUP $DEPLOY_DIR"
 
-# Migration and collect static
-if [ -f $BASERUN ]; then
-    echo "Run django migration"
-    cmd_or_die "sudo -u $SITE_USER sh $BASERUN manage.py migrate --noinput --settings=$DJANGO_SETTINGS"
+# Django migration
+CMD="manage.py migrate --noinput --settings=$DJANGO_SETTINGS 2>/dev/null"
+[ -f $BASERUN ] && CMD="$BASERUN $CMD"
+cmd "sudo -u $SITE_USER $CMD" && echo "Migrate done"
 
-    echo "Run django collect static files"
-    cmd_or_die "sudo -u $SITE_USER sh $BASERUN manage.py collectstatic --noinput --settings=$DJANGO_SETTINGS"
-fi
+# Django collectstatic
+CMD="manage.py collectstatic --noinput --settings=$DJANGO_SETTINGS 2>/dev/null"
+[ -f $BASERUN ] && CMD="$BASERUN $CMD"
+cmd "sudo -u $SITE_USER $CMD" && echo "Collect static done"
