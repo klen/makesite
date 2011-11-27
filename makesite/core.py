@@ -81,7 +81,7 @@ def get_scripts(path, prefix=None):
     check_project(path)
     service_dir = op.join(path, "service")
     templates = get_templates(path)
-    files = listdir(service_dir)
+    files = sorted(listdir(service_dir))
     result = []
     for template in templates:
         result += filter(is_exe,
