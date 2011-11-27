@@ -11,9 +11,9 @@ cmd_or_die "sudo chown -R $SITE_USER:$SITE_GROUP $DEPLOY_DIR"
 # Django migration
 CMD="manage.py migrate --noinput --settings=$DJANGO_SETTINGS 2>/dev/null"
 [ -f $BASERUN ] && CMD="$BASERUN $CMD"
-cmd "sudo -u $SITE_USER $CMD" && echo "Migrate done"
+cmd "sudo -u $SITE_USER $CMD" || echo "Migration skipped"
 
 # Django collectstatic
 CMD="manage.py collectstatic --noinput --settings=$DJANGO_SETTINGS 2>/dev/null"
 [ -f $BASERUN ] && CMD="$BASERUN $CMD"
-cmd "sudo -u $SITE_USER $CMD" && echo "Collect static done"
+cmd "sudo -u $SITE_USER $CMD" || echo "Collect static skipped"

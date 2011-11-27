@@ -2,5 +2,3 @@ Update docs
 Cherokee
 Flask
 Add apache mod_wsgi templates
-Fix supervisor restart (only one service)
-Django syncdb multidb support

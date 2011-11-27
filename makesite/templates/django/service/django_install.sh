@@ -18,4 +18,4 @@ cmd_or_die "sudo chown -R $SITE_USER:$SITE_GROUP $DEPLOY_DIR"
 # Django syncdb
 CMD="manage.py syncdb --noinput --settings=$DJANGO_SETTINGS 2>/dev/null"
 [ -f $BASERUN ] && CMD="$BASERUN $CMD"
-cmd "sudo -u $SITE_USER $CMD" && echo "Syncdb done"
+cmd "sudo -u $SITE_USER $CMD" || echo "Syncdb skipped"
