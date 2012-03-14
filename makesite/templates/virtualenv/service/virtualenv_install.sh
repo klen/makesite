@@ -13,7 +13,7 @@ cmd_or_die "virtualenv --no-site-packages $VIRTUALENVDIR"
 
 if [ -f $PIP_PROJECTFILE ]; then
     echo "Update virtualenv requirements '$PIP_PROJECTFILE'."
-    sudo pip -E $VIRTUALENVDIR install -I -r $PIP_PROJECTFILE
+    sudo pip -E $VIRTUALENVDIR install -I -M -r $PIP_PROJECTFILE
     cmd_or_die "rm -rf $VIRTUALENVDIR/.reqsum" 
     sh -c "md5sum $PIP_PROJECTFILE > $VIRTUALENVDIR/.reqsum"
 else

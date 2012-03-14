@@ -16,7 +16,7 @@ if [ -f $PIP_PROJECTFILE ]; then
     if [ "$REQ_SUM" = "$OLD_REQ_SUM" ]; then
         echo "Changes not found"
     else
-        sudo pip -E $VIRTUALENVDIR install -r $PIP_PROJECTFILE
+        sudo pip -E $VIRTUALENVDIR install -M -r $PIP_PROJECTFILE
         cmd_or_die "rm -rf $VIRTUALENVDIR/.reqsum "
         sh -c "md5sum $PIP_PROJECTFILE > $VIRTUALENVDIR/.reqsum"
     fi
