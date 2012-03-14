@@ -9,22 +9,22 @@ from setuptools import setup, find_packages
 from makesite import version, PROJECT, LICENSE
 
 
-PACKAGE_DATA = [ '*.ini', '*.sh' ]
+PACKAGE_DATA = ['*.ini', '*.sh']
 
 for folder in ['templates', 'modules']:
     for root, dirs, files in os.walk(os.path.join(PROJECT, folder)):
         for filename in files:
-            PACKAGE_DATA.append("%s/%s" % ( root[len(PROJECT)+1:], filename ))
+            PACKAGE_DATA.append("%s/%s" % (root[len(PROJECT) + 1:], filename))
 
 
-def read( fname ):
+def read(fname):
     try:
-        return open( os.path.join( os.path.dirname( __file__ ), fname ) ).read()
+        return open(os.path.join(os.path.dirname(__file__), fname)).read()
     except IOError:
         return ''
 
 
-install_requires = [ 'INITools==0.3.1' ]
+install_requires = ['INITools==0.3.1']
 if version_info < (2, 7):
     install_requires.append('argparse')
 
@@ -32,7 +32,7 @@ if version_info < (2, 7):
 META_DATA = dict(
     name=PROJECT,
     version=version,
-    LICENSE=LICENSE,
+    license=LICENSE,
     description=read('DESCRIPTION'),
     long_description=read('README.rst'),
     platforms=('Any'),
@@ -54,7 +54,7 @@ META_DATA = dict(
     ],
 
     packages=find_packages(),
-    package_data = { '': PACKAGE_DATA, },
+    package_data={'': PACKAGE_DATA},
 
     entry_points={
         'console_scripts': [
@@ -62,9 +62,9 @@ META_DATA = dict(
         ]
     },
 
-    install_requires = install_requires,
+    install_requires=install_requires,
 )
 
 
 if __name__ == "__main__":
-    setup( **META_DATA )
+    setup(**META_DATA)
