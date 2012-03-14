@@ -1,7 +1,8 @@
 build
 docs/_build
 dist
-sitegen.egg-info
+makesite.egg-info
 .ropeproject
 *.pyc
 .sass-cache
+_
