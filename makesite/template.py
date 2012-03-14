@@ -5,8 +5,8 @@ class TemplateException(Exception):
     pass
 
 
-class Template( object ):
-    tag_re = re.compile( '\{\{([^}]+)\}\}', re.M )
+class Template(object):
+    tag_re = re.compile('\{\{([^}]+)\}\}', re.M)
 
     def __init__(self, content=None, filename=None, context=None):
         self.content = content
@@ -20,7 +20,7 @@ class Template( object ):
         try:
             return open(self.filename, mode)
         except IOError:
-            raise TemplateException( "File read error: '%s" % self.filename )
+            raise TemplateException("File read error: '%s" % self.filename)
 
     def parse_file(self, **ctx):
         f = self.__open__()
@@ -32,19 +32,19 @@ class Template( object ):
         f.close()
         return True
 
-    def __call__( self, **ctx ):
+    def __call__(self, **ctx):
         if not self.content:
             self.content = self.__open__().read()
-        return self.sub( self.content, **ctx )
+        return self.sub(self.content, **ctx)
 
     @classmethod
     def sub(cls, content, **ctx):
 
-        def replace( obj ):
+        def replace(obj):
             code = obj.group(1)
             try:
-                return str(eval( code, {}, ctx ))
+                return str(eval(code, {}, ctx))
             except Exception, e:
                 raise TemplateException(str(e))
 
-        return cls.tag_re.sub( replace, content )
+        return cls.tag_re.sub(replace, content)

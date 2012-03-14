@@ -96,7 +96,7 @@ def template(args):
 
         for f in core.gen_template_files(tpl):
             if op.basename(op.dirname(f)) == 'service' and op.basename(f).startswith(args.TEMPLATE) and 'install' in op.basename(f):
-                core.call(op.join(path, f)  )
+                core.call(op.join(path, f))
 
     else:
         assert args.TEMPLATE in templates, "Template not found in project"
@@ -111,7 +111,6 @@ def template(args):
 
     core.call('sudo rm -r %s' % op.join(path, settings.TPLNAME))
     core.call('sudo sh -c "echo -n \'%s\' > %s"' % (','.join(templates), op.join(path, settings.TPLNAME)))
-
 
 
 @action(
@@ -149,7 +148,7 @@ def install(args):
     " Install site from sources or module "
 
     # Deactivate virtualenv
-    if environ.has_key('VIRTUAL_ENV'):
+    if 'VIRTUAL_ENV' in environ:
         raise Exception("Please deactivate virtualenv '%s' first." % environ['VIRTUAL_ENV'])
 
     # Install from base modules
@@ -201,7 +200,7 @@ def autocomplete():
     cwords = environ['COMP_WORDS'].split()[1:]
     cword = int(environ['COMP_CWORD'])
     try:
-        current = cwords[cword-1]
+        current = cwords[cword - 1]
     except IndexError:
         current = ''
 

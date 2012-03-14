@@ -20,7 +20,7 @@ class MakesiteArgsParser(ArgumentParser):
 
 
 def action(*arguments):
-    parser = MakesiteArgsParser(description = "'Makesite' easy create base project structure.")
+    parser = MakesiteArgsParser(description="'Makesite' easy control of project structure.")
     parser.add_argument('-v', '--version', action='version', version=settings.VERSION, help='Show makesite version')
     for (args, kwargs) in arguments:
         parser.add_argument(*args, **kwargs)
