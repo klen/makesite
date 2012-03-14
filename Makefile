@@ -35,7 +35,7 @@ _install:
 	sudo pip install -U .
 
 test:
-	python $(MODULE)/tests/__init__.py
+	python setup.py test
 
 doc:
 	python setup.py build_sphinx --source-dir=docs/ --build-dir=docs/_build --all-files
