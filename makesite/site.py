@@ -1,4 +1,4 @@
-from os import path as op, listdir, makedirs
+from os import path as op, listdir, makedirs, rename
 from makesite.template import Template
 from shutil import copy2
 from tempfile import mkdtemp
@@ -56,16 +56,18 @@ class Site(MakesiteParser):
         template = template or self._get_template_path(template_name)
         self.read([op.join(template, settings.CFGNAME)], extending=True)
 
-        for f in gen_template_files(template):
-            curdir = op.join(deploy_dir, op.dirname(f))
+        for fname in gen_template_files(template):
+            curdir = op.join(deploy_dir, op.dirname(fname))
             if not op.exists(curdir):
                 makedirs(curdir)
 
-            source = op.join(template, f)
-            target = op.join(deploy_dir, f)
+            source = op.join(template, fname)
+            target = op.join(deploy_dir, fname)
             copy2(source, target)
-            if not (f.startswith('bin') or f.startswith('static')):
+            name, ext = op.splitext(fname)
+            if ext == '.tmpl':
                 Template(filename=target, context=self.as_dict()).parse_file()
+                rename(target, op.join(deploy_dir, name))
 
         return deploy_dir
 
