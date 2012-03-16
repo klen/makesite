@@ -1,7 +1,7 @@
-import ConfigParser
 from os import path as op, listdir
 
 from makesite.settings import CFGNAME
+from makesite.core import MakesiteParser
 
 
 DEPLOYDIR = op.dirname(op.dirname(__file__))
@@ -9,7 +9,7 @@ DEPLOYDIR = op.dirname(op.dirname(__file__))
 
 def read_config(folder):
     path = op.join(folder, CFGNAME)
-    parser = ConfigParser.RawConfigParser()
+    parser = MakesiteParser()
     parser.read(path)
     try:
         site = dict(parser.items('Main'))
