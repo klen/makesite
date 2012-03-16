@@ -17,15 +17,15 @@ class CommonTest(TestCase):
 
         # Init engine
         engine = Installer(args)
-        self.assertTrue(op.isdir(engine.deploy_tmpdir))
+        self.assertTrue(op.isdir(engine.deploy_dir))
         self.assertEqual(engine.templates, ['base'])
 
         # Clone source
         engine.clone_source()
-        self.assertTrue(op.isdir(op.join(engine.deploy_tmpdir, 'source')))
-        self.assertTrue(op.isfile(op.join(engine.deploy_tmpdir, 'source', 'Makefile')))
+        self.assertTrue(op.isdir(op.join(engine.deploy_dir, 'source')))
+        self.assertTrue(op.isfile(op.join(engine.deploy_dir, 'source', 'Makefile')))
         self.assertEqual(engine.template, 'base,src-dir,virtualenv,django,supervisor,nginx,uwsgi')
-        self.assertEqual(engine.deploy_dir, op.join(args.home, args.PROJECT, args.branch))
+        self.assertEqual(engine.target_dir, op.join(args.home, args.PROJECT, args.branch))
         self.assertEqual(engine.django_settings, 'settings.dev')
         self.assertEqual(engine.templates, [
             ('base', op.join(settings.TPL_DIR, 'base')),
@@ -36,15 +36,15 @@ class CommonTest(TestCase):
             ('nginx', op.join(settings.TPL_DIR, 'nginx')),
             ('uwsgi', op.join(settings.TPL_DIR, 'uwsgi')),
         ])
-        self.assertTrue(op.isfile(op.join(engine.deploy_tmpdir, settings.TPLNAME)))
-        self.assertTrue(op.isfile(op.join(engine.deploy_tmpdir, 'service', 'django_install.sh')))
-        self.assertTrue(op.isfile(op.join(engine.deploy_tmpdir, settings.CFGNAME)))
+        self.assertTrue(op.isfile(op.join(engine.deploy_dir, settings.TPLNAME)))
+        self.assertTrue(op.isfile(op.join(engine.deploy_dir, 'service', 'django_install.sh')))
+        self.assertTrue(op.isfile(op.join(engine.deploy_dir, settings.CFGNAME)))
 
         # Build site
         engine.build()
 
         # Init site
-        site = Site(engine.deploy_dir)
+        site = Site(engine.target_dir)
         self.assertEqual(site.get_name(), u'main.master')
         self.assertEqual(site.get_info(), u'main.master [base,src-dir,virtualenv,django,supervisor,nginx,uwsgi]')
         self.assertTrue('www-data' in site.get_info(full=True))
@@ -69,7 +69,7 @@ class CommonTest(TestCase):
         # Gen scripts
         self.assertTrue(op.join(site.service_dir, 'django_install.sh') in site._gen_scripts('install'))
 
-        sites = list(gen_sites(op.dirname(engine.deploy_tmpdir)))
+        sites = list(gen_sites(op.dirname(engine.deploy_dir)))
         self.assertTrue(sites)
         for s in sites:
             s.clean()

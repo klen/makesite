@@ -77,6 +77,9 @@ class MakesiteParser(ConfigParser):
         self.add_section('Main')
         self.add_section('Templates')
 
+    def defaults(self):
+        return dict(self.items('Main'))
+
     def __getitem__(self, name):
         try:
             return self.get('Main', name)

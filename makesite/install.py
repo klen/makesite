@@ -1,4 +1,4 @@
-from os import path as op, makedirs
+from os import path as op
 from shutil import copytree
 from tempfile import mkdtemp
 
@@ -23,7 +23,7 @@ class Installer(MakesiteParser):
         self['project'] = args.PROJECT
         self['branch'] = args.branch
         self['makesite_home'] = args.home
-        self['deploy_dir'] = args.deploy_dir or op.join(args.home, args.PROJECT, args.branch)
+        self['deploy_dir'] = mkdtemp()
         self.read([
             settings.BASECONFIG, settings.HOMECONFIG,
             op.join(args.home, settings.CFGNAME),
@@ -32,16 +32,18 @@ class Installer(MakesiteParser):
 
         self['src'] = args.src or self['src']
 
-        self.deploy_tmpdir = mkdtemp()
-        self.templates = filter(None, ['base'])
+        self.target_dir = args.deploy_dir or op.join(args.home, args.PROJECT, args.branch)
+        self.templates = ['base']
 
     def clone_source(self):
         " Clone source and prepare templates "
 
         print_header('Clone src: %s' % self.src, '-')
 
+        # Get source
         source_dir = self._get_source()
 
+        # Append settings from source
         self.read(op.join(source_dir, settings.CFGNAME))
 
         self.templates += (self.args.template or self.template).split(',')
@@ -49,18 +51,20 @@ class Installer(MakesiteParser):
         self['template'] = ','.join(str(x[0]) for x in self.templates)
 
         print_header('Deploy templates: %s' % self.template, sep='-')
-        with open(op.join(self.deploy_tmpdir, settings.TPLNAME), 'w') as f:
+        with open(op.join(self.deploy_dir, settings.TPLNAME), 'w') as f:
             f.write(self.template)
 
-        with open(op.join(self.deploy_tmpdir, settings.CFGNAME), 'w') as f:
+        with open(op.join(self.deploy_dir, settings.CFGNAME), 'w') as f:
+            self['deploy_dir'], tmp_dir = self.target_dir, self.deploy_dir
             self.write(f)
+            self['deploy_dir'] = tmp_dir
 
         # Create site
-        site = Site(self.deploy_tmpdir)
+        site = Site(self.deploy_dir)
 
         # Prepare templates
         for template_name, template in self.templates:
-            site.paste_template(template_name, template, self.deploy_tmpdir)
+            site.paste_template(template_name, template, tmp_dir)
 
         # Create site
         if self.args.info:
@@ -68,32 +72,30 @@ class Installer(MakesiteParser):
             LOGGER.info(site.get_info(full=True))
             return None
 
-        # Save options
-        site.write(self.deploy_tmpdir)
-
         # Check requirements
-        site['service_dir'] = op.join(self.deploy_tmpdir, 'service')
-        call('sudo chmod +x %s/*.sh' % site.service_dir)
-        site.run_check()
-        site['service_dir'] = op.join(self.deploy_dir, 'service')
+        call('sudo chmod +x %s/*.sh' % self.service_dir)
+        site.run_check(service_dir=self.service_dir)
+
+        # Save options
+        site.write()
+
         return site
 
     def build(self):
         print_header('Build site', sep='-')
-        call('sudo mkdir -p %s' % op.dirname(self.deploy_dir))
-        call('sudo mv %s %s' % (self.deploy_tmpdir, self.deploy_dir))
-        call('sudo chmod 0755 %s' % self.deploy_dir)
+        call('sudo mkdir -p %s' % op.dirname(self.target_dir))
+        call('sudo mv %s %s' % (self.deploy_dir, self.target_dir))
+        call('sudo chmod 0755 %s' % self.target_dir)
 
     def _get_source(self):
         " Get source from CVS or filepath. "
 
-        source_dir = op.join(self.deploy_tmpdir, 'source')
+        source_dir = op.join(self.deploy_dir, 'source')
         for tp, cmd in settings.SRC_CLONE:
             if self.src.startswith(tp + '+'):
-                makedirs(source_dir)
                 program = which(tp)
                 assert program, '%s not found.' % tp
-                cmd = cmd % (self.src[len(tp) + 1:], self.deploy_tmpdir)
+                cmd = cmd % (self.src[len(tp) + 1:], source_dir)
                 call(cmd, shell=True)
                 self.templates.append('src-%s' % tp)
                 break
@@ -114,4 +116,5 @@ class Installer(MakesiteParser):
             if op.exists(tplname):
                 for item in self._gen_templates(open(tplname).read().strip().split(',')):
                     yield item
+            self.read(op.join(path, settings.CFGNAME), extending=True)
             yield (name, path)

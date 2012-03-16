@@ -12,8 +12,8 @@ from makesite.site import Site, gen_sites, find_site
 @action((["PATH"], dict(help="Path to site instance.")))
 def info(args):
     " Show information about installed site. "
-    site = Site(args.PATH)
-    print_header("%s -- install information" % site.name())
+    site = find_site(args.PATH)
+    print_header("%s -- install information" % site.get_name())
     print site.get_info(full=True)
     return True
 
@@ -167,7 +167,8 @@ def autocomplete():
         if sub_action in ['info', 'uninstall', 'update', 'template']:
             if settings.MAKESITE_HOME:
                 if not current or current.startswith('/'):
-                    print ' '.join(site.deploy_dir for site in gen_sites(settings.MAKESITE_HOME) if site.startswith(current))
+                    sites = list(gen_sites(settings.MAKESITE_HOME))
+                    print ' '.join(site.deploy_dir for site in sites if site.deploy_dir.startswith(current))
                 else:
                     names = map(lambda s: s.get_name(), gen_sites(settings.MAKESITE_HOME))
                     print ' '.join(name for name in names if name.startswith(current))

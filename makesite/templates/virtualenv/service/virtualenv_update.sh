@@ -5,6 +5,7 @@
 # Variables
 VIRTUALENVDIR={{ virtualenvdir  }}
 PIP_PROJECTFILE={{ pip_projectfile }}
+PIP=$VIRTUALENVDIR/bin/pip
 
 REQ_SUM=$(md5sum $PIP_PROJECTFILE)
 OLD_REQ_SUM=$(cat $VIRTUALENVDIR/.reqsum)
@@ -16,7 +17,7 @@ if [ -f $PIP_PROJECTFILE ]; then
     if [ "$REQ_SUM" = "$OLD_REQ_SUM" ]; then
         echo "Changes not found"
     else
-        sudo pip -E $VIRTUALENVDIR install -M -r $PIP_PROJECTFILE
+        $PIP install -M -r $PIP_PROJECTFILE
         cmd_or_die "rm -rf $VIRTUALENVDIR/.reqsum "
         sh -c "md5sum $PIP_PROJECTFILE > $VIRTUALENVDIR/.reqsum"
     fi

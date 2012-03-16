@@ -28,24 +28,24 @@ class Site(MakesiteParser):
     def get_name(self):
         return "%s.%s" % (self.project, self.branch)
 
-    def run_check(self, template_name=None):
+    def run_check(self, template_name=None, service_dir=None):
         print_header('Check requirements', sep='-')
-        map(call, self._gen_scripts('check'))
+        map(call, self._gen_scripts('check', template_name=template_name, service_dir=service_dir))
         return True
 
-    def run_install(self, template_name=None):
+    def run_install(self, template_name=None, service_dir=None):
         print_header('Install %s' % self.get_name())
-        map(call, self._gen_scripts('install', template_name=template_name))
+        map(call, self._gen_scripts('install', template_name=template_name, service_dir=service_dir))
         return True
 
-    def run_update(self, template_name=None):
+    def run_update(self, template_name=None, service_dir=None):
         print_header('Update %s' % self.get_name())
-        map(call, self._gen_scripts('update', template_name=template_name))
+        map(call, self._gen_scripts('update', template_name=template_name, service_dir=service_dir))
         return True
 
-    def run_remove(self, template_name=None):
+    def run_remove(self, template_name=None, service_dir=None):
         print_header('Uninstall %s' % self.get_name())
-        map(call, self._gen_scripts('remove', template_name=template_name))
+        map(call, self._gen_scripts('remove', template_name=template_name, service_dir=service_dir))
         return True
 
     def paste_template(self, template_name, template=None, deploy_dir=None):
@@ -54,7 +54,7 @@ class Site(MakesiteParser):
         LOGGER.info("Paste template: %s" % template_name)
         deploy_dir = deploy_dir or self.deploy_dir
         template = template or self._get_template_path(template_name)
-        self.read([op.join(template, settings.CFGNAME)])
+        self.read([op.join(template, settings.CFGNAME)], extending=True)
 
         for f in gen_template_files(template):
             curdir = op.join(deploy_dir, op.dirname(f))
@@ -101,7 +101,7 @@ class Site(MakesiteParser):
         call('sudo rm -rf %s' % self.deploy_dir)
 
     def _gen_scripts(self, prefix, service_dir=None, template_name=None):
-        service_dir = service_dir or self.service_dir
+        service_dir = service_dir or self.service_dir or op.join(self.deploy_dir, 'service')
         files = sorted(listdir(service_dir))
         for template in self.templates:
             for f in files:
@@ -138,6 +138,6 @@ def find_site(path):
         if not settings.MAKESITE_HOME or op.sep in path:
             raise
 
-        path = path if '.' in path else "master.%s" % path
+        path = path if '.' in path else "%s.master" % path
         project, branch = path.split('.', 2)
         return Site(op.join(settings.MAKESITE_HOME, project, branch))
