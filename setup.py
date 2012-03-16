@@ -24,7 +24,7 @@ def read(fname):
         return ''
 
 
-install_requires = ['INITools==0.3.1']
+install_requires = ['INITools==0.3.1', 'Tempita==0.5.1']
 if version_info < (2, 7):
     install_requires.append('argparse')
 

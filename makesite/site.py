@@ -1,7 +1,8 @@
-from os import path as op, listdir, makedirs, rename
-from makesite.template import Template
+from os import path as op, listdir, makedirs, remove
 from shutil import copy2
 from tempfile import mkdtemp
+
+from tempita import Template
 
 from makesite import settings
 from makesite.core import walklevel, call, print_header, is_exe, MakesiteParser, Error, \
@@ -66,8 +67,10 @@ class Site(MakesiteParser):
             copy2(source, target)
             name, ext = op.splitext(fname)
             if ext == '.tmpl':
-                Template(filename=target, context=self.as_dict()).parse_file()
-                rename(target, op.join(deploy_dir, name))
+                t = Template.from_filename(target, namespace=self.as_dict())
+                with open(op.join(deploy_dir, name), 'w') as f:
+                    f.write(t.substitute())
+                remove(target)
 
         return deploy_dir
 
