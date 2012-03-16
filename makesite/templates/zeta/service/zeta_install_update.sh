@@ -6,7 +6,7 @@
 cmd_or_die "sudo chown -R $USER:$USER $STATIC_DIR"
 
 # Pack static
-cmd_or_die "zeta $STATIC_DIR"
+cmd_or_die "zeta -p _ $STATIC_DIR"
 
 # Restore rights
 cmd_or_die "sudo chown -R $SITE_USER:$SITE_GROUP $STATIC_DIR"

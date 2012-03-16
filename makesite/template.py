@@ -23,13 +23,11 @@ class Template(object):
             raise TemplateException("File read error: '%s" % self.filename)
 
     def parse_file(self, **ctx):
-        f = self.__open__()
         context = ctx or self.context
-        src = self.sub(f.read(), **context)
-        f.close()
-        f = self.__open__('w')
-        f.write(src)
-        f.close()
+        with self.__open__() as f:
+            src = self.sub(f.read(), **context)
+        with self.__open__('w') as f:
+            f.write(src)
         return True
 
     def __call__(self, **ctx):

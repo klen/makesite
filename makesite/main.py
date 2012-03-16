@@ -1,21 +1,20 @@
 import sys
-from ConfigParser import ConfigParser
 from os import path as op, environ, listdir, getcwd
-from subprocess import CalledProcessError
 from shutil import copytree
+from subprocess import CalledProcessError
 
-from makesite import core, settings
-from makesite.engine import Engine
-from makesite.utils import action, actions
+from makesite import settings
+from makesite.core import ACTIONS, action, print_header, call, get_base_modules, get_base_templates, LOGFILE_HANDLER
+from makesite.install import Installer
+from makesite.site import Site, gen_sites, find_site
 
 
 @action((["PATH"], dict(help="Path to site instance.")))
 def info(args):
-    " Output information about site "
-    path = args.PATH.rstrip(op.sep)
-    output = core.get_info(path, full=True)
-    core.print_header("%s -- install information" % core.get_name(path))
-    print output
+    " Show information about installed site. "
+    site = Site(args.PATH)
+    print_header("%s -- install information" % site.name())
+    print site.get_info(full=True)
     return True
 
 
@@ -25,23 +24,19 @@ def info(args):
         default=settings.MAKESITE_HOME
     )))
 def ls(args):
-    " Output all currently installed sites to stdout "
-    core.print_header("Installed sites:")
-    for site in core.get_sites(args.path):
-        print core.get_info(site)
+    " Show list of currently installed sites. "
+    print_header("Installed sites:")
+    for site in gen_sites(args.path):
+        print site.get_info()
     return True
 
 
 @action((["PATH"], dict(help="Project path")))
 def update(args):
     " Update sites "
-    path = core.get_path(args.PATH)
-    for script in core.get_scripts(path, prefix='update'):
-        try:
-            core.call(script)
-        except CalledProcessError:
-            raise
-    return True
+    path = args.PATH
+    site = find_site(path)
+    return site.run_update()
 
 
 @action(
@@ -49,12 +44,12 @@ def update(args):
     (["DEST"], dict(help="Destination", default='new_project')),
     )
 def module(args):
-    " Copy module source to current directory "
+    " Copy module source to current directory. "
     mod = op.join(settings.MOD_DIR, args.MODULE)
     assert op.exists(mod), "Not found module: %s" % args.MODULE
     if not args.DEST.startswith(op.sep):
         args.DEST = op.join(getcwd(), args.DEST)
-    core.print_header("Copy module source")
+    print_header("Copy module source")
     copytree(mod, args.DEST)
     print "Done: %s" % args.DEST
 
@@ -62,13 +57,11 @@ def module(args):
 @action((["PATH"], dict(help="Project path")))
 def uninstall(args):
     " Uninstall sites "
-    path = core.get_path(args.PATH)
-    core.print_header('Uninstall project: %s' % path)
-    for script in core.get_scripts(path, prefix='remove'):
-        core.call(script)
-    core.call('sudo rm -rf %s' % path)
-    if not listdir(op.dirname(path)):
-        core.call('sudo rm -rf %s' % op.dirname(path))
+    site = Site(args.PATH)
+    site.uninstall()
+    site.clean()
+    if not listdir(op.dirname(site.deploy_dir)):
+        call('sudo rm -rf %s' % op.dirname(site.deploy_dir))
 
 
 @action(
@@ -77,40 +70,10 @@ def uninstall(args):
         (["PATH"], dict(help="Project path")),)
 def template(args):
     " Add or remove templates from site "
-    path = args.PATH.rstrip(op.sep)
-    templates = core.get_templates(path)
-    parser = ConfigParser()
-    tpl = op.join(settings.TPL_DIR, args.TEMPLATE)
-    parser.read([
-        op.join(op.dirname(path), settings.CFGNAME),
-        op.join(path, settings.CFGNAME),
-        op.join(tpl, settings.CFGNAME)])
-
+    site = Site(args.PATH)
     if args.ACTION == "add":
-        assert not args.TEMPLATE in templates, "Template already added"
-        core.print_header("Add template: %s" % args.TEMPLATE)
-        templates.append(args.TEMPLATE)
-
-        for f in core.gen_template_files(tpl):
-            core.call('sudo cp %s %s' % (op.join(tpl, f), op.join(path, f)))
-
-        for f in core.gen_template_files(tpl):
-            if op.basename(op.dirname(f)) == 'service' and op.basename(f).startswith(args.TEMPLATE) and 'install' in op.basename(f):
-                core.call(op.join(path, f))
-
-    else:
-        assert args.TEMPLATE in templates, "Template not found in project"
-        core.print_header("Remove template: %s" % args.TEMPLATE)
-        templates = filter(lambda x: not x == args.TEMPLATE, templates)
-        tfiles = map(lambda x: op.join(path, x), core.gen_template_files(tpl))
-        for f in tfiles:
-            if op.basename(op.dirname(f)) == 'service' and op.basename(f).startswith(args.TEMPLATE) and 'remove' in op.basename(f):
-                core.call(f)
-        for f in tfiles:
-            core.call('sudo rm -f %s' % f)
-
-    core.call('sudo rm -r %s' % op.join(path, settings.TPLNAME))
-    core.call('sudo sh -c "echo -n \'%s\' > %s"' % (','.join(templates), op.join(path, settings.TPLNAME)))
+        return site.add_template(args.TEMPLATE)
+    return site.remove_template(args.TEMPLATE)
 
 
 @action(
@@ -148,8 +111,7 @@ def install(args):
     " Install site from sources or module "
 
     # Deactivate virtualenv
-    if 'VIRTUAL_ENV' in environ:
-        raise Exception("Please deactivate virtualenv '%s' first." % environ['VIRTUAL_ENV'])
+    _check_virtualenv()
 
     # Install from base modules
     if args.module:
@@ -162,41 +124,36 @@ def install(args):
     args.home = op.abspath(args.path)
     args.deploy_dir = op.join(args.home, args.PROJECT, args.branch)
 
+    # Create engine
+    engine = Installer(args)
+
     # Check dir exists
     if not args.info and not args.repeat and op.exists(args.deploy_dir):
         raise Exception("\nPath %s exists. Stop deploy." % args.deploy_dir)
 
-    # Create engine
-    engine = Engine(args)
+    try:
+        if args.repeat:
+            site = Site(args.deploy_dir)
+            site.install()
+            return True
 
-    # Show info
-    if args.info:
-        core.print_header('Project context', sep='-')
-        print core.get_info(engine.tmp_deploy_dir, full=True)
-        return True
+        site = engine.clone_source()
+        if not site:
+            return True
 
-    # Deploy src
-    if not args.repeat:
-        core.print_header('Deploy site', sep='-')
-        core.call('sudo mkdir -p %s' % op.dirname(args.deploy_dir))
-        core.call('sudo cp -r %s %s' % (engine.tmp_deploy_dir, args.deploy_dir))
-        core.call('sudo chmod 0755 %s' % args.deploy_dir)
+        engine.build()
+        site.install()
 
-    # Run install scripts
-    core.print_header('Install site', sep='-')
-    for script in core.get_scripts(args.deploy_dir, prefix='install'):
-        try:
-            core.call(script)
-        except CalledProcessError:
-            print "Installation failed"
-            print "Fix errors and repeat installation with (-r) or run 'makesite uninstall %s' for cancel." % args.deploy_dir
-            raise
+    except (CalledProcessError, AssertionError):
+        print "Installation failed"
+        print "Fix errors and repeat installation with (-r) or run 'makesite uninstall %s' for cancel." % args.deploy_dir
+        raise
 
 
 def autocomplete():
     if 'MAKESITE_AUTO_COMPLETE' not in environ:
         return
-    commands = filter(lambda cmd: cmd != 'main', actions.keys())
+    commands = filter(lambda cmd: cmd != 'main', ACTIONS.keys())
     cwords = environ['COMP_WORDS'].split()[1:]
     cword = int(environ['COMP_CWORD'])
     try:
@@ -209,30 +166,30 @@ def autocomplete():
         if sub_action in ['info', 'uninstall', 'update', 'template']:
             if settings.MAKESITE_HOME:
                 if not current or current.startswith('/'):
-                    print ' '.join(site for site in core.get_sites(settings.MAKESITE_HOME) if site.startswith(current))
+                    print ' '.join(site.deploy_dir for site in gen_sites(settings.MAKESITE_HOME) if site.startswith(current))
                 else:
-                    names = map(core.get_name, core.get_sites(settings.MAKESITE_HOME))
+                    names = map(lambda s: s.get_name(), gen_sites(settings.MAKESITE_HOME))
                     print ' '.join(name for name in names if name.startswith(current))
         elif sub_action == 'install' and (cwords[-1] == '-m' or (current and cwords[-2] == '-m')):
-            print ' '.join(mod for mod in core.get_base_modules() if mod.startswith(current))
+            print ' '.join(mod for mod in get_base_modules() if mod.startswith(current))
         elif sub_action == 'install' and (cwords[-1] == '-t' or (current and cwords[-2] == '-t')):
-            print ' '.join(tpl for tpl in core.get_base_templates() if tpl.startswith(current))
+            print ' '.join(tpl for tpl in get_base_templates() if tpl.startswith(current))
         elif sub_action == 'module':
-            print ' '.join(tpl for tpl in core.get_base_modules() if tpl.startswith(current))
+            print ' '.join(tpl for tpl in get_base_modules() if tpl.startswith(current))
     except IndexError:
         print (' '.join(a for a in commands if a.startswith(current)))
     sys.exit(1)
 
 
-@action((["action"], dict(choices=actions.keys(), help="Choose action: %s" % ', '.join(actions.keys()))))
+@action((["action"], dict(choices=ACTIONS.keys(), help="Choose action: %s" % ', '.join(ACTIONS.keys()))))
 def main(args):
     " Base dispather "
     try:
-        func = actions.get(args.action)
+        func = ACTIONS.get(args.action)
         func(sys.argv[2:])
-    except Exception, e:
+    except AssertionError, e:
         sys.stderr.write('\n' + str(e))
-        print "\nSee log: %s" % core.handler.stream.name
+        print "\nSee log: %s" % LOGFILE_HANDLER.stream.name
         sys.exit(1)
 
 
@@ -240,6 +197,11 @@ def console():
     " Enter point "
     autocomplete()
     main(sys.argv[1:2])
+
+
+def _check_virtualenv():
+    if 'VIRTUAL_ENV' in environ:
+        raise Exception("Please deactivate virtualenv '%s' first." % environ['VIRTUAL_ENV'])
 
 
 if __name__ == '__main__':

@@ -1,22 +1,22 @@
-from os import path, environ, getenv
+from os import path as op, environ, getenv
 
 
 VERSION = '0.9.22'
 
-BASEDIR = path.abspath(path.dirname(__file__))
-TPL_DIR = path.join(BASEDIR, 'templates')
-MOD_DIR = path.join(BASEDIR, 'modules')
+BASEDIR = op.abspath(op.dirname(__file__))
+TPL_DIR = op.join(BASEDIR, 'templates')
+MOD_DIR = op.join(BASEDIR, 'modules')
 
 TPLNAME = '.makesite'
 CFGNAME = 'makesite.ini'
 
-BASECONFIG = path.join(BASEDIR, CFGNAME)
-HOMECONFIG = path.join(getenv('HOME', '~'), CFGNAME)
+BASECONFIG = op.join(BASEDIR, CFGNAME)
+HOMECONFIG = op.join(getenv('HOME', '~'), CFGNAME)
 
 MAKESITE_HOME = environ.get('MAKESITE_HOME')
 
-SRC_TYPES = (
-    ('svn', '%s checkout %s %s'),
-    ('git', '%s clone %s %s'),
-    ('hg', '%s clone %s %s'),
+SRC_CLONE = (
+    ('svn', 'svn checkout %s %s'),
+    ('git', 'git clone %s %s'),
+    ('hg',  'hg clone %s %s'),
 )

@@ -1,110 +1,134 @@
 import logging
-from os import walk, path as op, listdir, access, X_OK, environ, makedirs, pathsep
-from shutil import copy2
+import sys
+from argparse import ArgumentParser
+from os import walk, path as op, listdir, access, X_OK, environ, pathsep
+from initools.configparser import ConfigParser, Error
 from subprocess import check_call
-from tempfile import mktemp, mkdtemp
+from sys import stdout
+from tempfile import mktemp
 
-from makesite.settings import CFGNAME, TPLNAME, TPL_DIR, MOD_DIR, MAKESITE_HOME
-from makesite.template import Template
-
-
-logger = logging.getLogger('Makesite')
-logger.setLevel(logging.INFO)
-handler = logging.FileHandler(mktemp())
-logger.addHandler(handler)
+from makesite.settings import CFGNAME, TPLNAME, TPL_DIR, MOD_DIR, VERSION
 
 
-def walklevel(dirpath, level=1):
-    dirpath = dirpath.rstrip(op.sep)
-    assert op.isdir(dirpath)
-    start = dirpath.count(op.sep)
-    for root, dirs, files in walk(dirpath):
-        yield root, dirs, files
-        if start + level <= root.count(op.sep):
-            del dirs[:]
+# Log settings
+LOGGER = logging.getLogger('Makesite')
+LOGGER.setLevel(logging.INFO)
+LOGFILE_HANDLER = logging.FileHandler(mktemp())
+LOGGER.addHandler(LOGFILE_HANDLER)
+LOGGER.addHandler(logging.StreamHandler(stdout),)
 
 
-def is_project(path):
-    path = op.join(path, TPLNAME)
-    return op.exists(path) and op.isfile(path)
+ACTIONS = dict()
 
 
-def check_project(path):
-    if not is_project(path):
-        raise Exception("Invalid makesite-project: %s" % path)
+class MakesiteArgsParser(ArgumentParser):
+
+    def error(self, message):
+        self.print_usage(sys.stderr)
+        print "\nInstalled templates:"
+        print " ".join(get_base_templates())
+        print "\nInstalled modules:"
+        print " ".join(get_base_modules())
+        print
+        self.exit(2, '%s: error: %s\n' % (self.prog, message))
 
 
-def print_header(msg, sep='='):
-    logger.info("\n%s\n%s" % (msg, ''.join(sep for _ in msg)))
-    print "\n%s\n%s" % (msg, ''.join(sep for _ in msg))
+def action(*arguments):
+    parser = MakesiteArgsParser(description="'Makesite' easy control of project structure.")
+    parser.add_argument('-v', '--version', action='version', version=VERSION, help='Show makesite version')
+    for (args, kwargs) in arguments:
+        parser.add_argument(*args, **kwargs)
+
+    def _inner(func):
+        name = func.__name__
+        parser.description = func.__doc__
+
+        def _wrapper(args=None):
+            args = parser.parse_args(args)
+            return func(args)
+
+        ACTIONS[name] = _wrapper
+        if name != 'main':
+            parser.prog = " ".join((parser.prog, name))
+        return _wrapper
+
+    return _inner
 
 
-def get_templates(path):
+class OrderedSet(list):
+
+    def __init__(self, sequence):
+        result = []
+        for o in sequence:
+            if not o in result:
+                result.append(o)
+        super(OrderedSet, self).__init__(result)
+
+
+class MakesiteException(AssertionError):
+    " Exception raised by makesite "
+    pass
+
+
+class MakesiteParser(ConfigParser):
+
+    def __init__(self, *args, **kwargs):
+        super(MakesiteParser, self).__init__(*args, **kwargs)
+        self.add_section('Main')
+        self.add_section('Templates')
+
+    def __getitem__(self, name):
+        try:
+            return self.get('Main', name)
+        except Error:
+            return None
+
+    def __setitem__(self, name, value, section='Main'):
+        self.set(section, name, value)
+
+    def __getattr__(self, name):
+        return self[name]
+
+    def as_dict(self, section='Main', **kwargs):
+        " Return template context. "
+        items = super(MakesiteParser, self).items(section, **kwargs)
+        return dict(items)
+
+
+def get_project_templates(path):
+    " Get list of installed templates. "
+
     try:
         return open(op.join(path, TPLNAME)).read().strip().split(',')
     except IOError:
-        raise Exception("Invalid makesite-project: %s" % path)
+        raise MakesiteException("Invalid makesite-project: %s" % path)
 
 
 def get_base_modules():
+    " Get list of installed modules. "
+
     return sorted(filter(
             lambda x: op.isdir(op.join(MOD_DIR, x)),
             listdir(MOD_DIR)))
 
 
 def get_base_templates():
+    " Get list of installed templates. "
+
     return sorted(filter(
             lambda x: op.isdir(op.join(TPL_DIR, x)),
             listdir(TPL_DIR)))
 
 
-def get_sites(path):
-    for root, _, _ in walklevel(path, 2):
-        if is_project(root):
-            yield root
+def print_header(msg, sep='='):
+    " More strong message "
 
-
-def get_name(path):
-    return "%s.%s" % (op.basename(path), op.basename(op.dirname(path)))
-
-
-def get_info(path, full=False):
-    try:
-        if full:
-            return open(op.join(path, CFGNAME)).read()
-        return "%s [%s]" % (get_name(path), open(op.join(path, TPLNAME)).read())
-    except IOError:
-        raise Exception("Invalid makesite-project: %s" % path)
-
-
-def get_scripts(path, prefix=None):
-    check_project(path)
-    service_dir = op.join(path, "service")
-    templates = get_templates(path)
-    files = sorted(listdir(service_dir))
-    result = []
-    for template in templates:
-        result += filter(is_exe,
-            map(lambda x: op.join(service_dir, x),
-                    filter(lambda x: x.startswith(template) and (not prefix or prefix in x), files)))
-    return result
-
-
-def get_path(path):
-    path = path.rstrip(op.sep)
-    if is_project(path):
-        return path
-    if MAKESITE_HOME:
-        path = path if '.' in path else "master.%s" % path
-        branch, project = path.split('.', 2)
-        return op.join(MAKESITE_HOME, project, branch)
-
-
-def is_exe(path):
-    return op.exists(path) and access(path, X_OK)
+    LOGGER.info("\n%s\n%s" % (msg, ''.join(sep for _ in msg)))
 
 
 def which(program):
+    " Check program is exists. "
+
     head, _ = op.split(program)
 
     if head:
@@ -119,35 +143,30 @@ def which(program):
 
 
 def call(cmd, shell=True, **kwargs):
-    logger.info("Cmd: %s" % cmd)
-    print "Cmd: %s" % cmd
-    check_call(cmd, shell=shell, stdout=handler.stream, **kwargs)
+    " Run shell command. "
+
+    LOGGER.info("Cmd: %s" % cmd)
+    check_call(cmd, shell=shell, stdout=LOGFILE_HANDLER.stream, **kwargs)
+
+
+def walklevel(dirpath, level=1):
+    dirpath = dirpath.rstrip(op.sep)
+    assert op.isdir(dirpath)
+    start = dirpath.count(op.sep)
+    for root, dirs, files in walk(dirpath):
+        yield root, dirs, files
+        if start + level <= root.count(op.sep):
+            del dirs[:]
+
+
+def is_exe(path):
+    return op.exists(path) and access(path, X_OK)
 
 
 def gen_template_files(path):
-    " Generate relative template pathes "
+    " Generate relative template pathes. "
+
     path = path.rstrip(op.sep)
     for root, _, files in walk(path):
         for f in filter(lambda x: not x in (TPLNAME, CFGNAME), files):
             yield op.relpath(op.join(root, f), path)
-
-
-def prepare_template(name, path, parser, destination=None):
-    print "Prepare template: %s" % name
-
-    destination = destination or mkdtemp()
-    parser.read(op.join(path, CFGNAME), extending=True)
-    context = dict(parser.items('Main'))
-
-    for f in gen_template_files(path):
-        curdir = op.join(destination, op.dirname(f))
-        if not op.exists(curdir):
-            makedirs(curdir)
-
-        source = op.join(path, f)
-        target = op.join(destination, f)
-        copy2(source, target)
-        if not (f.startswith('bin') or f.startswith('static')):
-            Template(filename=target, context=context).parse_file()
-
-    return destination
