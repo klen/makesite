@@ -1,12 +1,10 @@
 from os import path as op
 from unittest import TestCase
 
-from makesite import settings
-from tempfile import mkdtemp
 from makesite.install import Installer
-from makesite.site import Site, gen_sites, find_site
 
-settings.MAKESITE_HOME = op.dirname(mkdtemp())
+from makesite import settings
+from makesite.site import Site, gen_sites, find_site
 
 
 class CommonTest(TestCase):

@@ -57,8 +57,8 @@ def module(args):
 @action((["PATH"], dict(help="Project path")))
 def uninstall(args):
     " Uninstall sites "
-    site = Site(args.PATH)
-    site.uninstall()
+    site = find_site(args.PATH)
+    site.run_remove()
     site.clean()
     if not listdir(op.dirname(site.deploy_dir)):
         call('sudo rm -rf %s' % op.dirname(site.deploy_dir))
@@ -134,15 +134,16 @@ def install(args):
     try:
         if args.repeat:
             site = Site(args.deploy_dir)
-            site.install()
-            return True
+            site.run_install()
+            return site
 
         site = engine.clone_source()
         if not site:
             return True
 
         engine.build()
-        site.install()
+        site.run_install()
+        return site
 
     except (CalledProcessError, AssertionError):
         print "Installation failed"

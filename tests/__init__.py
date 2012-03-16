@@ -1,5 +1,7 @@
-from makesite import settings
 from os import path as op
+from tempfile import mkdtemp
+
+from makesite import settings
 
 
-settings.MAKESITE_HOME = op.abspath(op.dirname(__file__))
+settings.MAKESITE_HOME = op.dirname(mkdtemp())
