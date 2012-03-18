@@ -1,6 +1,12 @@
 CHANGES
 =======
 
+## 2012-03-18 0.9.30
+--------------------
+* Tempita as template engine
+* Only .tpml files parsed as templates
+* Some fixes
+
 ## 2011-11-25 0.9.22
 --------------------
 * Echo check errors to stderr.
