@@ -111,7 +111,7 @@ def install(args):
     " Install site from sources or module "
 
     # Deactivate virtualenv
-    _check_virtualenv()
+    assert not 'VIRTUAL_ENV' in environ, "Please deactivate virtualenv '%s' first." % environ['VIRTUAL_ENV']
 
     # Install from base modules
     if args.module:
@@ -128,8 +128,7 @@ def install(args):
     engine = Installer(args)
 
     # Check dir exists
-    if not args.info and not args.repeat and op.exists(args.deploy_dir):
-        raise Exception("\nPath %s exists. Stop deploy." % args.deploy_dir)
+    assert args.info or args.repeat or not op.exists(args.deploy_dir), "Path %s exists. Stop deploy." % args.deploy_dir
 
     try:
         if args.repeat:
@@ -199,11 +198,6 @@ def console():
     " Enter point "
     autocomplete()
     main(sys.argv[1:2])
-
-
-def _check_virtualenv():
-    if 'VIRTUAL_ENV' in environ:
-        raise Exception("Please deactivate virtualenv '%s' first." % environ['VIRTUAL_ENV'])
 
 
 if __name__ == '__main__':
