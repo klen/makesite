@@ -188,7 +188,7 @@ def main(args):
     try:
         func = ACTIONS.get(args.action)
         func(sys.argv[2:])
-    except AssertionError, e:
+    except (AssertionError, CalledProcessError), e:
         sys.stderr.write('\n' + str(e))
         print "\nSee log: %s" % LOGFILE_HANDLER.stream.name
         sys.exit(1)
