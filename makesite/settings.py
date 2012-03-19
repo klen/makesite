@@ -1,7 +1,7 @@
 from os import path as op, environ, getenv
 
 
-VERSION = '0.9.31'
+VERSION = '0.9.32'
 
 BASEDIR = op.abspath(op.dirname(__file__))
 TPL_DIR = op.join(BASEDIR, 'templates')
@@ -16,7 +16,7 @@ HOMECONFIG = op.join(getenv('HOME', '~'), CFGNAME)
 MAKESITE_HOME = environ.get('MAKESITE_HOME')
 
 SRC_CLONE = (
-    ('svn', 'svn checkout %s %s'),
-    ('git', 'git clone %s %s'),
-    ('hg',  'hg clone %s %s'),
+    ('svn', 'svn checkout %(src)s %(source_dir)s'),
+    ('git', 'git clone %(src)s %(source_dir)s -b %(branch)s'),
+    ('hg',  'hg clone %(src)s %(source_dir)s'),
 )

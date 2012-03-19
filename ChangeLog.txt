@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-## 2012-03-19 0.9.31
+## 2012-03-19 0.9.32
 --------------------
 * Tempita as template engine
 * Only .tpml files parsed as templates

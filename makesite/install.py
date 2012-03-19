@@ -95,7 +95,9 @@ class Installer(MakesiteParser):
             if self.src.startswith(tp + '+'):
                 program = which(tp)
                 assert program, '%s not found.' % tp
-                cmd = cmd % (self.src[len(tp) + 1:], source_dir)
+                cmd = cmd % dict(src=self.src[len(tp) + 1:],
+                        source_dir=source_dir,
+                        branch=self.branch)
                 call(cmd, shell=True)
                 self.templates.append('src-%s' % tp)
                 break
