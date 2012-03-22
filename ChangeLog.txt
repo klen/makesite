@@ -1,7 +1,7 @@
 CHANGES
 =======
 
-## 2012-03-22 0.9.34
+## 2012-03-22 0.9.35
 --------------------
 * More install information
 
@@ -21,8 +21,7 @@ CHANGES
 
 ## 2011-11-16 0.9.15
 --------------------
-* Big code refactoring
-no backward compatibility 
+* Big code refactoring (no backward compatibility!) 
 * Add copy source from module
 * Add (append and remove templates)
 * Add shell integration
