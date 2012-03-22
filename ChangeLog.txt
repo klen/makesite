@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2012-03-22 0.9.34
+--------------------
+* More install information
+
 ## 2012-03-19 0.9.33
 --------------------
 * Tempita as template engine

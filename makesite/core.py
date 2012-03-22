@@ -97,6 +97,15 @@ class MakesiteParser(ConfigParser):
         items = super(MakesiteParser, self).items(section, **kwargs)
         return dict(items)
 
+    def read(self, filenames, extending=False, map_sections=None):
+        if isinstance(filenames, basestring):
+            filenames = [filenames]
+        filenames = filter(op.exists, filenames)
+        if not filenames:
+            return False
+        LOGGER.info("Read params: %s" % filenames)
+        return super(MakesiteParser, self).read(filenames, extending=extending, map_sections=map_sections)
+
 
 def get_project_templates(path):
     " Get list of installed templates. "
