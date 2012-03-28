@@ -1,3 +1,0 @@
-DEBUG = True
-ROOT_URLCONF = 'urls'
-TEMPLATE_DIRS = ['.']
