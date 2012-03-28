@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 import os
 
-from django.core.handlers.wsgi import WSGIHandler
+from django.core.wsgi import get_wsgi_application
 
 
 os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get('DJANGO_SETTINGS_MODULE', 'settings.dev')
-application = WSGIHandler()
+application = get_wsgi_application()
 
 if 'dev' in os.environ['DJANGO_SETTINGS_MODULE']:
     from werkzeug.debug import DebuggedApplication

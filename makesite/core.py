@@ -103,7 +103,6 @@ class MakesiteParser(ConfigParser):
         filenames = filter(op.exists, filenames)
         if not filenames:
             return False
-        LOGGER.info("Read params: %s" % filenames)
         return super(MakesiteParser, self).read(filenames, extending=extending, map_sections=map_sections)
 
 

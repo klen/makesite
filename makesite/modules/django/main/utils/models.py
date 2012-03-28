@@ -1,5 +1,6 @@
 import operator
 
+from django.db.models import signals
 from django.db.models.expressions import F, ExpressionNode
 
 
@@ -36,19 +37,8 @@ def resolve_expression_node(instance, node):
     return runner
 
 
-def update(instance, **kwargs):
-    """ Atomically update instance, setting field/value pairs from kwargs.
-    """
-
-    # clean instance before update
-    instance.full_clean()
-
-    # fields that use auto_now=True should be updated corrected, too!
-    for field in instance._meta.fields:
-        if hasattr(field, 'auto_now') and field.auto_now and field.name not in kwargs:
-            kwargs[field.name] = field.pre_save(instance, False)
-
-    rows_affected = instance.__class__._default_manager.filter(pk=instance.pk).update(**kwargs)
+def update(instance, full_clean=True, post_save=False, **kwargs):
+    "Atomically update instance, setting field/value pairs from kwargs"
 
     # apply the updated args to the instance to mimic the change
     # note that these might slightly differ from the true database values
@@ -59,6 +49,57 @@ def update(instance, **kwargs):
             v = resolve_expression_node(instance, v)
         setattr(instance, k, v)
 
-    # If you use an ORM cache, make sure to invalidate the instance!
-    #cache.set(djangocache.get_cache_key(instance=instance), None, 5)
+    # clean instance before update
+    if full_clean:
+        instance.full_clean()
+
+    # fields that use auto_now=True should be updated corrected, too!
+    for field in instance._meta.fields:
+        if hasattr(field, 'auto_now') and field.auto_now and field.name not in kwargs:
+            kwargs[field.name] = field.pre_save(instance, False)
+
+    rows_affected = instance.__class__._default_manager.filter(pk=instance.pk).update(**kwargs)
+
+    if post_save:
+        signals.post_save.send(sender=instance.__class__, instance=instance)
+
     return rows_affected
+
+
+class Choices(object):
+
+    def __init__(self, *choices):
+        self._choices = []
+        self._choice_dict = {}
+        self._labels = {}
+
+        for choice in choices:
+            if isinstance(choice, (list, tuple)):
+                if len(choice) == 2:
+                    choice = (choice[0], choice[0], choice[1])
+
+                elif len(choice) != 3:
+                    raise ValueError("Choices can't handle a list/tuple of length %s, only 2 or 3" % len(choice))
+            else:
+                choice = (choice, choice, choice)
+
+            self._choices.append((choice[0], choice[2]))
+            self._choice_dict[choice[1]] = choice[0]
+
+    def __getattr__(self, attname):
+        try:
+            return self._choice_dict[attname]
+        except KeyError:
+            raise AttributeError(attname)
+
+    def __iter__(self):
+        return iter(self._choices)
+
+    def __getitem__(self, index):
+        return self._choices[index]
+
+    def __repr__(self):
+        values, names = zip(*self._choices)
+        labels = self._labels.itervalues()
+        return '%s(%s)' % (self.__class__.__name__,
+                repr(zip(values, labels, names)))

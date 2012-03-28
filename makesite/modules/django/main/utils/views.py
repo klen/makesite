@@ -11,9 +11,9 @@ class TemplateContextView(TemplateView):
     """
     context = dict()
 
-    def __init__( self, context=None, **kwargs ):
+    def __init__(self, context=None, **kwargs):
         self.context = context or dict()
-        super(TemplateContextView, self).__init__( **kwargs )
+        super(TemplateContextView, self).__init__(**kwargs)
 
     def get(self, request, *args, **kwargs):
         self.context.update(self.get_context_data(**kwargs))
@@ -34,7 +34,7 @@ class AbstractResponseMixin(object):
         "Return HttpResponse."
         return http.HttpResponse(
             self.render_template(context),
-            content_type = self.mimetype, )
+            content_type=self.mimetype)
 
 
 class JSONResponseMixin(AbstractResponseMixin):

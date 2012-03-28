@@ -1,5 +1,6 @@
 " Common settings for all project. "
-import os, logging
+import os
+import logging
 
 from settings import PROJECT_ROOT, DEVZONE_ROOT, PROJECT_NAME
 
@@ -31,7 +32,6 @@ MEDIA_ROOT = os.path.join(DEVZONE_ROOT, 'media')
 STATIC_ROOT = os.path.join(DEVZONE_ROOT, 'static')
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
-ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 
 # Templates settings
 TEMPLATE_DIRS = ()
@@ -61,17 +61,17 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 )
 
+# Base apps settings
+MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
+
 # Middleware
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
-
-# Base apps settings
-MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
-AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
 
 # Localization
 USE_I18N = True

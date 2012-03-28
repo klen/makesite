@@ -16,33 +16,33 @@ def cached_instance(model, timeout=None, **filters):
     """ Auto cached model instance.
     """
     if isinstance(model, basestring):
-        assert '.' in model, ("'model_class' must be either a model"
-                                   " or a model name in the format"
-                                   " app_label.model_name")
-        app_label, model_name = model.split(".")
-        model = get_model(app_label, model_name)
+        model = _str_to_model(model)
 
     cache_key = generate_cache_key(model, **filters)
-    return __get_cached(cache_key, model.objects.select_related().get, kwargs=filters)
+    return get_cached(cache_key, model.objects.select_related().get, kwargs=filters)
 
 
 def cached_query(qs, timeout=None):
     """ Auto cached queryset and generate results.
     """
     cache_key = generate_cache_key(qs)
-    return __get_cached(cache_key, list, args=(qs,), timeout=None)
+    return get_cached(cache_key, list, args=(qs,), timeout=None)
 
 
-def clean_cache(*args, **kwargs):
-    """ Generate cache key and clean cached value.
-    """
-    cache_key = generate_cache_key(*args, **kwargs)
+def clean_cache(cached, **kwargs):
+    " Generate cache key and clean cached value. "
+
+    if isinstance(cached, basestring):
+        cached = _str_to_model(cached)
+
+    cache_key = generate_cache_key(cached, **kwargs)
     cache.delete(cache_key)
 
 
 def generate_cache_key(cached, **kwargs):
     """ Auto generate cache key for model or queryset
     """
+
     if isinstance(cached, QuerySet):
         key = str(cached.query)
 
@@ -73,7 +73,7 @@ def clean_cache_key(key):
     return cache_key
 
 
-def __get_cached(cache_key, func, timeout=None, args=None, kwargs=None):
+def get_cached(cache_key, func, timeout=None, args=None, kwargs=None):
     args = args or list()
     kwargs = kwargs or dict()
     result = cache.get(cache_key)
@@ -87,3 +87,11 @@ def __get_cached(cache_key, func, timeout=None, args=None, kwargs=None):
         cache.set(cache_key, result, timeout=timeout)
 
     return result
+
+
+def _str_to_model(string):
+    assert '.' in string, ("'model_class' must be either a model"
+                                " or a model name in the format"
+                                " app_label.model_name")
+    app_label, model_name = string.split(".")
+    return get_model(app_label, model_name)
