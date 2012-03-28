@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2012-03-28 0.9.40
+--------------------
+* Django 1.4 module support
+
 ## 2012-03-22 0.9.35
 --------------------
 * More install information
