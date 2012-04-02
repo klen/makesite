@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2012-04-02 0.9.41
+--------------------
+* Update virtualenv template
+
 ## 2012-03-28 0.9.40
 --------------------
 * Django 1.4 module support

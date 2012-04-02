@@ -14,8 +14,6 @@ OLD_REQ_SUM=$(cat $VIRTUALENVDIR/.reqsum)
 cmd_or_die "sudo chown -R $USER:$USER $VIRTUALENVDIR"
 
 if [ -f $PIP_PROJECTFILE ]; then
-    echo "Install pip"
-    $EASY_INSTALL -U pip
 
     echo "Update virtualenv requirements: $PIP_PROJECTFILE"
     if [ "$REQ_SUM" = "$OLD_REQ_SUM" ]; then
