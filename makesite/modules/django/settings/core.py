@@ -5,6 +5,8 @@ import logging
 from settings import PROJECT_ROOT, DEVZONE_ROOT, PROJECT_NAME
 
 
+SECRET_KEY = "RedefineME.%s" % PROJECT_NAME
+
 # Databases
 DATABASES = {
         'default': {
