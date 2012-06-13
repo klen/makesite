@@ -58,6 +58,8 @@ class CommonTest(TestCase):
         self.assertEqual(zeta_scripts, [u'/tmp/main/master/service/zeta_install_update.sh'])
         self.assertEqual(site.get_info(), u'main.master [base,src-dir,virtualenv,django,supervisor,nginx,uwsgi,zeta]')
 
+        self.assertEqual(site['branch'], site['safe_branch'])
+
         site.remove_template('zeta')
         site.run_remove('zeta')
         self.assertEqual(site.get_info(), u'main.master [base,src-dir,virtualenv,django,supervisor,nginx,uwsgi]')

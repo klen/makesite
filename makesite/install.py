@@ -22,6 +22,7 @@ class Installer(MakesiteParser):
 
         self['project'] = args.PROJECT
         self['branch'] = args.branch
+        self['safe_branch'] = self['branch'].replace('/', '-').replace(' ', '-')
         self['makesite_home'] = args.home
         self['deploy_dir'] = mkdtemp()
         self.read([
