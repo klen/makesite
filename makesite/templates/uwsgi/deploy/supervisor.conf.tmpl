@@ -1,4 +1,4 @@
-[program:{{ project }}.{{ branch }}]
+[program:{{ project }}.{{ safe_branch }}]
 command=uwsgi -x {{ uwsgi_source_confpath }}
 user={{ site_user }}
 environment=DJANGO_SETTINGS_MODULE="{{ django_settings }}"

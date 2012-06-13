@@ -27,7 +27,7 @@ class Site(MakesiteParser):
         return "%s [%s]" % (self.get_name(), self.template)
 
     def get_name(self):
-        return "%s.%s" % (self.project, self.branch)
+        return "%s.%s" % (self.project, self.safe_branch)
 
     def run_check(self, template_name=None, service_dir=None):
         print_header('Check requirements', sep='-')
