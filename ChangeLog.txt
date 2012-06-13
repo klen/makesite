@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2012-06-13 0.9.42
+--------------------
+* Added 'safe_branch' option
+
 ## 2012-04-02 0.9.41
 --------------------
 * Update virtualenv template
