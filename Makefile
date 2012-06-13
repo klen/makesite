@@ -21,7 +21,7 @@ _upload:
 _commit:
 	git add .
 	git add . -u
-	git commit
+	git commit || echo 'No commits'
 	git push origin
 	git push intaxi
 
