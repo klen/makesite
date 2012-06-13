@@ -1,4 +1,4 @@
-upstream {{ branch }}.{{ project }}.proxy {
+upstream {{ safe_branch }}.{{ project }}.proxy {
     server 127.0.0.1:{{ int( port ) + 1 }};
     server 127.0.0.1:{{ int( port ) + 2 }};
 }
@@ -28,6 +28,6 @@ server {
         proxy_redirect off;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Scheme $scheme;
-        proxy_pass http://{{ branch }}.{{ project }}.proxy;
+        proxy_pass http://{{ safe_branch }}.{{ project }}.proxy;
     }
 }

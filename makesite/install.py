@@ -35,7 +35,7 @@ class Installer(MakesiteParser):
         assert src, "Not found the source. Use options '-s' or set 'src' in your ini files."
         self['src'] = src
 
-        self.target_dir = args.deploy_dir or op.join(args.home, args.PROJECT, args.branch)
+        self.target_dir = getattr(args, 'deploy_dir', None) or op.join(args.home, self['project'], self['safe_branch'])
         self.templates = ['base']
 
     def clone_source(self):

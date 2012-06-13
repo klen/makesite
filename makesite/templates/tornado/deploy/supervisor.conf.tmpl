@@ -1,4 +1,4 @@
-[program:{{ project }}.{{ branch }}-{{ int( port ) + 1 }}]
+[program:{{ project }}.{{ safe_branch }}-{{ int( port ) + 1 }}]
 command={{ deploy_dir }}/.virtualenv/bin/python {{ source_dir }}/app.py --port={{ int( port ) + 1 }}
 user={{ site_user }}
 stdout_logfile={{ deploy_dir }}/logs/tornado.log
@@ -9,7 +9,7 @@ autorestart=true
 redirect_stderr=true
 stopsignal=QUIT
 
-[program:{{ project }}.{{ branch }}-{{ int( port ) + 2 }}]
+[program:{{ project }}.{{ safe_branch }}-{{ int( port ) + 2 }}]
 command={{ deploy_dir }}/.virtualenv/bin/python {{ source_dir }}/app.py --port={{ int( port ) + 2 }}
 user={{ site_user }}
 stdout_logfile={{ deploy_dir }}/logs/tornado.log

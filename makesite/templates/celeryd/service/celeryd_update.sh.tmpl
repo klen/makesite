@@ -3,7 +3,7 @@
 . $(dirname $0)/utils.sh
 
 # Variables
-SUPERVISOR_PROGRAMM_NAME={{ project }}.{{ branch }}.celeryd
+SUPERVISOR_PROGRAMM_NAME={{ project }}.{{ safe_branch }}.celeryd
 
 # Restart supervisor programm
 echo "Update supervisord for celeryd"

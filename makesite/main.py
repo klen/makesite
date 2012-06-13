@@ -122,17 +122,17 @@ def install(args):
     args.PROJECT = args.PROJECT.replace('-', '_')
 
     args.home = op.abspath(args.path)
-    args.deploy_dir = op.join(args.home, args.PROJECT, args.branch)
 
     # Create engine
     engine = Installer(args)
+    args.deploy_dir = engine.target_dir
 
     # Check dir exists
-    assert args.info or args.repeat or not op.exists(args.deploy_dir), "Path %s exists. Stop deploy." % args.deploy_dir
+    assert args.info or args.repeat or not op.exists(engine.target_dir), "Path %s exists. Stop deploy." % args.deploy_dir
 
     try:
         if args.repeat:
-            site = Site(args.deploy_dir)
+            site = Site(engine.target_dir)
             site.run_install()
             return site
 
