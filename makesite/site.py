@@ -27,7 +27,7 @@ class Site(MakesiteParser):
         return "%s [%s]" % (self.get_name(), self.template)
 
     def get_name(self):
-        return "%s.%s" % (self.project, self.safe_branch)
+        return "%s.%s" % (self.project, self.safe_branch or self.branch)
 
     def run_check(self, template_name=None, service_dir=None):
         print_header('Check requirements', sep='-')
@@ -104,6 +104,10 @@ class Site(MakesiteParser):
     def clean(self):
         print_header('Delete %s' % self.get_name(), sep="-")
         call('sudo rm -rf %s' % self.deploy_dir)
+
+    @property
+    def safe_branch(self):
+        return self['safe_branch'] or self.branch.replace('/', '-').replace(' ', '-')
 
     def _gen_scripts(self, prefix, service_dir=None, template_name=None):
         service_dir = service_dir or self.service_dir or op.join(self.deploy_dir, 'service')
