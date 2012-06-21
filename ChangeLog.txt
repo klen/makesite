@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2012-06-21 0.9.46
+--------------------
+* Fixed dots in branch names
+
 ## 2012-06-13 0.9.44
 --------------------
 * Added 'safe_branch' option
