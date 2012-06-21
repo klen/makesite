@@ -148,5 +148,5 @@ def find_site(path):
             raise
 
         path = path if '.' in path else "%s.master" % path
-        project, branch = path.split('.', 2)
+        project, branch = path.split('.', 1)
         return Site(op.join(settings.MAKESITE_HOME, project, branch))
