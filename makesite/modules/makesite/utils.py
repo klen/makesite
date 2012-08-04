@@ -18,10 +18,10 @@ def read_config(folder):
 
     git_head = op.join(folder, 'source', '.git', 'HEAD')
     if op.exists(git_head):
-        head = open(git_head).read().split()[1]
         try:
+            head = open(git_head).read().split()[1]
             site['revision'] = open(op.join(folder, 'source', '.git', head)).read()
-        except IOError:
+        except (IOError, IndexError):
             return site
     return site
 

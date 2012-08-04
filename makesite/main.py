@@ -160,7 +160,7 @@ def install(args):
         raise
 
 
-def autocomplete(cwords=None, cword=None, force=False):
+def autocomplete(force=False):
     " Shell autocompletion support. "
 
     if 'MAKESITE_AUTO_COMPLETE' not in environ and not force:
@@ -168,11 +168,8 @@ def autocomplete(cwords=None, cword=None, force=False):
 
     commands = filter(lambda cmd: cmd != 'main', ACTIONS.keys())
 
-    if cwords is None:
-        cwords = environ['COMP_WORDS'].split()[1:]
-
-    if cword is None:
-        cword = int(environ['COMP_CWORD'])
+    cwords = environ['COMP_WORDS'].split()[1:]
+    cword = int(environ['COMP_CWORD'])
 
     try:
         current = cwords[cword - 1]
