@@ -1,6 +1,7 @@
 " Production settings must be here. "
 
 from .core import *
+from os import path as op
 
 
 SECRET_KEY = 'SecretKeyForSessionSigning'
@@ -12,6 +13,8 @@ MAIL_USE_SSL = True
 MAIL_USERNAME = 'username@gmail.com'
 MAIL_PASSWORD = '*********'
 DEFAULT_MAIL_SENDER = 'Admin < %s >' % MAIL_USERNAME
+
+COLLECT_STATIC_ROOT = op.join(op.dirname(ROOTDIR), 'static')
 
 ADMINS = frozenset([MAIL_USERNAME])
 
