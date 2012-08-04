@@ -6,14 +6,17 @@ from initools.configparser import ConfigParser, Error
 from subprocess import check_call
 from sys import stdout
 from tempfile import mktemp
+from datetime import datetime
 
 from makesite.settings import CFGNAME, TPLNAME, TPL_DIR, MOD_DIR, VERSION
 
 
-# Log settings
+# Setup loggers
 LOGGER = logging.getLogger('Makesite')
 LOGGER.setLevel(logging.INFO)
-LOGFILE_HANDLER = logging.FileHandler(mktemp())
+LOGFILE_HANDLER = logging.FileHandler(mktemp('.log', 'ms.%s-' % datetime.now().strftime(
+    '%d.%m'
+)))
 LOGGER.addHandler(LOGFILE_HANDLER)
 LOGGER.addHandler(logging.StreamHandler(stdout),)
 
@@ -34,8 +37,10 @@ class MakesiteArgsParser(ArgumentParser):
 
 
 def action(*arguments):
-    parser = MakesiteArgsParser(description="'Makesite' easy control of project structure.")
-    parser.add_argument('-v', '--version', action='version', version=VERSION, help='Show makesite version')
+    parser = MakesiteArgsParser(
+        description="'Makesite' easy control of project structure.")
+    parser.add_argument('-v', '--version', action='version',
+                        version=VERSION, help='Show makesite version')
     for (args, kwargs) in arguments:
         parser.add_argument(*args, **kwargs)
 
@@ -119,16 +124,16 @@ def get_base_modules():
     " Get list of installed modules. "
 
     return sorted(filter(
-            lambda x: op.isdir(op.join(MOD_DIR, x)),
-            listdir(MOD_DIR)))
+                  lambda x: op.isdir(op.join(MOD_DIR, x)),
+                  listdir(MOD_DIR)))
 
 
 def get_base_templates():
     " Get list of installed templates. "
 
     return sorted(filter(
-            lambda x: op.isdir(op.join(TPL_DIR, x)),
-            listdir(TPL_DIR)))
+                  lambda x: op.isdir(op.join(TPL_DIR, x)),
+                  listdir(TPL_DIR)))
 
 
 def print_header(msg, sep='='):

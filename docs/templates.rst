@@ -2,20 +2,43 @@ Templates
 =========
 
 **Template** in makesite - sctructure of files and folders. It will be copied when makesite install project.
-Files in template, parse with makesite options. Service files in template will be launched.
+
+.. contents::
 
 
 Template syntax
 ---------------
 
-In template files you can use simple syntax. ::
+In template files (with extention `.tmpl`), you can use simple syntax. ::
 
     listen      {{ port }};
     server_name {{ domain }};
     access_log  {{ deploy_dir }}/logs/nginx_access.log;
     error_log   {{ deploy_dir }}/logs/nginx_error.log;
 
-Variable context from config and command line options. Each file from template will be processed.
+Context for templates will be created from config files and command line options.
+In target files `.tmpl` will be removed.
+
+
+Template specific files
+-----------------------
+
+Standart structure of makesite template: ::
+
+    template-name
+        deploy -- configuration files
+            ...
+            file1.conf.tmpl -- file will be rendered with template engine
+            file2.conf -- file will be copied as is
+        service -- service install, remove, update files
+        static -- static files
+        ...
+        [ makesite.ini ] -- custom template config (for default values)
+        [ .makesite ] -- separated list of required templates (them will be installed before)
+
+
+.. include:: ../makesite/templates/celery3/docs/celery3.rst
+.. include:: ../makesite/templates/virtualenv/docs/virtualenv.rst
 
 
 List
@@ -177,7 +200,7 @@ List
 
 
     supervisor
-        supervisor_ support.
+        Supervisor_ support.
 
         **default options** ::
             supervisor_target_confpath=/etc/supervisor/conf.d/{{ project }}.{{ branch }}.conf
@@ -242,7 +265,7 @@ List
 .. _compass source: https://github.com/klen/makesite/tree/master/makesite/templates/compass
 
 .. _nginx: http://www.nginx.org/
-.. _supervisor: http://supervisord.org/
+.. _Supervisor: http://supervisord.org/
 .. _git: http://git-scm.com/
 .. _uwsgi: http://projects.unbit.it/uwsgi/
 .. _zeta: https://github.com/klen/zeta-library

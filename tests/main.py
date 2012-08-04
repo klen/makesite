@@ -1,12 +1,15 @@
 from unittest import TestCase
-from os import path as op
-
-from makesite import main
 
 
 class MainTest(TestCase):
 
+    def test_autocompetion(self):
+        from makesite import main
+        main.autocomplete([], 0)
+
     def test_main(self):
+        from makesite import main
+
         main.install(['test', '-m', 'static'])
         main.install(['test', '-m', 'static', '-i'])
         site = main.install(['test', '-m', 'static', '-r'])
@@ -17,6 +20,9 @@ class MainTest(TestCase):
         main.uninstall([site.deploy_dir])
 
     def test_custom(self):
+        from makesite import main
+        from os import path as op
+
         site = main.install(['custom_test', '-s', op.abspath(op.join(op.dirname(__file__), 'custom'))])
         self.assertTrue(site)
         main.uninstall([site['deploy_dir']])
