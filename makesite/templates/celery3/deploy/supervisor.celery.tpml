@@ -1,0 +1,12 @@
+[program:{{ project }}.{{ safe_branch }}.celery3]
+environment=PATH='{{ virtualenvdir }}/bin:$PATH'
+command=celery {{ celery_params }}
+directory={{ deploy_dir }}
+user={{ site_user }}
+stdout_logfile={{ deploy_dir }}/logs/celery.log
+stderr_logfile={{ deploy_dir }}/logs/celery.log
+numprocs=1
+autostart=true
+autorestart=true
+startsecs=10
+stopwaitsecs = 30
