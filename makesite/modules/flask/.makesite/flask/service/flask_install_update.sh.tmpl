@@ -1,0 +1,11 @@
+#!/bin/bash
+
+PYTHON={{ virtualenvdir }}/bin/python
+SOURCEDIR={{ source_dir }}
+USER={{ site_user }}
+GROUP={{ site_group }}
+DEPLOYDIR={{ deploy_dir }}
+
+
+sudo $PYTHON $SOURCEDIR/manage.py collect
+sudo chown $USER:$GROUP -R $DEPLOYDIR

@@ -1,0 +1,1 @@
+Merge accounts with twitter_id, facebook_id, google_id (user model).

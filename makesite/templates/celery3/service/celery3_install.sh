@@ -1,0 +1,13 @@
+#!/bin/bash
+
+source $(dirname $0)/utils.sh
+
+PROGRAMM_NAME=$PROJECT.$SAFE_BRANCH.celery
+CELERY_CONFPATH={{ celery_svconf }}
+
+echo "Create link to supervisor conf: $CELERY_CONFPATH"
+cmd_or_die "sudo ln -sf $DEPLOY_DIR/deploy/supervisor.celery $CELERY_CONFPATH"
+
+echo "Update supervisord for celeryd"
+cmd_or_die "sudo supervisorctl reread"
+cmd_or_die "sudo supervisorctl reload $PROGRAMM_NAME"

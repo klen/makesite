@@ -11,7 +11,8 @@ from makesite.site import Site, gen_sites, find_site
 
 @action((["PATH"], dict(help="Path to site instance.")))
 def info(args):
-    " Show information about installed site. "
+    " Show information about site. "
+
     site = find_site(args.PATH)
     print_header("%s -- install information" % site.get_name())
     print site.get_info(full=True)
@@ -19,12 +20,14 @@ def info(args):
 
 
 @action((["-p", "--path"],
-    dict(help="path to makesite sites instalation dir. you can set it in $makesite_home env variable.",
+         dict(
+        help="path to makesite sites instalation dir. you can set it in $makesite_home env variable.",
         required=not bool(settings.MAKESITE_HOME),
         default=settings.MAKESITE_HOME
-    )))
+        )))
 def ls(args):
-    " Show list of currently installed sites. "
+    " Show list of installed sites. "
+
     print_header("Installed sites:")
     for site in gen_sites(args.path):
         print site.get_info()
@@ -33,7 +36,8 @@ def ls(args):
 
 @action((["PATH"], dict(help="Project path")))
 def update(args):
-    " Update sites "
+    " Update site. "
+
     path = args.PATH
     site = find_site(path)
     return site.run_update()
@@ -42,9 +46,10 @@ def update(args):
 @action(
     (["MODULE"], dict(help="Module name")),
     (["DEST"], dict(help="Destination", default='new_project')),
-    )
+)
 def module(args):
     " Copy module source to current directory. "
+
     mod = op.join(settings.MOD_DIR, args.MODULE)
     assert op.exists(mod), "Not found module: %s" % args.MODULE
     if not args.DEST.startswith(op.sep):
@@ -56,7 +61,8 @@ def module(args):
 
 @action((["PATH"], dict(help="Project path")))
 def uninstall(args):
-    " Uninstall sites "
+    " Uninstall site. "
+
     site = find_site(args.PATH)
     site.run_remove()
     site.clean()
@@ -65,11 +71,12 @@ def uninstall(args):
 
 
 @action(
-        (["ACTION"], dict(help="Choose add or remove operation", choices=("add", "remove"))),
-        (["TEMPLATE"], dict(help="Name of template")),
-        (["PATH"], dict(help="Project path")),)
+    (["ACTION"], dict(help="Choose add or remove operation",
+                      choices=("add", "remove"))),
+    (["TEMPLATE"], dict(help="Name of template")),
+    (["PATH"], dict(help="Project path")),)
 def template(args):
-    " Add or remove templates from site "
+    " Add or remove templates from site. "
     site = Site(args.PATH)
     if args.ACTION == "add":
         return site.add_template(args.TEMPLATE)
@@ -101,8 +108,10 @@ def shell(args):
     )),
     (['-b', '--branch'], dict(help='Name of branch.', default='master')),
     (['-m', '--module'], dict(help="Name of module. Install module.")),
-    (['-r', '--repeat'], dict(action="store_true", default=False, help='Repeat installation.')),
-    (['-i', '--info'], dict(action="store_true", default=False, help='Show project install options and exit.')),
+    (['-r', '--repeat'], dict(
+        action="store_true", default=False, help='Repeat installation.')),
+    (['-i', '--info'], dict(action="store_true", default=False,
+     help='Show project install options and exit.')),
     (['-s', '--src'], dict(help="Source path for installation.")),
     (['-t', '--template'], dict(help="Force templates.")),
     (['-c', '--config'], dict(help='Config file.', default='')),
@@ -128,7 +137,8 @@ def install(args):
     args.deploy_dir = engine.target_dir
 
     # Check dir exists
-    assert args.info or args.repeat or not op.exists(engine.target_dir), "Path %s exists. Stop deploy." % args.deploy_dir
+    assert args.info or args.repeat or not op.exists(
+        engine.target_dir), "Path %s exists. Stop deploy." % args.deploy_dir
 
     try:
         if args.repeat:
@@ -150,12 +160,17 @@ def install(args):
         raise
 
 
-def autocomplete():
-    if 'MAKESITE_AUTO_COMPLETE' not in environ:
+def autocomplete(force=False):
+    " Shell autocompletion support. "
+
+    if 'MAKESITE_AUTO_COMPLETE' not in environ and not force:
         return
+
     commands = filter(lambda cmd: cmd != 'main', ACTIONS.keys())
+
     cwords = environ['COMP_WORDS'].split()[1:]
     cword = int(environ['COMP_CWORD'])
+
     try:
         current = cwords[cword - 1]
     except IndexError:
@@ -169,14 +184,19 @@ def autocomplete():
                     sites = list(gen_sites(settings.MAKESITE_HOME))
                     print ' '.join(site.deploy_dir for site in sites if site.deploy_dir.startswith(current))
                 else:
-                    names = map(lambda s: s.get_name(), gen_sites(settings.MAKESITE_HOME))
-                    print ' '.join(name for name in names if name.startswith(current))
+                    names = map(lambda s: s.get_name(
+                    ), gen_sites(settings.MAKESITE_HOME))
+                    print ' '.join(
+                        name for name in names if name.startswith(current))
         elif sub_action == 'install' and (cwords[-1] == '-m' or (current and cwords[-2] == '-m')):
-            print ' '.join(mod for mod in get_base_modules() if mod.startswith(current))
+            print ' '.join(
+                mod for mod in get_base_modules() if mod.startswith(current))
         elif sub_action == 'install' and (cwords[-1] == '-t' or (current and cwords[-2] == '-t')):
-            print ' '.join(tpl for tpl in get_base_templates() if tpl.startswith(current))
+            print ' '.join(tpl for tpl in get_base_templates(
+            ) if tpl.startswith(current))
         elif sub_action == 'module':
-            print ' '.join(tpl for tpl in get_base_modules() if tpl.startswith(current))
+            print ' '.join(
+                tpl for tpl in get_base_modules() if tpl.startswith(current))
     except IndexError:
         print (' '.join(a for a in commands if a.startswith(current)))
     sys.exit(1)

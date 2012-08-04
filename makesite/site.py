@@ -6,12 +6,15 @@ from tempita import Template
 
 from makesite import settings
 from makesite.core import walklevel, call, print_header, is_exe, MakesiteParser, Error, \
-        gen_template_files, LOGGER
+    gen_template_files, LOGGER, LOGFILE_HANDLER
 
 
 class Site(MakesiteParser):
+    " Operations with site instance. "
 
     def __init__(self, deploy_dir):
+        " Init site options. "
+
         super(Site, self).__init__()
 
         self.deploy_dir = deploy_dir.rstrip(op.sep)
@@ -20,33 +23,59 @@ class Site(MakesiteParser):
         self.templates = self.template.split(',')
 
     def get_info(self, full=False):
+        " Return printable information about current site. "
+
         if full:
             context = self.as_dict()
             return "".join("{0:<25} = {1}\n".format(
-                    key, context[key]) for key in sorted(context.iterkeys()))
+                           key, context[key]) for key in sorted(context.iterkeys()))
         return "%s [%s]" % (self.get_name(), self.template)
 
     def get_name(self):
+        " Return name of site in format: 'project.branch'. "
+
         return "%s.%s" % (self.project, self.safe_branch or self.branch)
 
     def run_check(self, template_name=None, service_dir=None):
+        " Run checking scripts. "
+
         print_header('Check requirements', sep='-')
-        map(call, self._gen_scripts('check', template_name=template_name, service_dir=service_dir))
+        map(call, self._gen_scripts(
+            'check', template_name=template_name, service_dir=service_dir))
         return True
 
     def run_install(self, template_name=None, service_dir=None):
+        " Run instalation scripts. "
+
+        LOGGER.info('Site Install start.')
+        LOGGER.info('Logfile: %s' % LOGFILE_HANDLER.stream.name)
         print_header('Install %s' % self.get_name())
-        map(call, self._gen_scripts('install', template_name=template_name, service_dir=service_dir))
+        map(call, self._gen_scripts(
+            'install', template_name=template_name, service_dir=service_dir))
+        LOGGER.info('Site Install done.')
+        LOGGER.info('Logfile: %s' % LOGFILE_HANDLER.stream.name)
         return True
 
     def run_update(self, template_name=None, service_dir=None):
+        " Run update scripts. "
+
+        LOGGER.info('Site Update start.')
+        LOGGER.info('Logfile: %s' % LOGFILE_HANDLER.stream.name)
         print_header('Update %s' % self.get_name())
-        map(call, self._gen_scripts('update', template_name=template_name, service_dir=service_dir))
+        map(call, self._gen_scripts(
+            'update', template_name=template_name, service_dir=service_dir))
+        LOGGER.info('Site Update done.')
+        LOGGER.info('Logfile: %s' % LOGFILE_HANDLER.stream.name)
         return True
 
     def run_remove(self, template_name=None, service_dir=None):
+        " Run remove scripts. "
+
         print_header('Uninstall %s' % self.get_name())
-        map(call, self._gen_scripts('remove', template_name=template_name, service_dir=service_dir))
+        map(call, self._gen_scripts(
+            'remove', template_name=template_name, service_dir=service_dir))
+        LOGGER.info('Site Remove done.')
+        LOGGER.info('Logfile: %s' % LOGFILE_HANDLER.stream.name)
         return True
 
     def paste_template(self, template_name, template=None, deploy_dir=None):
@@ -80,7 +109,8 @@ class Site(MakesiteParser):
         deploy_tmpdir = mkdtemp()
         self.paste_template(template_name, deploy_dir=deploy_tmpdir)
         call('sudo cp -r %s/* %s' % (deploy_tmpdir, self.deploy_dir))
-        call('sudo chown %s:%s %s' % (self.site_user, self.site_group, self.deploy_dir))
+        call('sudo chown %s:%s %s' % (self.site_user,
+             self.site_group, self.deploy_dir))
         self.templates.append(template_name)
         self['template'] = ','.join(self.templates)
         self.write()
@@ -110,7 +140,8 @@ class Site(MakesiteParser):
         return self['safe_branch'] or self.branch.replace('/', '-').replace(' ', '-')
 
     def _gen_scripts(self, prefix, service_dir=None, template_name=None):
-        service_dir = service_dir or self.service_dir or op.join(self.deploy_dir, 'service')
+        service_dir = service_dir or self.service_dir or op.join(
+            self.deploy_dir, 'service')
         files = sorted(listdir(service_dir))
         for template in self.templates:
             for f in files:
@@ -131,6 +162,8 @@ class Site(MakesiteParser):
 
 
 def gen_sites(path):
+    " Seek sites by path. "
+
     for root, _, _ in walklevel(path, 2):
         try:
             yield Site(root)

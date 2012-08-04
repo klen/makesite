@@ -4,6 +4,7 @@
 
 VIRTUALENVDIR={{ virtualenvdir }}
 PIP_PROJECTFILE={{ pip_projectfile }}
+PIP_OPTIONS="{{ pip_options }}"
 PIP=$VIRTUALENVDIR/bin/pip
 EASY_INSTALL=$VIRTUALENVDIR/bin/easy_install
 
@@ -19,7 +20,7 @@ if [ -f $PIP_PROJECTFILE ]; then
 
     echo "Update virtualenv requirements '$PIP_PROJECTFILE'."
 
-    $PIP install -I -M -r $PIP_PROJECTFILE
+    $PIP install $PIP_OPTIONS -r $PIP_PROJECTFILE 
     cmd_or_die "rm -rf $VIRTUALENVDIR/.reqsum"
     sh -c "md5sum $PIP_PROJECTFILE > $VIRTUALENVDIR/.reqsum"
 else
