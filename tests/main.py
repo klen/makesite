@@ -3,10 +3,6 @@ from unittest import TestCase
 
 class MainTest(TestCase):
 
-    def test_autocompetion(self):
-        from makesite import main
-        main.autocomplete([], 0)
-
     def test_main(self):
         from makesite import main
 

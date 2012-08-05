@@ -1,6 +1,6 @@
-[program:{{ project }}.{{ safe_branch }}.celery3]
+[program:{{ project }}.{{ safe_branch }}.celery]
 environment=PATH='{{ virtualenvdir }}/bin:$PATH'
-command=celery {{ celery_params }}
+command={{ virtualenvdir }}/bin/celery {{ celery_params }}
 directory={{ deploy_dir }}
 user={{ site_user }}
 stdout_logfile={{ deploy_dir }}/logs/celery.log
