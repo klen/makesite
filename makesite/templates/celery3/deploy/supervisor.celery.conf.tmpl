@@ -1,7 +1,7 @@
 [program:{{ project }}.{{ safe_branch }}.celery]
 environment=PATH='{{ virtualenvdir }}/bin:$PATH'
 command={{ virtualenvdir }}/bin/celery {{ celery_params }}
-directory={{ deploy_dir }}
+directory={{ source_dir }}
 user={{ site_user }}
 stdout_logfile={{ deploy_dir }}/logs/celery.log
 stderr_logfile={{ deploy_dir }}/logs/celery.log
