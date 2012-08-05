@@ -1,5 +1,5 @@
 #!/bin/bash
 
-source $(dirname $0)/utils.sh | exit 1
+source $(dirname $0)/utils.sh
 
 check_program psql
