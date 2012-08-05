@@ -1,6 +1,0 @@
-PIP cache
-Remove all sudo calls. Install to target dir.
-Update docs
-Cherokee
-Flask-template
-Add apache mod_wsgi templates
