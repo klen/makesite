@@ -22,7 +22,8 @@ class Installer(MakesiteParser):
 
         self['project'] = args.PROJECT
         self['branch'] = args.branch
-        self['safe_branch'] = self['branch'].replace('/', '-').replace(' ', '-')
+        self['safe_branch'] = self['branch'].replace('/',
+                                                     '-').replace(' ', '-')
         self['makesite_home'] = args.home
         self['deploy_dir'] = mkdtemp()
         self.read([
@@ -35,7 +36,8 @@ class Installer(MakesiteParser):
         assert src, "Not found the source. Use options '-s' or set 'src' in your ini files."
         self['src'] = src
 
-        self.target_dir = getattr(args, 'deploy_dir', None) or op.join(args.home, self['project'], self['safe_branch'])
+        self.target_dir = getattr(args, 'deploy_dir', None) or op.join(
+            args.home, self['project'], self['safe_branch'])
         self.templates = ['base']
 
     def clone_source(self):
@@ -92,15 +94,17 @@ class Installer(MakesiteParser):
 
     def _get_source(self):
         " Get source from CVS or filepath. "
-
         source_dir = op.join(self.deploy_dir, 'source')
         for tp, cmd in settings.SRC_CLONE:
             if self.src.startswith(tp + '+'):
                 program = which(tp)
                 assert program, '%s not found.' % tp
                 cmd = cmd % dict(src=self.src[len(tp) + 1:],
-                        source_dir=source_dir,
-                        branch=self.branch)
+                                 source_dir=source_dir,
+                                 branch=self.branch)
+                user = self["%s_user" % tp]
+                if user:
+                    cmd = "sudo su %s -c \"%s\"" % (user, cmd)
                 call(cmd, shell=True)
                 self.templates.append('src-%s' % tp)
                 break
@@ -116,7 +120,8 @@ class Installer(MakesiteParser):
                 path = self.get('Templates', name)
             except NoOptionError:
                 path = op.join(settings.TPL_DIR, name)
-            assert op.exists(path), "Not found template: '%s (%s)'" % (name, path)
+            assert op.exists(
+                path), "Not found template: '%s (%s)'" % (name, path)
             tplname = op.join(path, settings.TPLNAME)
             if op.exists(tplname):
                 for item in self._gen_templates(open(tplname).read().strip().split(',')):
