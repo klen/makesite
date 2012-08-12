@@ -10,6 +10,7 @@ EASY_INSTALL=$VIRTUALENVDIR/bin/easy_install
 
 # Change rights
 sudo chown -R $USER:$USER $DEPLOY_DIR
+sudo rm -rf /tmp/.pip
 
 echo "Create virtualenv: $VIRTUALENVDIR"
 cmd_or_die "virtualenv --no-site-packages $VIRTUALENVDIR"

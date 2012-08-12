@@ -13,6 +13,7 @@ REQ_SUM=$(md5sum $PIP_PROJECTFILE)
 OLD_REQ_SUM=$(cat $VIRTUALENVDIR/.reqsum)
 
 cmd_or_die "sudo chown -R $USER:$USER $VIRTUALENVDIR"
+sudo rm -rf /tmp/.pip
 
 if [ -f $PIP_PROJECTFILE ]; then
 
