@@ -26,7 +26,7 @@ class Installer(MakesiteParser):
                                                      '-').replace(' ', '-')
         self['makesite_home'] = args.home
         self['deploy_dir'] = mkdtemp()
-        call("chmod a+w %s" % self.deploy_dir, shell=True)
+        call("chmod a+rwx %s" % self.deploy_dir, shell=True)
 
         self.read([
             settings.BASECONFIG, settings.HOMECONFIG,
