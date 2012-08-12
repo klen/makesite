@@ -1,4 +1,4 @@
-from os import path as op
+from os import path as op, environ
 from shutil import copytree
 from tempfile import mkdtemp
 
@@ -41,6 +41,7 @@ class Installer(MakesiteParser):
         self.target_dir = getattr(args, 'deploy_dir', None) or op.join(
             args.home, self['project'], self['safe_branch'])
         self.templates = ['base']
+        self['src_user'] = self['src_user'] or environ.get('USER')
 
     def clone_source(self):
         " Clone source and prepare templates "
@@ -104,9 +105,7 @@ class Installer(MakesiteParser):
                 cmd = cmd % dict(src=self.src[len(tp) + 1:],
                                  source_dir=source_dir,
                                  branch=self.branch)
-                user = self["%s_user" % tp]
-                if user:
-                    cmd = "sudo -u %s %s" % (user, cmd)
+                cmd = "sudo -u %s %s" % (self['src_user'], cmd)
                 call(cmd, shell=True)
                 self.templates.append('src-%s' % tp)
                 break
