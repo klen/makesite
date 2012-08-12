@@ -104,7 +104,7 @@ class Installer(MakesiteParser):
                                  branch=self.branch)
                 user = self["%s_user" % tp]
                 if user:
-                    cmd = "sudo su %s -c \"%s\"" % (user, cmd)
+                    cmd = "sudo -u %s %s" % (user, cmd)
                 call(cmd, shell=True)
                 self.templates.append('src-%s' % tp)
                 break
