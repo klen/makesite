@@ -40,7 +40,7 @@ class Site(MakesiteParser):
         " Run checking scripts. "
 
         print_header('Check requirements', sep='-')
-        map(call, self._gen_scripts(
+        map(lambda cmd: call("bash %s" % cmd), self._gen_scripts(
             'check', template_name=template_name, service_dir=service_dir))
         return True
 
