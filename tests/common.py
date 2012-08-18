@@ -49,18 +49,18 @@ class CommonTest(TestCase):
 
         with self.assertRaises(AssertionError):
             site.add_template('django')
-        # self.assertEqual(site._get_template_path('zeta'), op.join(settings.TPL_DIR, 'zeta'))
-        # site.add_template('zeta')
-        # site.run_install('zeta')
-        # zeta_scripts = list(site._gen_scripts('install', template_name='zeta'))
-        # self.assertEqual(zeta_scripts, [u'/tmp/main/feature-red-alert/service/zeta_install_update.sh'])
-        # self.assertEqual(site.get_info(), u'main.feature-red-alert [base,src-dir,virtualenv,django,supervisor,nginx,uwsgi,zeta]')
+        self.assertEqual(site._get_template_path('zeta'), op.join(settings.TPL_DIR, 'zeta'))
+        site.add_template('zeta')
+        site.run_install('zeta')
+        zeta_scripts = list(site._gen_scripts('install', template_name='zeta'))
+        self.assertEqual(zeta_scripts, [u'/tmp/main/feature-red-alert/service/zeta_install_update.sh'])
+        self.assertEqual(site.get_info(), u'main.feature-red-alert [base,src-dir,virtualenv,django,zeta]')
 
-        # self.assertEqual(site['safe_branch'], 'feature-red-alert')
+        self.assertEqual(site['safe_branch'], 'feature-red-alert')
 
-        # site.remove_template('zeta')
-        # site.run_remove('zeta')
-        # self.assertEqual(site.get_info(), u'main.feature-red-alert [base,src-dir,virtualenv,django,supervisor,nginx,uwsgi]')
+        site.remove_template('zeta')
+        site.run_remove('zeta')
+        self.assertEqual(site.get_info(), u'main.feature-red-alert [base,src-dir,virtualenv,django,supervisor,nginx,uwsgi]')
 
         # Find site
         self.assertTrue(find_site(site.deploy_dir))
