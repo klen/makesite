@@ -120,7 +120,7 @@ def install(args):
     " Install site from sources or module "
 
     # Deactivate virtualenv
-    assert not 'VIRTUAL_ENV' in environ, "Please deactivate virtualenv '%s' first." % environ['VIRTUAL_ENV']
+    # assert not 'VIRTUAL_ENV' in environ, "Please deactivate virtualenv '%s' first." % environ['VIRTUAL_ENV']
 
     # Install from base modules
     if args.module:
