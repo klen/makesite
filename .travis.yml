@@ -9,7 +9,7 @@ branches:
         - develop
 
 before_install:
-    - sudo apt-get install -qq supervisor
+    - sudo apt-get install -qq supervisor nginx
 
 install:
     - pip install -IM pylama
