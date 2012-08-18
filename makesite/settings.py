@@ -18,5 +18,5 @@ MAKESITE_HOME = environ.get('MAKESITE_HOME')
 SRC_CLONE = (
     ('svn', 'svn checkout %(src)s %(source_dir)s'),
     ('git', 'git clone %(src)s %(source_dir)s -b %(branch)s'),
-    ('hg',  'hg clone %(src)s %(source_dir)s'),
+    ('hg', 'hg clone %(src)s %(source_dir)s'),
 )

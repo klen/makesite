@@ -57,7 +57,8 @@ class BaseCoreTest(TestCase):
         role = Role.query.filter(Role.name == 'test').first()
         self.assertEqual(role.name, 'test')
 
-        manager.handle('manage', 'create_user', 'test test@test.com -p 12345'.split())
+        manager.handle(
+            'manage', 'create_user', 'test test@test.com -p 12345'.split())
         user = User.query.filter(User.username == 'test').first()
         manager.handle('manage', 'add_role', 'test test'.split())
         self.assertTrue(role in user.roles)

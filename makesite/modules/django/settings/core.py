@@ -9,22 +9,22 @@ SECRET_KEY = "RedefineME.%s" % PROJECT_NAME
 
 # Databases
 DATABASES = {
-        'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': 'django_master.sqlite',
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'django_master.sqlite',
                 'USER': '',
                 'PASSWORD': '',
                 'TEST_CHARSET': 'utf8',
-            }
-        }
+    }
+}
 
 # Caches
 CACHES = {
-        'default': {
-                'BACKEND':  'django.core.cache.backends.locmem.LocMemCache',
-                'KEY_PREFIX': '_'.join((PROJECT_NAME, 'CORE'))
-            }
-        }
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'KEY_PREFIX': '_'.join((PROJECT_NAME, 'CORE'))
+    }
+}
 
 # Base urls config
 ROOT_URLCONF = 'main.urls'

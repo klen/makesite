@@ -48,8 +48,8 @@ def generate_cache_key(cached, **kwargs):
 
     elif isinstance(cached, (Model, ModelBase)):
         key = '%s.%s:%s' % (cached._meta.app_label,
-                 cached._meta.module_name,
-                 ','.join('%s=%s' % item for item in kwargs.iteritems()))
+                            cached._meta.module_name,
+                            ','.join('%s=%s' % item for item in kwargs.iteritems()))
 
     else:
         raise AttributeError("Objects must be queryset or model.")
@@ -91,7 +91,7 @@ def get_cached(cache_key, func, timeout=None, args=None, kwargs=None):
 
 def _str_to_model(string):
     assert '.' in string, ("'model_class' must be either a model"
-                                " or a model name in the format"
-                                " app_label.model_name")
+                           " or a model name in the format"
+                           " app_label.model_name")
     app_label, model_name = string.split(".")
     return get_model(app_label, model_name)

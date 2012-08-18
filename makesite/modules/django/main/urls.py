@@ -11,14 +11,15 @@ handler404 = page_not_found
 handler500 = server_error
 
 # Project urls
-urlpatterns = patterns( '',
-    url('^$', mainviews.Index.as_view(), name='index'),
-    url('^logout/$', 'django.contrib.auth.views.logout', name='logout'),
-)
+urlpatterns = patterns('',
+                       url('^$', mainviews.Index.as_view(), name='index'),
+                       url('^logout/$',
+                           'django.contrib.auth.views.logout', name='logout'),
+                       )
 
 # Django admin
 admin.autodiscover()
-urlpatterns += [ url(r'^admin/', include(admin.site.urls)), ]
+urlpatterns += [url(r'^admin/', include(admin.site.urls)), ]
 
 # Debug static files serve
 urlpatterns += staticfiles_urlpatterns()

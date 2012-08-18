@@ -1,1 +1,1 @@
-../ChangeLog.txt
+../Changelog

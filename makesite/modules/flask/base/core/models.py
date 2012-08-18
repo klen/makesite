@@ -94,8 +94,8 @@ class BaseMixin(UpdateMixin, TimestampMixin):
         """
         mapper = object_mapper(self)
         return dict([(p.key, self.__getattribute__(p.key)) for
-            p in mapper.iterate_properties if
-            not self.__getattribute__(p.key) is None])
+                     p in mapper.iterate_properties if
+                     not self.__getattribute__(p.key) is None])
 
     @property
     def appstruct(self):

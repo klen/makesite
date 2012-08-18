@@ -23,3 +23,5 @@ CACHES['default']['KEY_PREFIX'] = '_'.join((PROJECT_NAME, 'PRJ'))
 TEMPLATE_LOADERS = (
     ('django.template.loaders.cached.Loader', TEMPLATE_LOADERS),
 )
+
+# pymode:lint_ignore=W404

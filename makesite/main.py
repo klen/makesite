@@ -182,7 +182,8 @@ def autocomplete(force=False):
             if settings.MAKESITE_HOME:
                 if not current or current.startswith('/'):
                     sites = list(gen_sites(settings.MAKESITE_HOME))
-                    print ' '.join(site.deploy_dir for site in sites if site.deploy_dir.startswith(current))
+                    print ' '.join(site.deploy_dir for site in sites if site.
+                                   deploy_dir.startswith(current))
                 else:
                     names = map(lambda s: s.get_name(
                     ), gen_sites(settings.MAKESITE_HOME))

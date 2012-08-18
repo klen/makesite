@@ -3,3 +3,4 @@
 
 # Base tests
 from main.tests.base import BaseTestCase
+assert BaseTestCase
