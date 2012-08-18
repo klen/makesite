@@ -8,11 +8,9 @@ branches:
         - master
         - develop
 
-before_install:
-    - sudo apt-get install -qq nginx
-
 install:
+    - sudo apt-get install -qq nginx
+    - pip install -IM zetalibrary
     - pip install -IM pylama
 
 script: make test
-
