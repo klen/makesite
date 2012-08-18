@@ -1,3 +1,7 @@
+2012-08-18  klen
+
+	* Integrate with travis
+
 2012-08-21 0.9.62  klen
 
 	* 'git_user', 'hg_user' and etc support
