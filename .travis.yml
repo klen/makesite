@@ -8,6 +8,9 @@ branches:
         - master
         - develop
 
+before_install:
+    - sudo apt-get install -qq supervisor
+
 install:
     - pip install -IM pylama
 
