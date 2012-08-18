@@ -60,7 +60,7 @@ class CommonTest(TestCase):
 
         site.remove_template('zeta')
         site.run_remove('zeta')
-        self.assertEqual(site.get_info(), u'main.feature-red-alert [base,src-dir,virtualenv,django,supervisor,nginx,uwsgi]')
+        self.assertEqual(site.get_info(), u'main.feature-red-alert [base,src-dir,virtualenv,django]')
 
         # Find site
         self.assertTrue(find_site(site.deploy_dir))
