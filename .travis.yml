@@ -9,7 +9,7 @@ branches:
         - develop
 
 before_install:
-    - sudo apt-get install -qq supervisor nginx
+    - sudo apt-get install -qq supervisor nginx uwsgi
 
 install:
     - pip install -IM pylama
