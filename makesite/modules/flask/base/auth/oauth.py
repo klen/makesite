@@ -76,7 +76,8 @@ class OAuthTwitter(OAuthBase):
 
         user = current_user
         if not user.is_authenticated():
-            user = User.query.filter(User.username == resp['screen_name']).first()
+            user = User.query.filter(
+                User.username == resp['screen_name']).first()
 
             if user is None:
                 user = User(

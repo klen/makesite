@@ -12,7 +12,7 @@ EXPRESSION_NODE_CALLBACKS = {
     ExpressionNode.MOD: operator.mod,
     ExpressionNode.AND: operator.and_,
     ExpressionNode.OR: operator.or_,
-    }
+}
 
 
 class CannotResolve(Exception):
@@ -58,7 +58,8 @@ def update(instance, full_clean=True, post_save=False, **kwargs):
         if hasattr(field, 'auto_now') and field.auto_now and field.name not in kwargs:
             kwargs[field.name] = field.pre_save(instance, False)
 
-    rows_affected = instance.__class__._default_manager.filter(pk=instance.pk).update(**kwargs)
+    rows_affected = instance.__class__._default_manager.filter(
+        pk=instance.pk).update(**kwargs)
 
     if post_save:
         signals.post_save.send(sender=instance.__class__, instance=instance)
@@ -102,4 +103,4 @@ class Choices(object):
         values, names = zip(*self._choices)
         labels = self._labels.itervalues()
         return '%s(%s)' % (self.__class__.__name__,
-                repr(zip(values, labels, names)))
+                           repr(zip(values, labels, names)))

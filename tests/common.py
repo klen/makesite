@@ -11,7 +11,7 @@ class CommonTest(TestCase):
 
     def test_site(self):
         args = FakeArgs(
-            template='django,uwsgi',
+            template='django',
             branch='feature/red-alert',
             src=op.join(settings.MOD_DIR, 'django'),
         )
@@ -25,7 +25,7 @@ class CommonTest(TestCase):
         engine.clone_source()
         self.assertTrue(op.isdir(op.join(engine.deploy_dir, 'source')))
         self.assertTrue(op.isfile(op.join(engine.deploy_dir, 'source', 'Makefile')))
-        self.assertEqual(engine.template, 'base,src-dir,virtualenv,django,supervisor,nginx,uwsgi')
+        self.assertEqual(engine.template, 'base,src-dir,virtualenv,django')
         self.assertEqual(engine.target_dir, op.join(args.home, args.PROJECT, args.branch.replace('/', '-')))
         self.assertEqual(engine.django_settings, 'settings.dev')
         self.assertEqual(engine.templates, [
@@ -33,9 +33,6 @@ class CommonTest(TestCase):
             ('src-dir', op.join(settings.TPL_DIR, 'src-dir')),
             ('virtualenv', op.join(settings.TPL_DIR, 'virtualenv')),
             ('django', op.join(settings.TPL_DIR, 'django')),
-            ('supervisor', op.join(settings.TPL_DIR, 'supervisor')),
-            ('nginx', op.join(settings.TPL_DIR, 'nginx')),
-            ('uwsgi', op.join(settings.TPL_DIR, 'uwsgi')),
         ])
         self.assertTrue(op.isfile(op.join(engine.deploy_dir, settings.TPLNAME)))
         self.assertTrue(op.isfile(op.join(engine.deploy_dir, 'service', 'django_install.sh')))
@@ -47,7 +44,7 @@ class CommonTest(TestCase):
         # Init site
         site = Site(engine.target_dir)
         self.assertEqual(site.get_name(), u'main.feature-red-alert')
-        self.assertEqual(site.get_info(), u'main.feature-red-alert [base,src-dir,virtualenv,django,supervisor,nginx,uwsgi]')
+        self.assertEqual(site.get_info(), u'main.feature-red-alert [base,src-dir,virtualenv,django]')
         self.assertTrue('www-data' in site.get_info(full=True))
 
         with self.assertRaises(AssertionError):
@@ -57,13 +54,13 @@ class CommonTest(TestCase):
         site.run_install('zeta')
         zeta_scripts = list(site._gen_scripts('install', template_name='zeta'))
         self.assertEqual(zeta_scripts, [u'/tmp/main/feature-red-alert/service/zeta_install_update.sh'])
-        self.assertEqual(site.get_info(), u'main.feature-red-alert [base,src-dir,virtualenv,django,supervisor,nginx,uwsgi,zeta]')
+        self.assertEqual(site.get_info(), u'main.feature-red-alert [base,src-dir,virtualenv,django,zeta]')
 
         self.assertEqual(site['safe_branch'], 'feature-red-alert')
 
         site.remove_template('zeta')
         site.run_remove('zeta')
-        self.assertEqual(site.get_info(), u'main.feature-red-alert [base,src-dir,virtualenv,django,supervisor,nginx,uwsgi]')
+        self.assertEqual(site.get_info(), u'main.feature-red-alert [base,src-dir,virtualenv,django]')
 
         # Find site
         self.assertTrue(find_site(site.deploy_dir))

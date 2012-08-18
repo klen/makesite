@@ -14,3 +14,5 @@ DATABASES = {
 # Caches
 CACHES['default']['BACKEND'] = 'django.core.cache.backends.locmem.LocMemCache'
 CACHES['default']['KEY_PREFIX'] = '_'.join((PROJECT_NAME, 'TST'))
+
+# pymode:lint_ignore=W404

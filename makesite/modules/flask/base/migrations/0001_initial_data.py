@@ -11,8 +11,8 @@ class Migration(BaseMigration):
         staff = Role(name='staff')
 
         user = User(username='admin',
-                email='admin@admin.com',
-                pw_hash='admin')
+                    email='admin@admin.com',
+                    pw_hash='admin')
 
         user.roles.append(admin)
         user.roles.append(staff)

@@ -18,4 +18,5 @@ else:
     V = dict()
 
 
-PROJECT_NAME = "%s.%s" % (V.get('project', 'undefined'), V.get('branch', 'master'))
+PROJECT_NAME = "%s.%s" % (
+    V.get('project', 'undefined'), V.get('branch', 'master'))

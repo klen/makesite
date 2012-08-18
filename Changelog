@@ -1,0 +1,266 @@
+2012-08-18  klen
+
+	* Integrate with travis
+
+2012-08-21 0.9.62  klen
+
+	* 'git_user', 'hg_user' and etc support
+
+2012-08-05 0.9.53  klen
+
+	* Add flask module
+
+2012-06-21 0.9.46  klen
+
+	* Fixed dots in branch names
+
+2012-06-13 0.9.44  klen
+
+	* Added 'safe_branch' option
+
+2012-04-02 0.9.41  klen
+
+	* Update virtualenv template
+
+2012-03-28 0.9.40  klen
+
+	* Django 1.4 module support
+
+2012-03-22 0.9.35  klen
+
+	* More install information
+
+2012-03-19 0.9.33  klen
+
+	* Tempita as template engine
+	* Only .tpml files parsed as templates
+	* Some fixes
+
+2011-11-25 0.9.22  klen
+
+	* Echo check errors to stderr.
+
+2011-11-23 0.9.18  klen
+
+	* Fix check requirements
+
+2011-11-16 0.9.15  klen
+
+	* Big code refactoring (no backward compatibility!) 
+	* Add copy source from module
+	* Add (append and remove templates)
+	* Add shell integration
+
+2011-11-06 0.8.76  klen
+
+	* Add information about installed templates
+
+2011-10-27 0.8.74  klen
+
+	* Update uwsgi config
+
+2011-10-21 0.8.5  klen
+
+	* Some upgrades django module.
+
+2011-10-13 0.8.2  klen
+
+	* Add hg support
+	* Add svn support
+	* Add test mysql support
+
+2011-09-30 0.7.35  klen
+
+	* Drop auto installation from templates
+
+2011-06-02 0.7.19  klen
+
+	* Add pgport to postgres template
+
+2011-06-02 0.7.18  klen
+
+	* Remove auto cache setup from settigns.
+
+2011-05-30 0.7.17  klen
+
+	* Configurable nginx template
+	* Configurable supervisor template
+	* Change uwsgi params
+
+2011-03-30 0.7.13  klen
+
+	* Fix version 0.7.11 bug
+
+2011-03-29 0.7.11  klen
+
+	* Add `append` option to makesite
+	* Add support for 'bin' folder in templates (files from this folder
+	are copied as-is), template rendering transformations are not applied)
+
+2011-03-23 0.6.9  klen
+
+	* Migrate to Django 1.3 in django module
+
+2011-03-18 0.6.8  klen
+
+	* Move template options to templates
+
+2011-03-16 0.6.71  klen
+
+	* More debian compatability
+
+2011-03-16 0.6.7  klen
+
+	* Fix celeryd config (Also run the celerybeat periodic task scheduler)
+
+2011-03-16 0.6.6  klen
+
+	* Fix virtualenv update script (chown was broken)
+
+2011-03-10 0.6.51  klen
+
+	* Migrate to argparse
+
+2011-03-09 0.6.4  klen
+
+	* Fix django settings define in uwsgi and django configs
+
+2011-03-04 0.6.2  klen
+
+	* Fix celeryd template
+
+2011-02-27 0.6.1  klen
+
+	* Add html template
+
+2011-02-18 0.5.96  klen
+
+	* Auto install memcached if HOST is localhost and this not install
+	* Fix makesite module
+	* Drop dummy module
+	* Add static module
+	* Fix src bug
+
+2011-02-14 0.5.2  klen
+
+	* Create documentation
+
+2011-02-14 0.5.1  klen
+
+	* Add tornado template
+	* Change django, uwsgi template
+
+2011-02-14 0.5.0  klen
+
+	* New makesite deploy logic
+
+2011-02-09 0.4.6  klen
+	* Drop parse .db for django module
+	* Add dev, project mode option
+	* Enable cached templates for django module
+
+2011-02-07 0.4.0  klen
+	* Fix base run service script
+
+2011-02-02 0.3.9  klen
+	* Fix makesite-web template
+	* Fix siteinfo command
+	* Add ckeck path exists in project deploy
+
+2011-01-31 0.3.4  klen
+	* Add dummy module, optimize django module
+	* Improve bash autocomplete
+
+2011-01-27 0.3.2  klen
+	* New makesite-web template
+
+2011-01-27 0.3.0  klen
+	* Fix templates
+
+2011-01-26 0.2.93  klen
+	* Another fix celeryd (debya.msk@gmail.com)
+
+2011-01-24 0.2.92  klen
+	* Add worksite command
+	* envsite now check directory
+
+2011-01-23 0.2.91  klen
+	* Fix virtualenv template (denya.msk@gmail.com)
+
+2011-01-21 0.2.9  klen
+	* Add celeryd template and fix template scripts (denya.msk@gmail.com)
+
+2011-01-19 0.2.7  klen
+	* Fix 404 and 500 templates in django module
+
+2010-12-27 0.2.5  klen
+	* Fix compass and src-dir templates
+
+2010-12-26 0.2.3  klen
+	* Add django module
+
+2010-12-16 0.2.2  klen
+	* Cosmetic updates in makesite-web
+	* Public in pypi
+	* Rename project from sitegen to makesite
+	* Fix makesite-web and wsgi module
+
+2010-12-16 0.1.7  klen
+	* Add modules support
+	* Add sitegen-web module
+
+2010-12-14 0.1.6  klen
+	* Add autoinstall git, virtualenv and etc
+
+2010-11-22 0.1.5  klen
+	* Add testsite
+
+2010-11-18 0.1.4  klen
+	* Add django, cron, postgres template
+
+2010-11-16 0.1.3  klen
+	* Rename sitegenupdate to updatesite
+	* Change bash complete
+	* Add removesite, drop options -d
+	* Drop tempita
+
+2010-11-16 0.1.2  klen
+	* Add sitegenupdate
+
+2010-11-13 0.1.1  klen
+	* Add update templates
+
+2010-11-13 0.1  klen
+	* Change template engine from tempita to pyratemp
+
+2010-11-13 0.09  klen
+	* Drop -l options
+	* Add sitegen wrapper ( lssites, cdsite, envsite )
+
+2010-11-13 0.08  klen
+	* Add $SITEGEN_SITES_PATH parsing
+	* Sitegen now run from current user ( without sudo )
+
+2010-11-12 0.07  klen
+	* Add option --path - required options (path to projects dir)
+	* Now ini file also parsed from project_dir/sitegen.ini
+
+2010-11-12 0.06  klen
+	* Add tempita template engine
+
+2010-11-12 0.05  klen
+	* Add restart template
+
+2010-11-11 0.04  klen
+	* Add pip template
+
+2010-11-11 0.03  klen
+	* Add listing project
+	* Add git template
+
+2010-11-11 0.02  klen
+	* Remove project dir if it empty
+	* Add virtualenv support to uwsgi template
+
+2010-11-10 0.01  klen
+	* First public version.

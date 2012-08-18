@@ -4,7 +4,7 @@ from shutil import copytree
 from subprocess import CalledProcessError
 
 from makesite import settings
-from makesite.core import ACTIONS, action, print_header, call, get_base_modules, get_base_templates, LOGFILE_HANDLER
+from makesite.core import ACTIONS, action, print_header, call, get_base_modules, get_base_templates, LOGFILE_HANDLER, LOGGER
 from makesite.install import Installer
 from makesite.site import Site, gen_sites, find_site
 
@@ -120,7 +120,8 @@ def install(args):
     " Install site from sources or module "
 
     # Deactivate virtualenv
-    assert not 'VIRTUAL_ENV' in environ, "Please deactivate virtualenv '%s' first." % environ['VIRTUAL_ENV']
+    if 'VIRTUAL_ENV' in environ:
+        LOGGER.warning('Virtualenv enabled: %s' % environ['VIRTUAL_ENV'])
 
     # Install from base modules
     if args.module:
@@ -182,7 +183,8 @@ def autocomplete(force=False):
             if settings.MAKESITE_HOME:
                 if not current or current.startswith('/'):
                     sites = list(gen_sites(settings.MAKESITE_HOME))
-                    print ' '.join(site.deploy_dir for site in sites if site.deploy_dir.startswith(current))
+                    print ' '.join(site.deploy_dir for site in sites if site.
+                                   deploy_dir.startswith(current))
                 else:
                     names = map(lambda s: s.get_name(
                     ), gen_sites(settings.MAKESITE_HOME))
