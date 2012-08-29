@@ -1,12 +1,13 @@
 import sys
+from datetime import datetime
 from os import path as op, environ, listdir, getcwd
 from shutil import copytree
 from subprocess import CalledProcessError
 
-from makesite import settings
-from makesite.core import ACTIONS, action, print_header, call, get_base_modules, get_base_templates, LOGFILE_HANDLER, LOGGER
-from makesite.install import Installer
-from makesite.site import Site, gen_sites, find_site
+from . import settings
+from .core import ACTIONS, action, print_header, call, get_base_modules, get_base_templates, LOGFILE_HANDLER, LOGGER
+from .install import Installer
+from .site import Site, gen_sites, find_site
 
 
 @action((["PATH"], dict(help="Path to site instance.")))
@@ -15,7 +16,7 @@ def info(args):
 
     site = find_site(args.PATH)
     print_header("%s -- install information" % site.get_name())
-    print site.get_info(full=True)
+    LOGGER.debug(site.get_info(full=True))
     return True
 
 
@@ -30,7 +31,7 @@ def ls(args):
 
     print_header("Installed sites:")
     for site in gen_sites(args.path):
-        print site.get_info()
+        LOGGER.debug(site.get_info())
     return True
 
 
@@ -56,7 +57,6 @@ def module(args):
         args.DEST = op.join(getcwd(), args.DEST)
     print_header("Copy module source")
     copytree(mod, args.DEST)
-    print "Done: %s" % args.DEST
 
 
 @action((["PATH"], dict(help="Project path")))
@@ -156,8 +156,8 @@ def install(args):
         return site
 
     except (CalledProcessError, AssertionError):
-        print "Installation failed"
-        print "Fix errors and repeat installation with (-r) or run 'makesite uninstall %s' for cancel." % args.deploy_dir
+        LOGGER.error("Installation failed")
+        LOGGER.error("Fix errors and repeat installation with (-r) or run 'makesite uninstall %s' for cancel." % args.deploy_dir)
         raise
 
 
@@ -204,15 +204,21 @@ def autocomplete(force=False):
     sys.exit(1)
 
 
-@action((["action"], dict(choices=ACTIONS.keys(), help="Choose action: %s" % ', '.join(ACTIONS.keys()))))
+@action((["action"], dict(choices=ACTIONS.keys(), help="Choose action: %s" % ', '.join(ACTIONS.keys()))),)
 def main(args):
     " Base dispather "
     try:
+        start = datetime.now()
+        LOGGER.info('MAKESITE Version %s' % settings.VERSION)
+        LOGGER.info('Started at %s' % start.strftime("%Y-%m-%d %H:%M:%S"))
+        LOGGER.info('Logfile: %s' % LOGFILE_HANDLER.stream.name)
+        LOGGER.info('-' * 60 + "\n")
         func = ACTIONS.get(args.action)
         func(sys.argv[2:])
+        LOGGER.info("OPERATION SUCCESSFUL")
     except (AssertionError, CalledProcessError), e:
-        sys.stderr.write('\n' + str(e))
-        print "\nSee log: %s" % LOGFILE_HANDLER.stream.name
+        LOGGER.error("OPERATION FAILED - %s" % str(e))
+        LOGGER.error("See log: %s" % LOGFILE_HANDLER.stream.name)
         sys.exit(1)
 
 

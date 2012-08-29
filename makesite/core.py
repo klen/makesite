@@ -8,17 +8,34 @@ from sys import stdout
 from tempfile import mktemp
 from datetime import datetime
 
-from makesite.settings import CFGNAME, TPLNAME, TPL_DIR, MOD_DIR, VERSION
+from .settings import CFGNAME, TPLNAME, TPL_DIR, MOD_DIR, VERSION
+from . import terminal
 
 
-# Setup loggers
 LOGGER = logging.getLogger('Makesite')
 LOGGER.setLevel(logging.INFO)
-LOGFILE_HANDLER = logging.FileHandler(mktemp('.log', 'ms.%s-' % datetime.now().strftime(
-    '%d.%m'
-)))
+LOGFILE_HANDLER = logging.FileHandler(
+    mktemp('.log', 'ms.%s-' % datetime.now().strftime('%d.%m')))
 LOGGER.addHandler(LOGFILE_HANDLER)
-LOGGER.addHandler(logging.StreamHandler(stdout),)
+
+
+class ColoredFormater(logging.Formatter):
+    def format(self, record):
+        s = super(ColoredFormater, self).format(record)
+        if record.levelno == logging.DEBUG:
+            return terminal.italic(s)
+        if record.levelno == logging.INFO:
+            return terminal.bold(s)
+        if record.levelno == logging.WARN:
+            return terminal.styled_text(
+                "[WARN] " + s, terminal.BOLD, terminal.fg(terminal.BROWN))
+        return terminal.styled_text(
+            s, terminal.BOLD, terminal.fg(terminal.RED))
+
+STREAM_HANDLER = logging.StreamHandler(stdout)
+STREAM_HANDLER.setFormatter(ColoredFormater())
+LOGGER.addHandler(STREAM_HANDLER)
+LOGGER.setLevel(logging.DEBUG)
 
 
 ACTIONS = dict()
@@ -28,11 +45,10 @@ class MakesiteArgsParser(ArgumentParser):
 
     def error(self, message):
         self.print_usage(sys.stderr)
-        print "\nInstalled templates:"
-        print " ".join(get_base_templates())
-        print "\nInstalled modules:"
-        print " ".join(get_base_modules())
-        print
+        LOGGER.info("\nInstalled templates:")
+        LOGGER.debug(" ".join(get_base_templates()))
+        LOGGER.info("\nInstalled modules:")
+        LOGGER.debug(" ".join(get_base_modules()) + "\n")
         self.exit(2, '%s: error: %s\n' % (self.prog, message))
 
 
@@ -161,7 +177,7 @@ def which(program):
 def call(cmd, shell=True, **kwargs):
     " Run shell command. "
 
-    LOGGER.info("Cmd: %s" % cmd)
+    LOGGER.debug("Cmd: %s" % cmd)
     check_call(cmd, shell=shell, stdout=LOGFILE_HANDLER.stream, **kwargs)
 
 
