@@ -1,12 +1,11 @@
 from os import path as op, listdir, makedirs, remove
+
 from shutil import copy2
 from tempfile import mkdtemp
-
 from tempita import Template
 
 from makesite import settings
-from makesite.core import walklevel, call, print_header, is_exe, MakesiteParser, Error, \
-    gen_template_files, LOGGER, LOGFILE_HANDLER
+from makesite.core import walklevel, call, print_header, is_exe, MakesiteParser, Error, gen_template_files, LOGGER
 
 
 class Site(MakesiteParser):
@@ -48,24 +47,20 @@ class Site(MakesiteParser):
         " Run instalation scripts. "
 
         LOGGER.info('Site Install start.')
-        LOGGER.info('Logfile: %s' % LOGFILE_HANDLER.stream.name)
         print_header('Install %s' % self.get_name())
         map(call, self._gen_scripts(
             'install', template_name=template_name, service_dir=service_dir))
         LOGGER.info('Site Install done.')
-        LOGGER.info('Logfile: %s' % LOGFILE_HANDLER.stream.name)
         return True
 
     def run_update(self, template_name=None, service_dir=None):
         " Run update scripts. "
 
         LOGGER.info('Site Update start.')
-        LOGGER.info('Logfile: %s' % LOGFILE_HANDLER.stream.name)
         print_header('Update %s' % self.get_name())
         map(call, self._gen_scripts(
             'update', template_name=template_name, service_dir=service_dir))
         LOGGER.info('Site Update done.')
-        LOGGER.info('Logfile: %s' % LOGFILE_HANDLER.stream.name)
         return True
 
     def run_remove(self, template_name=None, service_dir=None):
@@ -75,13 +70,12 @@ class Site(MakesiteParser):
         map(call, self._gen_scripts(
             'remove', template_name=template_name, service_dir=service_dir))
         LOGGER.info('Site Remove done.')
-        LOGGER.info('Logfile: %s' % LOGFILE_HANDLER.stream.name)
         return True
 
     def paste_template(self, template_name, template=None, deploy_dir=None):
         " Paste template. "
 
-        LOGGER.info("Paste template: %s" % template_name)
+        LOGGER.debug("Paste template: %s" % template_name)
         deploy_dir = deploy_dir or self.deploy_dir
         template = template or self._get_template_path(template_name)
         self.read([op.join(template, settings.CFGNAME)], extending=True)

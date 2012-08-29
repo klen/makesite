@@ -77,7 +77,7 @@ class Installer(MakesiteParser):
         # Create site
         if self.args.info:
             print_header('Project context', sep='-')
-            LOGGER.info(site.get_info(full=True))
+            LOGGER.debug(site.get_info(full=True))
             return None
 
         # Check requirements
