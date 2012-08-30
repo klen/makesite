@@ -5,3 +5,6 @@ from makesite import settings
 
 
 settings.MAKESITE_HOME = op.dirname(mkdtemp())
+
+from .common import *
+from .main import *

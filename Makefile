@@ -22,6 +22,10 @@ upload: doc
 test:
 	python setup.py test
 
+.PHONY: tox
+tox: .tox tox.ini
+	tox
+
 .PHONY: audit
 audit:
 	pylama $(MODULE) -i E501
