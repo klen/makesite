@@ -21,7 +21,7 @@ LOGGER.addHandler(LOGFILE_HANDLER)
 
 class ColoredFormater(logging.Formatter):
     def format(self, record):
-        s = super(ColoredFormater, self).format(record)
+        s = logging.Formatter.format(self, record)
         if record.levelno == logging.DEBUG:
             return terminal.italic(s)
         if record.levelno == logging.INFO:
