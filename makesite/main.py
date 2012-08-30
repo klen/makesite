@@ -212,12 +212,12 @@ def main(args):
         LOGGER.info('MAKESITE Version %s' % settings.VERSION)
         LOGGER.info('Started at %s' % start.strftime("%Y-%m-%d %H:%M:%S"))
         LOGGER.info('Logfile: %s' % LOGFILE_HANDLER.stream.name)
-        LOGGER.info('-' * 60 + "\n")
+        LOGGER.info('-' * 60)
         func = ACTIONS.get(args.action)
         func(sys.argv[2:])
-        LOGGER.info("OPERATION SUCCESSFUL")
+        LOGGER.info("\nOPERATION SUCCESSFUL")
     except (AssertionError, CalledProcessError), e:
-        LOGGER.error("OPERATION FAILED - %s" % str(e))
+        LOGGER.error("\nOPERATION FAILED - %s" % str(e))
         LOGGER.error("See log: %s" % LOGFILE_HANDLER.stream.name)
         sys.exit(1)
 
