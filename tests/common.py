@@ -1,4 +1,5 @@
 from os import path as op
+from sys import version_info
 from unittest import TestCase
 
 from makesite.install import Installer
@@ -47,8 +48,10 @@ class CommonTest(TestCase):
         self.assertEqual(site.get_info(), u'main.feature-red-alert [base,src-dir,virtualenv,django]')
         self.assertTrue('www-data' in site.get_info(full=True))
 
-        with self.assertRaises(AssertionError):
-            site.add_template('django')
+        if version_info >= (2,7):
+            with self.assertRaises(AssertionError):
+                site.add_template('django')
+
         self.assertEqual(site._get_template_path('zeta'), op.join(settings.TPL_DIR, 'zeta'))
         site.add_template('zeta')
         site.run_install('zeta')
