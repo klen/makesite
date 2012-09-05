@@ -8,9 +8,9 @@ PGPASSWORD={{ pgpassword }}
 PGHOST={{ pghost }}
 PGPORT={{ pgport }}
 PSQL="psql -At"
-DBNAME={{ db_name }}
-DBUSER={{ db_user }}
-DBPASSWORD={{ db_password }}
+DBNAME={{ dbname }}
+DBUSER={{ dbuser }}
+DBPASSWORD={{ dbpassword }}
 
 if [ -z "$PGUSER" ] || [ -z $PGHOST ] || [ -z $PGPASSWORD ]; then
     # pass
