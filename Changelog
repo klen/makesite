@@ -1,3 +1,8 @@
+2012-09-07  klen
+
+	* Add remote command by ssh (-H)
+	* Add bulk update
+
 2012-08-30  klen
 
 	* Upgrade terminal
