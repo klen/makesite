@@ -58,4 +58,7 @@ class MakesiteParser(ConfigParser):
         filenames = filter(op.exists, filenames)
         if not filenames:
             return False
-        return super(MakesiteParser, self).read(filenames, extending=extending, map_sections=map_sections)
+        try:
+            return super(MakesiteParser, self).read(filenames, extending=extending, map_sections=map_sections)
+        except Exception:
+            return False

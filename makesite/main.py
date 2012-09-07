@@ -317,7 +317,7 @@ def console():
     config.read([
         settings.BASECONFIG, settings.HOMECONFIG,
         op.join(settings.MAKESITE_HOME or '', settings.CFGNAME),
-        op.join(op.dirname(__file__), settings.CFGNAME),
+        op.join(op.curdir, settings.CFGNAME),
     ])
     argv = []
     alias = dict(config.items('alias'))
