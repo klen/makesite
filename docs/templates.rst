@@ -4,6 +4,7 @@ Templates
 **Template** in makesite - sctructure of files and folders. It will be copied when makesite install project.
 
 .. contents::
+    :depth: 2
 
 
 Template syntax
@@ -38,7 +39,20 @@ Standart structure of makesite template: ::
 
 
 .. include:: ../makesite/templates/celery3/docs/celery3.rst
+
+----
+
 .. include:: ../makesite/templates/virtualenv/docs/virtualenv.rst
+
+----
+
+.. include:: ../makesite/templates/db-mysql/docs/db-mysql.rst
+
+----
+
+.. include:: ../makesite/templates/db-postgres/docs/db-postgres.rst
+
+----
 
 
 List

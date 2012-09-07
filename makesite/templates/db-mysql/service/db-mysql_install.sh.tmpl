@@ -3,15 +3,15 @@
 . $(dirname $0)/utils.sh
 
 # Variables
-DBUSER={{ db_user }}
-DBPASSWORD={{ db_password }}
-DBNAME={{ db_name }}
+DBUSER={{ dbuser }}
+DBPASSWORD={{ dbpassword }}
+DBNAME={{ dbname }}
 
-HOST={{ mysql_host }}
-PORT={{ mysql_port }}
+HOST={{ mysqlhost }}
+PORT={{ mysqlport }}
 CLIENT="mysql"
-USER={{ mysql_user }}
-PASSWORD={{ mysql_password }}
+USER={{ mysqluser }}
+PASSWORD={{ mysqlpassword }}
 
 if [ -z "$USER" ] || [ -z $HOST ] || [ -z $PASSWORD ]; then
     # pass

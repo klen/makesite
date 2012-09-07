@@ -15,7 +15,7 @@ import sys, os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from makesite import version, AUTHOR
+from makesite import version, __author__
 
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -46,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'makesite'
-copyright = AUTHOR
+copyright = __author__
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

@@ -5,15 +5,15 @@ from sys import version_info
 
 from setuptools import setup, find_packages
 
-from makesite import version, PROJECT, LICENSE
+from makesite import __version__, __project__, __license__
 
 
 PACKAGE_DATA = ['*.ini', '*.sh']
 
 for folder in ['templates', 'modules']:
-    for root, dirs, files in os.walk(os.path.join(PROJECT, folder)):
+    for root, dirs, files in os.walk(os.path.join(__project__, folder)):
         for filename in files:
-            PACKAGE_DATA.append("%s/%s" % (root[len(PROJECT) + 1:], filename))
+            PACKAGE_DATA.append("%s/%s" % (root[len(__project__) + 1:], filename))
 
 
 def read(fname):
@@ -29,9 +29,9 @@ if version_info < (2, 7):
 
 
 META_DATA = dict(
-    name=PROJECT,
-    version=version,
-    license=LICENSE,
+    name=__project__,
+    version=__version__,
+    license=__license__,
     description=read('DESCRIPTION'),
     long_description=read('README.rst'),
     platforms=('Any'),

@@ -5,10 +5,10 @@ from tempfile import mkdtemp
 from tempita import Template
 
 from makesite import settings
-from makesite.core import walklevel, call, print_header, is_exe, MakesiteParser, Error, gen_template_files, LOGGER
+from makesite.core import walklevel, call, print_header, is_exe, gen_template_files, LOGGER
 
 
-class Site(MakesiteParser):
+class Site(settings.MakesiteParser):
     " Operations with site instance. "
 
     def __init__(self, deploy_dir):
@@ -149,7 +149,7 @@ class Site(MakesiteParser):
     def _get_template_path(self, template_name):
         try:
             path = self.get('Templates', template_name)
-        except Error:
+        except settings.Error:
             path = op.join(settings.TPL_DIR, template_name)
         assert op.exists(path), "Template not found."
         return path
@@ -165,15 +165,17 @@ def gen_sites(path):
             continue
 
 
-def find_site(path):
-    " Find site by path or name. "
+def find_site(site, path=None):
+    " Return inited site by name (project.bracnch) or path "
 
     try:
-        return Site(path)
+        return Site(site)
+
     except AssertionError:
-        if not settings.MAKESITE_HOME or op.sep in path:
+        path = path or settings.MAKESITE_HOME
+        if op.sep in site:
             raise
 
-        path = path if '.' in path else "%s.master" % path
-        project, branch = path.split('.', 1)
-        return Site(op.join(settings.MAKESITE_HOME, project, branch))
+        site = site if '.' in site else "%s.master" % site
+        project, branch = site.split('.', 1)
+        return Site(op.join(path, project, branch))

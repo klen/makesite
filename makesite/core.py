@@ -1,15 +1,14 @@
 import logging
 import sys
 from argparse import ArgumentParser
+from datetime import datetime
 from os import walk, path as op, listdir, access, X_OK, environ, pathsep
-from initools.configparser import ConfigParser, Error
 from subprocess import check_call
 from sys import stdout
 from tempfile import mktemp
-from datetime import datetime
 
-from .settings import CFGNAME, TPLNAME, TPL_DIR, MOD_DIR, VERSION
-from . import terminal
+from .settings import CFGNAME, TPLNAME, TPL_DIR, MOD_DIR
+from makesite import version, terminal
 
 
 LOGGER = logging.getLogger('Makesite')
@@ -51,22 +50,29 @@ class MakesiteArgsParser(ArgumentParser):
         LOGGER.debug(" ".join(get_base_modules()) + "\n")
         self.exit(2, '%s: error: %s\n' % (self.prog, message))
 
+    def parse_args(self, args=None, namespace=None):
+        args, argv = self.parse_known_args(args, namespace)
+        args.argv = argv
+        return args
 
-def action(*arguments):
+
+def action(*arguments, **options):
     parser = MakesiteArgsParser(
-        description="'Makesite' easy control of project structure.")
+        description="'Makesite' easy control of project structure.",
+        **options)
     parser.add_argument('-v', '--version', action='version',
-                        version=VERSION, help='Show makesite version')
+                        version=version, help='Show makesite version')
     for (args, kwargs) in arguments:
         parser.add_argument(*args, **kwargs)
 
     def _inner(func):
         name = func.__name__
-        parser.description = func.__doc__
+        parser.description = func.__doc__.strip().split('\n')[0]
 
-        def _wrapper(args=None):
-            args = parser.parse_args(args)
-            return func(args)
+        def _wrapper(params=None):
+            params = parser.parse_args(params)
+            return func(params)
+        _wrapper.__doc__ = func.__doc__
 
         ACTIONS[name] = _wrapper
         if name != 'main':
@@ -89,42 +95,6 @@ class OrderedSet(list):
 class MakesiteException(AssertionError):
     " Exception raised by makesite "
     pass
-
-
-class MakesiteParser(ConfigParser):
-
-    def __init__(self, *args, **kwargs):
-        super(MakesiteParser, self).__init__(*args, **kwargs)
-        self.add_section('Main')
-        self.add_section('Templates')
-
-    def defaults(self):
-        return dict(self.items('Main'))
-
-    def __getitem__(self, name):
-        try:
-            return self.get('Main', name)
-        except Error:
-            return None
-
-    def __setitem__(self, name, value, section='Main'):
-        self.set(section, name, value)
-
-    def __getattr__(self, name):
-        return self[name]
-
-    def as_dict(self, section='Main', **kwargs):
-        " Return template context. "
-        items = super(MakesiteParser, self).items(section, **kwargs)
-        return dict(items)
-
-    def read(self, filenames, extending=False, map_sections=None):
-        if isinstance(filenames, basestring):
-            filenames = [filenames]
-        filenames = filter(op.exists, filenames)
-        if not filenames:
-            return False
-        return super(MakesiteParser, self).read(filenames, extending=extending, map_sections=map_sections)
 
 
 def get_project_templates(path):

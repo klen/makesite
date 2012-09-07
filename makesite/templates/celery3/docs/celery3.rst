@@ -1,7 +1,7 @@
 Celery3
 -------
 
-Template has controled celery process at project with supervisor.
+Template **celery3** has controled celery process with supervisor.
 
 Requirements
 ^^^^^^^^^^^^
