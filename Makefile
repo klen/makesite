@@ -22,7 +22,7 @@ register:
 
 .PHONY: upload
 # target: upload - Upload module on PyPi
-upload: doc
+upload: docs
 	python setup.py sdist upload || echo 'Upload already'
 
 .PHONY: test
