@@ -28,6 +28,7 @@ class MakesiteParser(ConfigParser):
         super(MakesiteParser, self).__init__(*args, **kwargs)
         self.add_section('Main')
         self.add_section('Templates')
+        self.add_section('alias')
 
     def defaults(self):
         return dict(self.items('Main'))

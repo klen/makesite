@@ -288,12 +288,6 @@ def main(args=None):
         LOGGER.info('Logfile: %s' % LOGFILE_HANDLER.stream.name)
         LOGGER.info('-' * 60)
 
-        config = settings.MakesiteParser()
-        config.read([
-            settings.BASECONFIG, settings.HOMECONFIG,
-            op.join(settings.MAKESITE_HOME or '', settings.CFGNAME),
-            op.join(op.dirname(__file__), settings.CFGNAME),
-        ])
         if args.host:
             cmd = "makesite %s %s" % (args.action, ' '.join(args.argv))
             for host in args.host:
@@ -319,7 +313,22 @@ def main(args=None):
 def console():
     " Enter point "
     autocomplete()
-    main()
+    config = settings.MakesiteParser()
+    config.read([
+        settings.BASECONFIG, settings.HOMECONFIG,
+        op.join(settings.MAKESITE_HOME or '', settings.CFGNAME),
+        op.join(op.dirname(__file__), settings.CFGNAME),
+    ])
+    argv = []
+    alias = dict(config.items('alias'))
+    names = alias.keys()
+    for arg in sys.argv:
+        if arg in names:
+            argv += alias[arg].split()
+            continue
+        argv.append(arg)
+
+    main(argv)
 
 
 if __name__ == '__main__':
