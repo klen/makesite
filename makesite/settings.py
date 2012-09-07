@@ -14,6 +14,7 @@ BASECONFIG = op.join(BASEDIR, CFGNAME)
 HOMECONFIG = op.join(getenv('HOME', '~'), CFGNAME)
 
 MAKESITE_HOME = environ.get('MAKESITE_HOME')
+USER = environ.get('USER', 'roor')
 
 SRC_CLONE = (
     ('svn', 'svn checkout %(src)s %(source_dir)s'),

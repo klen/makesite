@@ -1,5 +1,5 @@
-from os import environ
 from .core import LOGGER
+from .settings import USER
 
 import ssh
 
@@ -7,7 +7,7 @@ import ssh
 class SSHClient:
 
     def __init__(self, host):
-        self.host = host
+        self.user, self.host = host_params(host)
         self.client = ssh.SSHClient()
 
     def connect(self):
@@ -26,3 +26,11 @@ class SSHClient:
 
         for line in stderr.readlines():
             LOGGER.error("%s: %s" % (self.host, line))
+
+
+def host_params(host):
+    user, _, host = host.partition('@')
+    if not host:
+        host = user
+        user = USER
+    return user, host
