@@ -322,7 +322,7 @@ def console():
     argv = []
     alias = dict(config.items('alias'))
     names = alias.keys()
-    for arg in sys.argv:
+    for arg in sys.argv[1:]:
         if arg in names:
             argv += alias[arg].split()
             continue
