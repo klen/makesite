@@ -112,9 +112,7 @@ Commands
 
         makesite install PROJECT [OPTIONS]
 
-
 .. autofunction:: makesite.main.update
-
 
 .. data:: uninstall
 
@@ -123,9 +121,7 @@ Commands
 
         $ makesite uninstall PROJECT_PATH 
 
-.. data:: ls
-
-   Show list deployed projects.
+.. autofunction:: makesite.main.ls
 
 .. data:: info
 

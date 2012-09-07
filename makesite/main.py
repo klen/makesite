@@ -30,7 +30,29 @@ def info(args):
         default=settings.MAKESITE_HOME
         )))
 def ls(args):
-    " Show list of installed sites. "
+    """
+    List sites
+    ----------
+
+    Show list of installed sites.
+
+    ::
+
+        usage: makesite ls [-h] [-v] [-p PATH]
+
+        Show list of installed sites.
+
+        optional arguments:
+        -p PATH, --path PATH  path to makesite sites instalation dir. you can set it
+                                in $makesite_home env variable.
+
+    Examples: ::
+
+            makesite ls
+
+    """
+
+    assert args.path, "Not finded MAKESITE HOME."
 
     print_header("Installed sites:")
     for site in gen_sites(args.path):
@@ -88,7 +110,7 @@ def update(args):
 
     for site in gen_sites(args.path):
         site.run_update()
-        return True
+    return True
 
 
 @action(
