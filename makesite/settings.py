@@ -1,7 +1,7 @@
 from os import path as op, environ, getenv
 
+from initools.configparser import ConfigParser, Error
 
-VERSION = '0.9.66'
 
 BASEDIR = op.abspath(op.dirname(__file__))
 TPL_DIR = op.join(BASEDIR, 'templates')
@@ -20,3 +20,41 @@ SRC_CLONE = (
     ('git', 'git clone %(src)s %(source_dir)s -b %(branch)s'),
     ('hg', 'hg clone %(src)s %(source_dir)s'),
 )
+
+
+class MakesiteParser(ConfigParser):
+
+    def __init__(self, *args, **kwargs):
+        super(MakesiteParser, self).__init__(*args, **kwargs)
+        self.add_section('Main')
+        self.add_section('Templates')
+
+    def defaults(self):
+        return dict(self.items('Main'))
+
+    def __getitem__(self, name):
+        try:
+            return self.get('Main', name)
+        except Error:
+            return None
+
+    def __setitem__(self, name, value, section='Main'):
+        self.set(section, name, value)
+
+    def __getattr__(self, name):
+        return self[name]
+
+    def as_dict(self, section='Main', **kwargs):
+        """Return template context from configs.
+
+        """
+        items = super(MakesiteParser, self).items(section, **kwargs)
+        return dict(items)
+
+    def read(self, filenames, extending=False, map_sections=None):
+        if isinstance(filenames, basestring):
+            filenames = [filenames]
+        filenames = filter(op.exists, filenames)
+        if not filenames:
+            return False
+        return super(MakesiteParser, self).read(filenames, extending=extending, map_sections=map_sections)

@@ -112,12 +112,9 @@ Commands
 
         makesite install PROJECT [OPTIONS]
 
-.. data:: update
 
-   Run update scripts from deployed project in templates order. 
-   Used for update projects. ::
+.. autofunction:: makesite.main.update
 
-        $ makesite update PROJECT_PATH 
 
 .. data:: uninstall
 

@@ -4,12 +4,12 @@ from tempfile import mkdtemp
 
 from initools.configparser import NoOptionError
 
-from makesite import settings
-from makesite.core import MakesiteParser, print_header, call, LOGGER, which, OrderedSet
-from makesite.site import Site
+from . import settings
+from .core import print_header, call, LOGGER, which, OrderedSet
+from .site import Site
 
 
-class Installer(MakesiteParser):
+class Installer(settings.MakesiteParser):
 
     def __init__(self, args):
         " Load configuration. "

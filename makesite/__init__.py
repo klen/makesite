@@ -1,11 +1,6 @@
-#!/usr/bin/env python
+__project__ = __name__
+__author__ = "Kirill Klenov <horneds@gmail.com>"
+__license__ = "GNU LGPL"
 
-from .settings import VERSION
-
-
-version_info = map(int, VERSION.split('.'))
-
-__version__ = version = VERSION
-__project__ = PROJECT = __name__
-__author__ = AUTHOR = "Kirill Klenov <horneds@gmail.com>"
-__license__ = LICENSE = "GNU LGPL"
+__version__ = version = '0.9.66'
+version_info = map(int, __version__.split('.'))

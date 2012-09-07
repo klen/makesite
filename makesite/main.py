@@ -3,8 +3,11 @@ from datetime import datetime
 from os import path as op, environ, listdir, getcwd
 from shutil import copytree
 from subprocess import CalledProcessError
+from socket import gaierror
+from makesite import version
 
 from . import settings
+from .remote import SSHClient
 from .core import ACTIONS, action, print_header, call, get_base_modules, get_base_templates, LOGFILE_HANDLER, LOGGER
 from .install import Installer
 from .site import Site, gen_sites, find_site
@@ -35,13 +38,57 @@ def ls(args):
     return True
 
 
-@action((["PATH"], dict(help="Project path")))
+@action(
+    (["SITE"], dict(help="Path to site or name (project.branch)", nargs="?")),
+    (["-p", "--path"],
+        dict(
+            help="path to makesite sites instalation dir. you can set it in $makesite_home env variable.",
+            required=not bool(settings.MAKESITE_HOME),
+            default=settings.MAKESITE_HOME))
+)
 def update(args):
-    " Update site. "
+    """
+    Run site update
+    ---------------
 
-    path = args.PATH
-    site = find_site(path)
-    return site.run_update()
+    Run updates for site or all installed.
+
+    ::
+
+        usage: main.py update [-h] [-v] [-p PATH] [SITE]
+
+        Run site update
+
+        positional arguments:
+        SITE                  Path to site or name (project.branch)
+
+        optional arguments:
+        -p PATH, --path PATH  path to makesite sites instalation dir. you can set it
+                                in $makesite_home env variable.
+
+    Examples: ::
+
+        # Update all makesite instances on server
+        $ makesite update
+
+        # Update by project name
+        makesite update intaxi
+
+        # Update by project name
+        makesite update intaxi.develop
+
+        # Update by project path
+        makesite update /var/www/intaxi/master
+
+
+    """
+    if args.SITE:
+        site = find_site(args.SITE, path=args.path)
+        return site.run_update()
+
+    for site in gen_sites(args.path):
+        site.run_update()
+        return True
 
 
 @action(
@@ -204,19 +251,44 @@ def autocomplete(force=False):
     sys.exit(1)
 
 
-@action((["action"], dict(choices=ACTIONS.keys(), help="Choose action: %s" % ', '.join(ACTIONS.keys()))),)
-def main(args):
+@action(
+    (["action"], dict(choices=ACTIONS.keys(), help="Choose action: %s" % ', '.join(ACTIONS.keys()))),
+    (['-H'], dict(help="Host for run Makesite commands by ssh.", nargs="+", dest='host')),
+    add_help=False
+)
+def main(args=None):
     " Base dispather "
     try:
         start = datetime.now()
-        LOGGER.info('MAKESITE Version %s' % settings.VERSION)
+
+        LOGGER.info('MAKESITE Version %s' % version)
         LOGGER.info('Started at %s' % start.strftime("%Y-%m-%d %H:%M:%S"))
         LOGGER.info('Logfile: %s' % LOGFILE_HANDLER.stream.name)
         LOGGER.info('-' * 60)
-        func = ACTIONS.get(args.action)
-        func(sys.argv[2:])
-        LOGGER.info("\nOPERATION SUCCESSFUL")
-    except (AssertionError, CalledProcessError), e:
+
+        config = settings.MakesiteParser()
+        config.read([
+            settings.BASECONFIG, settings.HOMECONFIG,
+            op.join(settings.MAKESITE_HOME, settings.CFGNAME),
+            op.join(op.dirname(__file__), settings.CFGNAME),
+        ])
+        if args.host:
+            cmd = "makesite %s %s" % (args.action, ' '.join(args.argv))
+            for host in args.host:
+                LOGGER.info('\nHOST: %s' % host)
+                LOGGER.info('RUN: %s\n' % cmd)
+                client = SSHClient(host)
+                client.connect()
+                client.exec_command(cmd)
+                client.close()
+                LOGGER.info("\nOPERATION SUCCESSFUL\n")
+
+        else:
+            func = ACTIONS.get(args.action)
+            func(args.argv)
+            LOGGER.info("\nOPERATION SUCCESSFUL")
+
+    except (AssertionError, CalledProcessError, gaierror), e:
         LOGGER.error("\nOPERATION FAILED - %s" % str(e))
         LOGGER.error("See log: %s" % LOGFILE_HANDLER.stream.name)
         sys.exit(1)
@@ -225,7 +297,7 @@ def main(args):
 def console():
     " Enter point "
     autocomplete()
-    main(sys.argv[1:2])
+    main()
 
 
 if __name__ == '__main__':
