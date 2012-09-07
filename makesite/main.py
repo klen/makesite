@@ -291,7 +291,7 @@ def main(args=None):
         config = settings.MakesiteParser()
         config.read([
             settings.BASECONFIG, settings.HOMECONFIG,
-            op.join(settings.MAKESITE_HOME, settings.CFGNAME),
+            op.join(settings.MAKESITE_HOME or '', settings.CFGNAME),
             op.join(op.dirname(__file__), settings.CFGNAME),
         ])
         if args.host:
