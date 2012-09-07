@@ -13,7 +13,7 @@ class SSHClient:
     def connect(self):
         self.client.load_system_host_keys()
         self.client.set_missing_host_key_policy(ssh.WarningPolicy)
-        self.client.connect(self.host, port=22, username=environ.get('USER', 'root'))
+        self.client.connect(self.host, port=22, username=self.user)
 
     def close(self):
         self.client.close()
