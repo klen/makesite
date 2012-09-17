@@ -1,8 +1,8 @@
 " Common settings for all project. "
-import os
+from os import path as op, walk
 import logging
 
-from settings import PROJECT_ROOT, DEVZONE_ROOT, PROJECT_NAME
+from settings import SOURCE_DIR, PROJECT_DIR, PROJECT_NAME
 
 
 SECRET_KEY = "RedefineME.%s" % PROJECT_NAME
@@ -30,16 +30,16 @@ CACHES = {
 ROOT_URLCONF = 'main.urls'
 
 # Media settigns
-MEDIA_ROOT = os.path.join(DEVZONE_ROOT, 'media')
-STATIC_ROOT = os.path.join(DEVZONE_ROOT, 'static')
+MEDIA_ROOT = op.join(PROJECT_DIR, 'media')
+STATIC_ROOT = op.join(PROJECT_DIR, 'static')
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 
 # Templates settings
 TEMPLATE_DIRS = ()
-for root, dirs, files in os.walk(PROJECT_ROOT, followlinks=True):
+for root, dirs, files in walk(SOURCE_DIR, followlinks=True):
     if 'templates' in dirs:
-        TEMPLATE_DIRS += (os.path.join(root, 'templates'),)
+        TEMPLATE_DIRS += (op.join(root, 'templates'),)
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
