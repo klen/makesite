@@ -1,10 +1,11 @@
 # Base
+# ----
+Django==1.4.1
+South==0.7.6
 wsgiref==0.1.2
 
-# Django base
-Django==1.4
-South==0.7.4
-
 # Debug
+# -----
 django-debug-toolbar==0.9.4
+ipdb==0.7
 Werkzeug==0.8.3
