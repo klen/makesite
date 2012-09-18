@@ -7,7 +7,7 @@ HG_BRANCH_CREATE={{ hg_branch_create }}
 
 # Create project branch
 if [[ ! "$BRANCH" = "master" ]] && [[ "$HG_BRANCH_CREATE" = "yes" ]]; then
-    cmd_or_die "sudo chown -R $USER:$USER $SOURCE_DIR"
+    cmd_or_die "sudo chown -R $SRC_USER:$SRC_USER $SOURCE_DIR"
     cmd "sudo -u $SRC_USER hg branch $BRANCH"
     cmd "sudo -u $SRC_USER hg commit"
     cmd "sudo -u $SRC_USER hg push"
