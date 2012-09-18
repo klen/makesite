@@ -7,7 +7,7 @@ GIT_BRANCH_CREATE={{ git_branch_create }}
 
 # Create project branch
 if [[ ! "$BRANCH" = "master" ]] && [[ "$GIT_BRANCH_CREATE" = "yes" ]]; then
-    cmd "sudo chown -R $USER:$USER $SOURCE_DIR"
+    cmd "sudo chown -R $SRC_USER:$SRC_USER $SOURCE_DIR"
     cmd "sudo -u $SRC_USER git --work-tree $SOURCE_DIR --git-dir $SOURCE_DIR/.git push origin origin:refs/heads/$BRANCH"
     cmd "sudo -u $SRC_USER git --work-tree $SOURCE_DIR --git-dir $SOURCE_DIR/.git fetch origin"
     cmd "sudo -u $SRC_USER git --work-tree $SOURCE_DIR --git-dir $SOURCE_DIR/.git checkout --track origin/$BRANCH"
