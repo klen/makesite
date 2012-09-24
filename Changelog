@@ -1,6 +1,10 @@
+2012-09-24  klen
+
+	* Minor fixes of virtualenv templates
+
 2012-09-18  klen
 
-	* FIx SCM templates
+	* Fix SCM templates
 
 2012-09-17  klen
 
