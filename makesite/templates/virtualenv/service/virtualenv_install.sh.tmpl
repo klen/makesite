@@ -23,7 +23,6 @@ if [ -f $PIP_PROJECTFILE ]; then
 
     $PIP install $PIP_OPTIONS -r $PIP_PROJECTFILE 
     cmd_or_die "rm -rf $VIRTUALENVDIR/.reqsum"
-    sh -c "md5sum $PIP_PROJECTFILE > $VIRTUALENVDIR/.reqsum"
 else
     echo "Not found pip requirements file: $PIP_PROJECTFILE"
 fi

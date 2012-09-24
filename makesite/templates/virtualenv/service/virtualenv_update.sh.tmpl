@@ -7,10 +7,6 @@ VIRTUALENVDIR={{ virtualenvdir  }}
 PIP_PROJECTFILE={{ pip_projectfile }}
 PIP_OPTIONS="{{ pip_options }}"
 PIP=$VIRTUALENVDIR/bin/pip
-EASY_INSTALL=$VIRTUALENVDIR/bin/easy_install
-
-REQ_SUM=$(md5sum $PIP_PROJECTFILE)
-OLD_REQ_SUM=$(cat $VIRTUALENVDIR/.reqsum)
 
 cmd_or_die "sudo chown -R $USER:$USER $VIRTUALENVDIR"
 sudo rm -rf /tmp/.pip
@@ -18,13 +14,8 @@ sudo rm -rf /tmp/.pip
 if [ -f $PIP_PROJECTFILE ]; then
 
     echo "Update virtualenv requirements: $PIP_PROJECTFILE"
-    if [ "$REQ_SUM" = "$OLD_REQ_SUM" ]; then
-        echo "Changes not found"
-    else
-        $PIP install -r $PIP_PROJECTFILE $PIP_OPTIONS
-        cmd_or_die "rm -rf $VIRTUALENVDIR/.reqsum "
-        sh -c "md5sum $PIP_PROJECTFILE > $VIRTUALENVDIR/.reqsum"
-    fi
+    $PIP install -r $PIP_PROJECTFILE $PIP_OPTIONS
+
 fi
 
 # Restore rights
