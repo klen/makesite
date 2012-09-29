@@ -1,8 +1,0 @@
-*.pyc
-.env
-.ropeproject
-.tests
-.vimrc
-.db
-.tags
-._
