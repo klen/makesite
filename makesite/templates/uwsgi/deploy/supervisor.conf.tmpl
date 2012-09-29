@@ -1,7 +1,7 @@
 [program:{{ project }}.{{ safe_branch }}]
 command=uwsgi -x {{ uwsgi_source_confpath }}
 user={{ site_user }}
-environment=DJANGO_SETTINGS_MODULE="{{ django_settings }}"
+environment=DJANGO_SETTINGS_MODULE="{{ django_settings }}",MODE={{ mode }}
 stdout_logfile={{ deploy_dir }}/logs/uwsgi.log
 stderr_logfile={{ deploy_dir }}/logs/uwsgi_err.log
 directory={{ source_dir }}
