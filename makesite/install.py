@@ -89,10 +89,14 @@ class Installer(settings.MakesiteParser):
 
         return site
 
-    def build(self):
+    def build(self, update=False):
         print_header('Build site', sep='-')
         call('sudo mkdir -p %s' % op.dirname(self.target_dir))
-        call('sudo mv %s %s' % (self.deploy_dir, self.target_dir))
+        if not update:
+            call('sudo mv %s %s' % (self.deploy_dir, self.target_dir))
+        else:
+            call('sudo cp -rf %s/* %s' % (self.deploy_dir, self.target_dir))
+            call('sudo rm -r %s' % self.deploy_dir)
         call('sudo chmod 0755 %s' % self.target_dir)
 
     def _get_source(self):

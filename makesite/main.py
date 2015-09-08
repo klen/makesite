@@ -177,6 +177,9 @@ def shell(args):
     )),
     (['-b', '--branch'], dict(help='Name of branch.', default='master')),
     (['-m', '--module'], dict(help="Name of module. Install module.")),
+    (['-u', '--update'], dict(
+        action="store_true", default=False,
+        help="Update already existing installation.")),
     (['-r', '--repeat'], dict(
         action="store_true", default=False, help='Repeat installation.')),
     (['-i', '--info'], dict(action="store_true", default=False,
@@ -207,7 +210,7 @@ def install(args):
     args.deploy_dir = engine.target_dir
 
     # Check dir exists
-    assert args.info or args.repeat or not op.exists(
+    assert args.info or args.repeat or args.update or not op.exists(
         engine.target_dir), "Path %s exists. Stop deploy." % args.deploy_dir
 
     try:
@@ -220,7 +223,7 @@ def install(args):
         if not site:
             return True
 
-        engine.build()
+        engine.build(args.update)
         site.run_install()
         return site
 
