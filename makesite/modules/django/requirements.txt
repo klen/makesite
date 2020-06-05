@@ -1,6 +1,6 @@
 # Base
 # ----
-Django==1.4.1
+Django==1.11.29
 South==0.7.6
 wsgiref==0.1.2
 
